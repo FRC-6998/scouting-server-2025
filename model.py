@@ -1,8 +1,11 @@
 # TODO: Make sure all the parameters are suitable to the requirement driver teams provided.
 
-import uuid
+from uuid import uuid4
 from enum import Enum
-from pydantic import BaseModel
+from uuid import UUID
+
+from pydantic import BaseModel, PrivateAttr, computed_field
+
 
 # Match type enum
 class MatchType(str, Enum):
@@ -12,7 +15,14 @@ class MatchType(str, Enum):
 
 # Model to verify input data
 class ObjectiveMatchData(BaseModel):
-    match_uuid: uuid.UUID
+
+    # "_id" field: Making sure that the data in temp and db has same id
+    _id: UUID = PrivateAttr(default_factory= lambda: uuid4())
+    @computed_field
+    @property
+    def data_id(self) -> UUID:
+        return self._id
+
     match_type: MatchType
     match_number: int
     team_number: int
