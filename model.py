@@ -1,5 +1,5 @@
-from enum import Enum
-from typing import List
+from enum import Enum, IntEnum
+from typing import List, Optional
 
 from pydantic import BaseModel
 from ulid import ULID
@@ -81,12 +81,12 @@ class ObjectiveMatchData(BaseModel):
 
 # Subjective Match Data (formerly known as Super Scout Data)
 
-class SubjectiveRanking3(int, Enum):
+class SubjectiveRanking3(IntEnum):
     FIRST = 1
     SECOND = 2
     THIRD = 3
 
-class SubjectiveRanking2(int, Enum):
+class SubjectiveRanking2(IntEnum):
     FIRST = 1
     SECOND = 2
 
@@ -103,3 +103,55 @@ class SubjectiveMatchData(BaseModel):
     num_score_on_net: int
     mobility = SubjectiveRanking3
     defense = SubjectiveRanking3
+
+# Pit Scout Data
+
+class Chassis(str, Enum):
+    SWERVE = "Swerve"
+    MECANUM = "Mecanum"
+    TANK = "Tank"
+
+class MainSuperstructure(str, Enum):
+    ARM = "Arm"
+    ELEVATOR = "Elevator"
+
+class IntakeType(str, Enum):
+    INTEGRATED = "Integrated"
+    SEPERATED = "Seperated"
+
+class AlgaeScoringCapabilityChoice(str, Enum):
+    PROCESSOR = "Processor"
+    NET = "Net"
+
+class ReefCapabilityChoice(str, Enum):
+    L1 = "L1"
+    L2 = "L2"
+    L3 = "L3"
+    L4 = "L4"
+
+class PreloadChoice(str, Enum):
+    CORAL = "Coral"
+    ALGAE = "Algae"
+
+class BargeCapabilityChoice(str, Enum):
+    PARK = "Park"
+    DEEP = "Deep"
+    SHALLOW = "Shallow"
+
+class VisionFunctionalityChoice(str, Enum):
+    AUTO_ALIGN = "Auto Align"
+    FIELD_RELATED_POS = "Field-Related Positioning"
+    OBJ_DETECT = "Object Detection"
+
+class PitScoutData(BaseModel):
+    chassis: Chassis
+    main_superstructure: MainSuperstructure
+    intake_type: IntakeType
+    algae_scoring_capability: {AlgaeScoringCapabilityChoice}
+    reef_capability: {ReefCapabilityChoice}
+    preload: {Preload}
+    vision_functionality: Optional[{VisionFunctionalityChoice}]
+    barge_capability: Optional[{BargeCapabilityChoice}] = None
+    robot_weight: float
+    net_confidence: bool
+    driver_seniority: int
