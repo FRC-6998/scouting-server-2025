@@ -1,18 +1,15 @@
 # TODO: Make every model have its own ulid field.
 
-from pickle import FALSE
-from uuid import UUID
-from enum import Enum
-from fastapi import FastAPI, responses, HTTPException, status
-from fastapi.params import Body
-from pymongo import MongoClient, AsyncMongoClient
-from routers import objective_scout
+from fastapi import FastAPI
+from pymongo import AsyncMongoClient
 
-from model import ObjectiveMatchData, TestModel
-from pydantic import BaseModel
-import pymongo
+from routers import objective_scout, subjective_scout
 
-scouting_app = FastAPI()
+scouting_app = FastAPI(
+    title="Scouting Field Server API",
+    description="API for Scouting Field Server made by Team Unipards 6998",
+    version="0.1.0",
+)
 
 # MongoDB connection setting
 MONGO_URI = "mongodb://localhost:27017"
@@ -39,3 +36,4 @@ raw_collection = db["raw_data"]
 #     return data
 
 scouting_app.include_router(objective_scout.router)
+scouting_app.include_router(subjective_scout.router)
