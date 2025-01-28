@@ -4,6 +4,10 @@ from typing import List, Optional
 from pydantic import BaseModel
 from ulid import ULID
 
+# Model which are only made for testing
+class TestModel(BaseModel):
+    _id: ULID
+    name: str
 
 # Objective Match Data (formerly known as Scouting Data)
 
@@ -101,8 +105,8 @@ class SubjectiveMatchData(BaseModel):
     driver_awareness: SubjectiveRanking3
     coral_station_awareness: SubjectiveRanking2
     num_score_on_net: int
-    mobility = SubjectiveRanking3
-    defense = SubjectiveRanking3
+    mobility: SubjectiveRanking3
+    defense: SubjectiveRanking3
 
 # Pit Scout Data
 
@@ -147,11 +151,10 @@ class PitScoutData(BaseModel):
     chassis: Chassis
     main_superstructure: MainSuperstructure
     intake_type: IntakeType
-    algae_scoring_capability: {AlgaeScoringCapabilityChoice}
-    reef_capability: {ReefCapabilityChoice}
-    preload: {Preload}
-    vision_functionality: Optional[{VisionFunctionalityChoice}]
-    barge_capability: Optional[{BargeCapabilityChoice}] = None
-    robot_weight: float
+    algae_scoring_capability: List[AlgaeScoringCapabilityChoice]
+    reef_capability: List[ReefCapabilityChoice]
+    preload: Optional[List[PreloadChoice]]
+    vision_functionality: Optional[List[VisionFunctionalityChoice]]
+    barge_capability: Optional[List[BargeCapabilityChoice]]
     net_confidence: bool
     driver_seniority: int
