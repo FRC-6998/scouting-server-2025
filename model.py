@@ -71,7 +71,7 @@ class BargeAction(str, Enum):
 
 class ObjectiveMatchData(BaseModel):
     # "_id" field: Making sure that the data in temp and db has same id
-    _id: ULID
+    ulid: ULID
     scout: str
     match_type: MatchType
     match_number: int
@@ -95,7 +95,7 @@ class SubjectiveRanking2(IntEnum):
     SECOND = 2
 
 class SubjectiveMatchData(BaseModel):
-    _id: ULID
+    ulid: ULID
     scout: str
     match_type: MatchType
     match_number: int
@@ -148,6 +148,8 @@ class VisionFunctionalityChoice(str, Enum):
     OBJ_DETECT = "Object Detection"
 
 class PitScoutData(BaseModel):
+    ulid: ULID
+    scout: str
     chassis: Chassis
     main_superstructure: MainSuperstructure
     intake_type: IntakeType
