@@ -2,14 +2,12 @@ from fastapi import APIRouter, Body
 from pymongo import AsyncMongoClient
 from starlette import status
 
+from constants import DATABASE_NAME, MONGO_URL, SUBJECTIVE_DATA_COLLECTION
 from model import SubjectiveMatchData
 
-MONGO_URI = "mongodb://localhost:27017"
-DATABASE_NAME = "scouting-field"
-
-client = AsyncMongoClient("localhost", 27017)
+client = AsyncMongoClient(MONGO_URL)
 db = client[DATABASE_NAME]
-subjective_collection = db["subjective"]
+subjective_collection = db[SUBJECTIVE_DATA_COLLECTION]
 
 router = APIRouter(
     prefix="/subjective",
@@ -19,8 +17,8 @@ router = APIRouter(
 @router.post(
     "",
     name= "Adding subjective match data",
-    description= "Post a new objective match data in the server database.",
-    response_description="Added a new objective match data successfully",
+    description= "Post a new subjective match data in the server database.",
+    response_description="Added a new subjective match data successfully",
     response_model=SubjectiveMatchData,
     status_code=status.HTTP_201_CREATED,
 )
@@ -50,7 +48,7 @@ async def get_sbj_match_data():
     response_model=SubjectiveMatchData,
     status_code=status.HTTP_200_OK,
 )
-async def get_sub_match_data_by_match(match_type: str, match_number: int):
+async def get_sbj_match_data_by_match(match_type: str, match_number: int):
     data = []
     async for sbj in subjective_collection.find({"match_type": match_type, "match_number": match_number}):
         data.append(sbj)

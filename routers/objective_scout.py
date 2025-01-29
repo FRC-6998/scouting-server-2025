@@ -1,15 +1,12 @@
 from fastapi import APIRouter, Body
 from pymongo import AsyncMongoClient
 from starlette import status
-
+from constants import MONGO_URL, DATABASE_NAME, OBJECTIVE_DATA_COLLECTION
 from model import ObjectiveMatchData
 
-MONGO_URI = "mongodb://localhost:27017"
-DATABASE_NAME = "scouting-field"
-
-client = AsyncMongoClient("localhost", 27017)
+client = AsyncMongoClient(MONGO_URL)
 db = client[DATABASE_NAME]
-objective_collection = db["objective"]
+objective_collection = db[OBJECTIVE_DATA_COLLECTION]
 
 router = APIRouter(
     prefix="/objective",
