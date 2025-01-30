@@ -53,3 +53,17 @@ async def get_pit_scout_data_by_match(match_type: str, match_number: int):
     async for sbj in pit_collection.find({"match_type": match_type, "match_number": match_number}):
         data.append(sbj)
     return data
+
+@router.get(
+    "/get/team",
+    name="Getting pit scout data by team number",
+    description="Getting pit scout data filtered by team number from the database.",
+    response_description="Got pit scout data filtered by team number successfully",
+    response_model=PitScoutData,
+    status_code=status.HTTP_200_OK,
+)
+async def get_pit_scout_data_by_team(team_number: int):
+    data = []
+    async for sbj in pit_collection.find({"team_number": team_number}):
+        data.append(sbj)
+    return data

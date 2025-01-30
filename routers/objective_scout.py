@@ -52,3 +52,17 @@ async def get_obj_match_data_by_match(match_type: str, match_number: int):
     async for obj in objective_collection.find({"match_type": match_type, "match_number": match_number}):
         data.append(obj)
     return data
+
+@router.get(
+    "/get/team",
+    name="Getting objective match data by team number",
+    description="Getting objective match data filtered by team number from the database.",
+    response_description="Got objective match data filtered by team number successfully",
+    response_model=ObjectiveMatchData,
+    status_code=status.HTTP_200_OK,
+)
+async def get_obj_match_data_by_team(team_number: int):
+    data = []
+    async for obj in objective_collection.find({"team_number": team_number}):
+        data.append(obj)
+    return data

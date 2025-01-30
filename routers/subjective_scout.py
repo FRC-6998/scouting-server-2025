@@ -53,3 +53,17 @@ async def get_sbj_match_data_by_match(match_type: str, match_number: int):
     async for sbj in subjective_collection.find({"match_type": match_type, "match_number": match_number}):
         data.append(sbj)
     return data
+
+@router.get(
+    "/get/team",
+    name="Getting subjective match data by team number",
+    description="Getting subjective match data filtered by team number from the database.",
+    response_description="Got subjective match data filtered by team number successfully",
+    response_model=SubjectiveMatchData,
+    status_code=status.HTTP_200_OK,
+)
+async def get_sbj_match_data_by_team(team_number: int):
+    data = []
+    async for sbj in subjective_collection.find({"team_number": team_number}):
+        data.append(sbj)
+    return data
