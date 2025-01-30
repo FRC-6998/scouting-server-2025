@@ -3,7 +3,7 @@ from pymongo import AsyncMongoClient
 from starlette import status
 
 from constants import DATABASE_NAME, MONGO_URL, SUBJECTIVE_DATA_COLLECTION
-from model import SubjectiveMatchData
+from model import SubjectiveMatchRawData
 
 client = AsyncMongoClient(MONGO_URL)
 db = client[DATABASE_NAME]
@@ -19,10 +19,10 @@ router = APIRouter(
     name= "Adding subjective match data",
     description= "Post a new subjective match data in the server database.",
     response_description="Added a new subjective match data successfully",
-    response_model=SubjectiveMatchData,
+    response_model=SubjectiveMatchRawData,
     status_code=status.HTTP_201_CREATED,
 )
-async def add_sbj_match_data(data: SubjectiveMatchData = Body(...)):
+async def add_sbj_match_data(data: SubjectiveMatchRawData = Body(...)):
     await subjective_collection.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
     return data
 
@@ -31,7 +31,7 @@ async def add_sbj_match_data(data: SubjectiveMatchData = Body(...)):
     name= "Getting all subjective match data",
     description="Getting all subjective match data from the database.",
     response_description="Got all subjective match data successfully",
-    response_model=list[SubjectiveMatchData],
+    response_model=list[SubjectiveMatchRawData],
     status_code=status.HTTP_200_OK,
 )
 async def get_sbj_match_data():
@@ -45,7 +45,7 @@ async def get_sbj_match_data():
     name="Getting subjective match data by match type and number",
     description="Getting subjective match data filtered by match level and number from the database.",
     response_description="Got subjective match data filtered by match level and number successfully",
-    response_model=SubjectiveMatchData,
+    response_model=SubjectiveMatchRawData,
     status_code=status.HTTP_200_OK,
 )
 async def get_sbj_match_data_by_match(match_type: str, match_number: int):
@@ -59,7 +59,7 @@ async def get_sbj_match_data_by_match(match_type: str, match_number: int):
     name="Getting subjective match data by team number",
     description="Getting subjective match data filtered by team number from the database.",
     response_description="Got subjective match data filtered by team number successfully",
-    response_model=SubjectiveMatchData,
+    response_model=SubjectiveMatchRawData,
     status_code=status.HTTP_200_OK,
 )
 async def get_sbj_match_data_by_team(team_number: int):

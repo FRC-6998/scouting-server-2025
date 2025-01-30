@@ -2,7 +2,7 @@ from fastapi import APIRouter, Body
 from pymongo import AsyncMongoClient
 from starlette import status
 from constants import MONGO_URL, DATABASE_NAME, OBJECTIVE_DATA_COLLECTION
-from model import ObjectiveMatchData
+from model import ObjectiveMatchRawData
 
 client = AsyncMongoClient(MONGO_URL)
 db = client[DATABASE_NAME]
@@ -18,10 +18,10 @@ router = APIRouter(
     name= "Adding objective match data",
     description= "Post a new objective match data in the server database.",
     response_description="Added a new objective match data successfully",
-    response_model=ObjectiveMatchData,
+    response_model=ObjectiveMatchRawData,
     status_code=status.HTTP_201_CREATED,
 )
-async def add_obj_match_data(data: ObjectiveMatchData = Body(...)):
+async def add_obj_match_data(data: ObjectiveMatchRawData = Body(...)):
     await objective_collection.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
     return data
 
@@ -30,7 +30,7 @@ async def add_obj_match_data(data: ObjectiveMatchData = Body(...)):
     name= "Getting all objective match data",
     description="Getting all objective match data from the database.",
     response_description="Got all objective match data successfully",
-    response_model=list[ObjectiveMatchData],
+    response_model=list[ObjectiveMatchRawData],
     status_code=status.HTTP_200_OK,
 )
 async def get_obj_match_data():
@@ -44,7 +44,7 @@ async def get_obj_match_data():
     name="Getting objective match data by match type and number",
     description="Getting objective match data filtered by match level and number from the database.",
     response_description="Got objective match data filtered by match level and number successfully",
-    response_model=ObjectiveMatchData,
+    response_model=ObjectiveMatchRawData,
     status_code=status.HTTP_200_OK,
 )
 async def get_obj_match_data_by_match(match_type: str, match_number: int):
@@ -58,7 +58,7 @@ async def get_obj_match_data_by_match(match_type: str, match_number: int):
     name="Getting objective match data by team number",
     description="Getting objective match data filtered by team number from the database.",
     response_description="Got objective match data filtered by team number successfully",
-    response_model=ObjectiveMatchData,
+    response_model=ObjectiveMatchRawData,
     status_code=status.HTTP_200_OK,
 )
 async def get_obj_match_data_by_team(team_number: int):

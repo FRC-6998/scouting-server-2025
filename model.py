@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from ulid import ULID
 
 # Model which are only made for testing
-class TestModel(BaseModel):
+class TestModel (BaseModel):
     _id: ULID
     name: str
 
@@ -13,18 +13,18 @@ class TestModel(BaseModel):
 
 # Match basic information
 
-class MatchType(str, Enum):
+class MatchType (str, Enum):
     PRACTICE = "Practice"
     QUALIFICATION = "Qualification"
     PLAYOFF = "Playoff"
 
-class Alliance(str, Enum):
+class Alliance (str, Enum):
     RED = "Red"
     BLUE = "Blue"
 
 # Auto
 
-class Preload(str, Enum):
+class Preload (str, Enum):
     NONE = "None"
     CORAL = "Coral"
     ALGAE = "Algae"
@@ -34,16 +34,16 @@ class AutoStartPosition(str, Enum):
     CENTER = "Center"
     MIDDLE = "Middle"
 
-class AutoPathPosition(str, Enum):
+class AutoPathPosition (str, Enum):
     # TODO: List out all possible positions
     EXAMPLE = "Example"
 
-class AutoPath(BaseModel):
+class AutoPath (BaseModel):
     second: float
     position: str
     success: bool = False
 
-class Auto(BaseModel):
+class AutoRaw (BaseModel):
     preload: Preload = "None"
     start_position: AutoStartPosition
     leave: bool = False
@@ -51,17 +51,17 @@ class Auto(BaseModel):
 
 # Teleop
 
-class TeleopPath(BaseModel):
+class TeleopPath (BaseModel):
     second: float
     position: str
     success: bool = False
 
-class Teleop(BaseModel):
+class TeleopRaw (BaseModel):
     teleop_path: List[TeleopPath]
 
 # Endgame
 
-class BargeAction(str, Enum):
+class BargeAction (str, Enum):
     NONE = "None"
     PARK = "Park"
     DEEP = "Deep"
@@ -69,7 +69,7 @@ class BargeAction(str, Enum):
 
 # General Model
 
-class ObjectiveMatchData(BaseModel):
+class ObjectiveMatchRawData (BaseModel):
     # "_id" field: Making sure that the data in temp and db has same id
     ulid: ULID
     scout: str
@@ -78,23 +78,23 @@ class ObjectiveMatchData(BaseModel):
     event_key: str
     team_number: int
     alliance: Alliance
-    auto : Auto
-    teleop: Teleop
+    auto : AutoRaw
+    teleop: TeleopRaw
     barge_action: BargeAction
     barge_time: float
 
 # Subjective Match Data (formerly known as Super Scout Data)
 
-class SubjectiveRanking3(IntEnum):
+class SubjectiveRanking3 (IntEnum):
     FIRST = 1
     SECOND = 2
     THIRD = 3
 
-class SubjectiveRanking2(IntEnum):
+class SubjectiveRanking2 (IntEnum):
     FIRST = 1
     SECOND = 2
 
-class SubjectiveMatchData(BaseModel):
+class SubjectiveMatchRawData (BaseModel):
     ulid: ULID
     scout: str
     match_type: MatchType
@@ -110,44 +110,44 @@ class SubjectiveMatchData(BaseModel):
 
 # Pit Scout Data
 
-class Chassis(str, Enum):
+class Chassis (str, Enum):
     SWERVE = "Swerve"
     MECANUM = "Mecanum"
     TANK = "Tank"
 
-class MainSuperstructure(str, Enum):
+class MainSuperstructure (str, Enum):
     ARM = "Arm"
     ELEVATOR = "Elevator"
 
-class IntakeType(str, Enum):
+class IntakeType (str, Enum):
     INTEGRATED = "Integrated"
     SEPERATED = "Seperated"
 
-class AlgaeScoringCapabilityChoice(str, Enum):
+class AlgaeScoringCapabilityChoice (str, Enum):
     PROCESSOR = "Processor"
     NET = "Net"
 
-class ReefCapabilityChoice(str, Enum):
+class ReefCapabilityChoice (str, Enum):
     L1 = "L1"
     L2 = "L2"
     L3 = "L3"
     L4 = "L4"
 
-class PreloadChoice(str, Enum):
+class PreloadChoice (str, Enum):
     CORAL = "Coral"
     ALGAE = "Algae"
 
-class BargeCapabilityChoice(str, Enum):
+class BargeCapabilityChoice (str, Enum):
     PARK = "Park"
     DEEP = "Deep"
     SHALLOW = "Shallow"
 
-class VisionFunctionalityChoice(str, Enum):
+class VisionFunctionalityChoice (str, Enum):
     AUTO_ALIGN = "Auto Align"
     FIELD_RELATED_POS = "Field-Related Positioning"
     OBJ_DETECT = "Object Detection"
 
-class PitScoutData(BaseModel):
+class PitScoutData (BaseModel):
     ulid: ULID
     scout: str
     chassis: Chassis
@@ -162,3 +162,4 @@ class PitScoutData(BaseModel):
     driver_seniority: int
 
 # TODO: Add analysis data return model.
+
