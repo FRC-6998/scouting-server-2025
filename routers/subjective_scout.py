@@ -41,7 +41,7 @@ async def get_sbj_match_data():
     return data
 
 @router.get(
-    "/get",
+    "/get/match",
     name="Getting subjective match data by match type and number",
     description="Getting subjective match data filtered by match level and number from the database.",
     response_description="Got subjective match data filtered by match level and number successfully",

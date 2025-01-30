@@ -41,7 +41,7 @@ async def get_pit_scout_data():
     return data
 
 @router.get(
-    "/get",
+    "/get/match",
     name="Getting pit scout data by match type and number",
     description="Getting pit scout data filtered by match level and number from the database.",
     response_description="Got pit scout data filtered by match level and number successfully",

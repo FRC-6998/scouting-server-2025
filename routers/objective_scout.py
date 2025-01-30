@@ -40,7 +40,7 @@ async def get_obj_match_data():
     return data
 
 @router.get(
-    "/get",
+    "/get/match",
     name="Getting objective match data by match type and number",
     description="Getting objective match data filtered by match level and number from the database.",
     response_description="Got objective match data filtered by match level and number successfully",
