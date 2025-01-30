@@ -1,5 +1,3 @@
-# TODO: Make every model have its own ulid field.
-
 from enum import Enum, IntEnum
 from typing import List, Optional
 
@@ -162,3 +160,5 @@ class PitScoutData(BaseModel):
     barge_capability: Optional[List[BargeCapabilityChoice]]
     net_confidence: bool
     driver_seniority: int
+
+# TODO: Add analysis data return model.
