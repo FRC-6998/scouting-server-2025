@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Body
+from fastapi.params import Query
 from pymongo import AsyncMongoClient
 from starlette import status
+from typing_extensions import Annotated
 
 from constants import DATABASE_NAME, MONGO_URL, SUBJECTIVE_DATA_COLLECTION
-from model import SubjectiveMatchRawData
+from model import SubjectiveMatchRawData #, MatchRawDataFilterParams
 
 client = AsyncMongoClient(MONGO_URL)
 db = client[DATABASE_NAME]
@@ -11,7 +13,7 @@ subjective_collection = db[SUBJECTIVE_DATA_COLLECTION]
 
 router = APIRouter(
     prefix="/subjective",
-    tags=["subjective match data"]
+    tags=["Subjective Match Data"]
 )
 
 @router.post(
@@ -27,43 +29,12 @@ async def add_sbj_match_data(data: SubjectiveMatchRawData = Body(...)):
     return data
 
 @router.get(
-    "/get/all",
-    name= "Getting all subjective match data",
-    description="Getting all subjective match data from the database.",
-    response_description="Got all subjective match data successfully",
+    "",
+    name= "Getting subjective match data",
+    description="Getting subjective match data from the database.",
+    response_description="Got subjective match data successfully",
     response_model=list[SubjectiveMatchRawData],
     status_code=status.HTTP_200_OK,
 )
-async def get_sbj_match_data():
-    data = []
-    async for sbj in subjective_collection.find():
-        data.append(sbj)
-    return data
-
-@router.get(
-    "/get/match",
-    name="Getting subjective match data by match type and number",
-    description="Getting subjective match data filtered by match level and number from the database.",
-    response_description="Got subjective match data filtered by match level and number successfully",
-    response_model=SubjectiveMatchRawData,
-    status_code=status.HTTP_200_OK,
-)
-async def get_sbj_match_data_by_match(match_type: str, match_number: int):
-    data = []
-    async for sbj in subjective_collection.find({"match_type": match_type, "match_number": match_number}):
-        data.append(sbj)
-    return data
-
-@router.get(
-    "/get/team",
-    name="Getting subjective match data by team number",
-    description="Getting subjective match data filtered by team number from the database.",
-    response_description="Got subjective match data filtered by team number successfully",
-    response_model=SubjectiveMatchRawData,
-    status_code=status.HTTP_200_OK,
-)
-async def get_sbj_match_data_by_team(team_number: int):
-    data = []
-    async for sbj in subjective_collection.find({"team_number": team_number}):
-        data.append(sbj)
-    return data
+async def get_sbj_match_data(data_query: Annotated[SubjectiveMatchRawData, Query()]):
+    return data_query

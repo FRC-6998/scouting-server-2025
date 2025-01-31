@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Query
 from pymongo import AsyncMongoClient
 from starlette import status
+from typing_extensions import Annotated
+
 from constants import MONGO_URL, DATABASE_NAME, OBJECTIVE_DATA_COLLECTION
-from model import ObjectiveMatchRawData
+from model import ObjectiveMatchRawData #, MatchRawDataFilterParams
 
 client = AsyncMongoClient(MONGO_URL)
 db = client[DATABASE_NAME]
@@ -10,7 +12,7 @@ objective_collection = db[OBJECTIVE_DATA_COLLECTION]
 
 router = APIRouter(
     prefix="/objective",
-    tags=["objective match data"]
+    tags=["Objective Match Data"]
 )
 
 @router.post(
@@ -26,41 +28,16 @@ async def add_obj_match_data(data: ObjectiveMatchRawData = Body(...)):
     return data
 
 @router.get(
-    "/get/all",
-    name= "Getting all objective match data",
-    description="Getting all objective match data from the database.",
-    response_description="Got all objective match data successfully",
+    "",
+    name= "Getting objective match data",
+    description="Getting objective match data from the database.",
+    response_description="Got objective match data successfully",
     response_model=list[ObjectiveMatchRawData],
     status_code=status.HTTP_200_OK,
 )
-async def get_obj_match_data():
-    data = []
-    async for obj in objective_collection.find():
-        data.append(obj)
-    return data
+async def get_obj_match_data(data_query: Annotated[ObjectiveMatchRawData, Query()]):
+    return data_query
 
-@router.get(
-    "/get/match",
-    name="Getting objective match data by match type and number",
-    description="Getting objective match data filtered by match level and number from the database.",
-    response_description="Got objective match data filtered by match level and number successfully",
-    response_model=ObjectiveMatchRawData,
-    status_code=status.HTTP_200_OK,
-)
-async def get_obj_match_data_by_match(match_type: str, match_number: int):
-    data = []
-    async for obj in objective_collection.find({"match_type": match_type, "match_number": match_number}):
-        data.append(obj)
-    return data
-
-@router.get(
-    "/get/team",
-    name="Getting objective match data by team number",
-    description="Getting objective match data filtered by team number from the database.",
-    response_description="Got objective match data filtered by team number successfully",
-    response_model=ObjectiveMatchRawData,
-    status_code=status.HTTP_200_OK,
-)
 async def get_obj_match_data_by_team(team_number: int):
     data = []
     async for obj in objective_collection.find({"team_number": team_number}):
