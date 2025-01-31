@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="Adding analysis data model TODO.">
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
-    </list>
+    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="Finished AutoPathPosition enumeration." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -115,7 +113,9 @@
       <workItem from="1738077337520" duration="10370000" />
       <workItem from="1738165024284" duration="2368000" />
       <workItem from="1738254258501" duration="376000" />
-      <workItem from="1738257356543" duration="787000" />
+      <workItem from="1738257356543" duration="1702000" />
+      <workItem from="1738342272260" duration="882000" />
+      <workItem from="1738343429994" duration="1924000" />
     </task>
     <task id="LOCAL-00001" summary="Adopt MongoDB client in this project.">
       <option name="closed" value="true" />
@@ -261,7 +261,31 @@
       <option name="project" value="LOCAL" />
       <updated>1738257932926</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Rename some unclear variable model.">
+      <option name="closed" value="true" />
+      <created>1738258326766</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1738258326766</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Rename some unclear variable model.">
+      <option name="closed" value="true" />
+      <created>1738258332794</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1738258332794</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Finished AutoPathPosition enumeration.">
+      <option name="closed" value="true" />
+      <created>1738345347760</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1738345347760</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -308,9 +332,11 @@
     <MESSAGE value="Change &quot;get by match&quot; routine." />
     <MESSAGE value="Adding &quot;get data by team number&quot; API." />
     <MESSAGE value="Adding analysis data model TODO." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding analysis data model TODO." />
+    <MESSAGE value="Rename some unclear variable model." />
+    <MESSAGE value="Finished AutoPathPosition enumeration." />
+    <option name="LAST_COMMIT_MESSAGE" value="Finished AutoPathPosition enumeration." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Unipards_6998_Scouting_Field_Server$Unipards_6998_Scouting_Field_Server.coverage" NAME="Unipards-6998_Scouting-Field-Server Coverage Results" MODIFIED="1738167194814" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Unipards_6998_Scouting_Field_Server$Unipards_6998_Scouting_Field_Server.coverage" NAME="Unipards-6998_Scouting-Field-Server Coverage Results" MODIFIED="1738345361074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>

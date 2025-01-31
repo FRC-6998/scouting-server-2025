@@ -1,13 +1,9 @@
+from typing import List, Optional, Annotated, Literal
 from enum import Enum, IntEnum
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from ulid import ULID
-
-# Model which are only made for testing
-class TestModel (BaseModel):
-    _id: ULID
-    name: str
 
 # Objective Match Data (formerly known as Scouting Data)
 
@@ -35,11 +31,44 @@ class AutoStartPosition(str, Enum):
     MIDDLE = "Middle"
 
 class AutoPathPosition (str, Enum):
-    # TODO: List out all possible positions
-    EXAMPLE = "Example"
+    # Coral Station
+    LEFT_CORAL_STATION = "leftCoralStation"
+    RIGHT_CORAL_STATION = "rightCoralStation"
+    # Ground
+    LEFT_GROUND_CORAL = "leftGroundCoral"
+    CENTER_GROUND_CORAL = "centerGroundCoral"
+    RIGHT_GROUND_CORAL = "rightGroundCoral"
+    LEFT_GROUND_ALGAE = "leftGroundAlgae"
+    CENTER_GROUND_ALGAE = "centerGroundAlgae"
+    RIGHT_GROUND_ALGAE = "rightGroundAlgae"
+    # Reef
+    L1_REEF_AB = "l1ReefAB"
+    L1_REEF_CD = "l1ReefCD"
+    L1_REEF_EF = "l1ReefEF"
+    L1_REEF_GH = "l1ReefGH"
+    L1_REEF_IJ = "l1ReefIJ"
+    L1_REEF_KL = "l1ReefKL"
+    L2_REEF_AB = "l2ReefAB"
+    L2_REEF_CD = "l2ReefCD"
+    L2_REEF_EF = "l2ReefEF"
+    L2_REEF_GH = "l2ReefGH"
+    L2_REEF_IJ = "l2ReefIJ"
+    L2_REEF_KL = "l2ReefKL"
+    L3_REEF_AB = "l3ReefAB"
+    L3_REEF_CD = "l3ReefCD"
+    L3_REEF_EF = "l3ReefEF"
+    L3_REEF_GH = "l3ReefGH"
+    L3_REEF_IJ = "l3ReefIJ"
+    L3_REEF_KL = "l3ReefKL"
+    L4_REEF_AB = "l4ReefAB"
+    L4_REEF_CD = "l4ReefCD"
+    L4_REEF_EF = "l4ReefEF"
+    L4_REEF_GH = "l4ReefGH"
+    L4_REEF_IJ = "l4ReefIJ"
+    L4_REEF_KL = "l4ReefKL"
 
 class AutoPath (BaseModel):
-    second: float
+    second: float = Field(10.0)
     position: str
     success: bool = False
 
@@ -162,4 +191,3 @@ class PitScoutData (BaseModel):
     driver_seniority: int
 
 # TODO: Add analysis data return model.
-
