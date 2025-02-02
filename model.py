@@ -100,17 +100,17 @@ class BargeAction (str, Enum):
 
 class ObjectiveMatchRawData (BaseModel):
     # "_id" field: Making sure that the data in temp and db has same id
-    ulid: ULID = None
-    scout: str = None
-    match_type: MatchType = None
-    match_number: int = None
-    event_key: str = None
-    team_number: int = None
-    alliance: Alliance = None
-    auto : AutoRaw = None
-    teleop: TeleopRaw = None
-    barge_action: BargeAction = None
-    barge_time: float = None
+    ulid: ULID
+    scout: str
+    match_type: MatchType
+    match_number: int
+    event_key: str
+    team_number: int
+    alliance: Alliance
+    auto : AutoRaw
+    teleop: TeleopRaw
+    barge_action: BargeAction
+    barge_time: float
 
 # Subjective Match Data (formerly known as Super Scout Data)
 
@@ -124,18 +124,18 @@ class SubjectiveRanking2 (IntEnum):
     SECOND = 2
 
 class SubjectiveMatchRawData (BaseModel):
-    ulid: ULID = None
-    scout: str = None
-    match_type: MatchType = None
-    match_number: int = None
-    event_key: str = None
-    team_number: int = None
-    alliance: Alliance = None
-    driver_awareness: SubjectiveRanking3 = None
-    coral_station_awareness: SubjectiveRanking2 = None
-    num_score_on_net: int = None
-    mobility: SubjectiveRanking3 = None
-    defense: SubjectiveRanking3 = None
+    ulid: ULID
+    scout: str
+    match_type: MatchType
+    match_number: int
+    event_key: str
+    team_number: int
+    alliance: Alliance
+    driver_awareness: SubjectiveRanking3
+    coral_station_awareness: SubjectiveRanking2
+    num_score_on_net: int
+    mobility: SubjectiveRanking3
+    defense: SubjectiveRanking3
 
 # Pit Scout Data
 

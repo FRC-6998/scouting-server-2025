@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="Finished AutoPathPosition enumeration.">
+    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="Merge GET API in all routines.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/objective_scout.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/objective_scout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routers/subjective_scout.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/subjective_scout.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +118,8 @@
       <workItem from="1738254258501" duration="376000" />
       <workItem from="1738257356543" duration="1702000" />
       <workItem from="1738342272260" duration="882000" />
-      <workItem from="1738343429994" duration="4317000" />
+      <workItem from="1738343429994" duration="4754000" />
+      <workItem from="1738487944925" duration="622000" />
     </task>
     <task id="LOCAL-00001" summary="Adopt MongoDB client in this project.">
       <option name="closed" value="true" />
@@ -298,7 +297,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738345400951</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Merge GET API in all routines.">
+      <option name="closed" value="true" />
+      <created>1738348112982</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1738348112982</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -347,9 +354,10 @@
     <MESSAGE value="Adding analysis data model TODO." />
     <MESSAGE value="Rename some unclear variable model." />
     <MESSAGE value="Finished AutoPathPosition enumeration." />
-    <option name="LAST_COMMIT_MESSAGE" value="Finished AutoPathPosition enumeration." />
+    <MESSAGE value="Merge GET API in all routines." />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge GET API in all routines." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Unipards_6998_Scouting_Field_Server$Unipards_6998_Scouting_Field_Server.coverage" NAME="Unipards-6998_Scouting-Field-Server Coverage Results" MODIFIED="1738347834827" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Unipards_6998_Scouting_Field_Server$Unipards_6998_Scouting_Field_Server.coverage" NAME="Unipards-6998_Scouting-Field-Server Coverage Results" MODIFIED="1738488328251" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>
