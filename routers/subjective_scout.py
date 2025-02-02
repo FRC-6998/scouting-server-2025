@@ -1,15 +1,13 @@
 from fastapi import APIRouter, Body
 from fastapi.params import Query
-from pymongo import AsyncMongoClient
 from starlette import status
 from typing_extensions import Annotated
 
-from constants import DATABASE_NAME, MONGO_URL, SUBJECTIVE_DATA_COLLECTION
-from model import SubjectiveMatchRawData #, MatchRawDataFilterParams
+from constants import SUBJECTIVE_DATA_COLLECTION
+from model import SubjectiveMatchRawData  # , MatchRawDataFilterParams
+from scripts.initdb import init_collection
 
-client = AsyncMongoClient(MONGO_URL)
-db = client[DATABASE_NAME]
-subjective_collection = db[SUBJECTIVE_DATA_COLLECTION]
+subjective_collection = init_collection(SUBJECTIVE_DATA_COLLECTION)
 
 router = APIRouter(
     prefix="/subjective",

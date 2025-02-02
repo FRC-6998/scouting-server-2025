@@ -1,20 +1,18 @@
 from fastapi import APIRouter, Body
 from fastapi.params import Query
-from pymongo import AsyncMongoClient
 from starlette import status
 from typing_extensions import Annotated
 
-from constants import DATABASE_NAME, MONGO_URL, PIT_DATA_COLLECTION
+from constants import PIT_DATA_COLLECTION
 from model import PitScoutData
+from scripts.initdb import init_collection
 
 router = APIRouter(
     prefix="/pit_scout",
     tags=["Pit Scout Data"]
 )
 
-client = AsyncMongoClient(MONGO_URL)
-db = client[DATABASE_NAME]
-pit_collection = db[PIT_DATA_COLLECTION]
+pit_collection = init_collection(PIT_DATA_COLLECTION)
 
 @router.post(
     "",
