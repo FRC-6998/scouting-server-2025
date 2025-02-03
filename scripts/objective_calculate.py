@@ -38,7 +38,6 @@ async def calc_auto_reef (team_number: int, level: str):
     average = numpy.mean(reef_count)
     standard_derivation = numpy.std(reef_count)
     """
-    Unipards use "stability" to measure the consistency of the team's performance in the auto phase.
     - stability is the reciprocal of coefficient of variation (CV)
     - CV = standard_derivation / average
     - stability = average / standard_derivation
