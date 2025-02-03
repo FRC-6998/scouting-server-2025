@@ -1,9 +1,9 @@
-from typing import List, Optional, Annotated, Literal
 from enum import Enum, IntEnum
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
 from ulid import ULID
+
 
 # Objective Match Data (formerly known as Scouting Data)
 
