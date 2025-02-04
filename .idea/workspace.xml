@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="Adding misc result calculating function.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/objective_calculate.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/objective_calculate.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +21,13 @@
         <option value="FastAPI test_main" />
         <option value="Python Script" />
       </list>
+    </option>
+  </component>
+  <component name="Git.Pull.Settings">
+    <option name="OPTIONS">
+      <set>
+        <option value="REBASE" />
+      </set>
     </option>
   </component>
   <component name="Git.Settings">
@@ -38,6 +47,9 @@
     &quot;accountId&quot;: &quot;b1c18ef7-60ab-4721-996a-cc1eeb300c15&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -394,22 +406,6 @@
     <MESSAGE value="Let db's collection initialization seperated from router files." />
     <MESSAGE value="Adding misc result calculating function." />
     <option name="LAST_COMMIT_MESSAGE" value="Adding misc result calculating function." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model.py</url>
-          <line>121</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model.py</url>
-          <line>126</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Unipards_6998_Scouting_Field_Server$Unipards_6998_Scouting_Field_Server.coverage" NAME="Unipards-6998_Scouting-Field-Server Coverage Results" MODIFIED="1738512922317" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

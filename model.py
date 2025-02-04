@@ -226,3 +226,47 @@ class PitScoutData (BaseModel):
 # Data filter query params
 
 # TODO: Add analysis data return model.
+
+class PreloadCount(BaseModel):
+    none: int
+    coral: int
+    algae: int
+
+class StartPositionCount(BaseModel):
+    left: int
+    center: int
+    right: int
+
+class GamePieceActionResult (BaseModel):
+    average: float
+    stability: float
+    rank: int
+    zScore: float
+
+class ReefCountResult(BaseModel):
+    l1: GamePieceActionResult
+    l2: GamePieceActionResult
+    l3: GamePieceActionResult
+    l4: GamePieceActionResult
+
+class AutoResult(BaseModel):
+    preloadCount: PreloadCount
+    startPositionCount: StartPositionCount
+    leaveSuccessRate: float
+    reef: ReefCountResult
+    reefBySide: ReefCountResult
+    reefScore: GamePieceActionResult
+    reefScoreBySide: GamePieceActionResult
+    processorScore: GamePieceActionResult
+    netScore: GamePieceActionResult
+
+class TeleopResult(BaseModel):
+    reef: ReefCountResult
+    processorScore: GamePieceActionResult
+    netScore: GamePieceActionResult
+    cycleTime: GamePieceActionResult
+    hang: GamePieceActionResult
+
+class ObjectiveResult (BaseModel):
+    team_number: int
+    auto: AutoResult
