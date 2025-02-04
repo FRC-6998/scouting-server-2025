@@ -13,6 +13,7 @@ async def count_preload (team_number: int):
     algae = raw_data.count({"preload": "Algae"})
     return {"none": none, "coral": coral, "algae": algae}
 
+# Simple use
 async def count_start_pos (team_number: int):
     raw_data = [await collection.find({"team_number": team_number}, {"_id": 0, "start_position": 1})]
     side = raw_data.count({"start_position": "Side"})
