@@ -9,68 +9,57 @@ from ulid import ULID
 
 # Match basic information
 
-class MatchLevel (str, Enum):
-    UNSET = "unset"
-    PRACTICE = "practice"
-    QUALIFICATION = "qualification"
-    PLAYOFF = "playoff"
+class MatchType (str, Enum):
+    PRACTICE = "Practice"
+    QUALIFICATION = "Qualification"
+    PLAYOFF = "Playoff"
 
 class Alliance (str, Enum):
-    UNSET = "unset"
-    RED = "red"
-    BLUE = "blue"
+    RED = "Red"
+    BLUE = "Blue"
 
 # Auto
 
 class Preload (str, Enum):
-    UNSET = "unset"
-    NONE = "none"
-    CORAL = "coral"
-    ALGAE = "algae"
+    NONE = "None"
+    CORAL = "Coral"
+    ALGAE = "Algae"
 
 class AutoStartPosition(str, Enum):
-    UNSET = "unset"
-    LEFT = "left"
-    CENTER = "center"
-    RIGHT = "right"
+    SIDE = "Side"
+    CENTER = "Center"
+    MIDDLE = "Middle"
 
-class AutoPathPoint (str, Enum):
+class AutoPathPosition (str, Enum):
+    # Coral Station
     LEFT_CORAL_STATION = "leftCoralStation"
     RIGHT_CORAL_STATION = "rightCoralStation"
-
+    # Ground
     LEFT_GROUND_CORAL = "leftGroundCoral"
     CENTER_GROUND_CORAL = "centerGroundCoral"
     RIGHT_GROUND_CORAL = "rightGroundCoral"
-
     LEFT_GROUND_ALGAE = "leftGroundAlgae"
     CENTER_GROUND_ALGAE = "centerGroundAlgae"
     RIGHT_GROUND_ALGAE = "rightGroundAlgae"
-
-    REEF_ALGAE = "reefAlgae"
-    PROCESSOR = "processor"
-    NET = "net"
-
+    # Reef
     L1_REEF_AB = "l1ReefAB"
     L1_REEF_CD = "l1ReefCD"
     L1_REEF_EF = "l1ReefEF"
     L1_REEF_GH = "l1ReefGH"
     L1_REEF_IJ = "l1ReefIJ"
     L1_REEF_KL = "l1ReefKL"
-
     L2_REEF_AB = "l2ReefAB"
     L2_REEF_CD = "l2ReefCD"
     L2_REEF_EF = "l2ReefEF"
     L2_REEF_GH = "l2ReefGH"
     L2_REEF_IJ = "l2ReefIJ"
     L2_REEF_KL = "l2ReefKL"
-
     L3_REEF_AB = "l3ReefAB"
     L3_REEF_CD = "l3ReefCD"
     L3_REEF_EF = "l3ReefEF"
     L3_REEF_GH = "l3ReefGH"
     L3_REEF_IJ = "l3ReefIJ"
     L3_REEF_KL = "l3ReefKL"
-
     L4_REEF_AB = "l4ReefAB"
     L4_REEF_CD = "l4ReefCD"
     L4_REEF_EF = "l4ReefEF"
@@ -79,45 +68,17 @@ class AutoPathPoint (str, Enum):
     L4_REEF_KL = "l4ReefKL"
 
 class AutoPath (BaseModel):
-    timestamp: float = Field(10.0)
+    second: float = Field(10.0)
     position: str = Field("None")
     success: bool = False
 
 class AutoRaw (BaseModel):
     preload: Preload = "None"
-    startPosition: AutoStartPosition
+    start_position: AutoStartPosition
     leave: bool = False
-    path: List[AutoPath]
+    auto_path: List[AutoPath]
 
-# Teleop (including Endgame)
-
-class BargeAction (str, Enum):
-    UNSET = "unset"
-    NONE = "none"
-    PARK = "park"
-    DEEP = "deep"
-    SHALLOW = "shallow"
-
-class BargePosition (str, Enum):
-    UNSET = "unset"
-    LEFT = "left"
-    CENTER = "center"
-    RIGHT = "right"
-
-class TeleopPathPoint (str, Enum):
-    CORAL_STATION = "coralStation"
-
-    GROUND_CORAL = "groundCoral"
-    GROUND_ALGAE = "groundAlgae"
-
-    REEF_ALGAE = "reefAlgae"
-    PROCESSOR = "processor"
-    NET = "net"
-
-    L1_REEF = "l1Reef"
-    L2_REEF = "l2Reef"
-    L3_REEF = "l3Reef"
-    L4_REEF = "l4Reef"
+# Teleop
 
 class TeleopPath (BaseModel):
     second: float
@@ -125,11 +86,15 @@ class TeleopPath (BaseModel):
     success: bool = False
 
 class TeleopRaw (BaseModel):
-    path: List[TeleopPath]
-    hangTime: float
-    bargeTried: BargeAction
-    bargeResult: BargeAction
-    bargePosition: BargePosition
+    teleop_path: List[TeleopPath]
+
+# Endgame
+
+class BargeAction (str, Enum):
+    NONE = "None"
+    PARK = "Park"
+    DEEP = "Deep"
+    SHALLOW = "Shallow"
 
 # General Model
 
@@ -137,13 +102,15 @@ class ObjectiveMatchRawData (BaseModel):
     # "_id" field: Making sure that the data in temp and db has same id
     ulid: ULID
     scout: str
-    matchLevel: MatchLevel
-    matchNumber: int
-    eventKey: str
-    teamNumber: int
+    match_type: MatchType
+    match_number: int
+    event_key: str
+    team_number: int
     alliance: Alliance
     auto : AutoRaw
     teleop: TeleopRaw
+    barge_action: BargeAction
+    barge_time: float
 
 # Subjective Match Data (formerly known as Super Scout Data)
 
@@ -159,7 +126,7 @@ class SubjectiveRanking2 (IntEnum):
 class SubjectiveMatchRawData (BaseModel):
     ulid: ULID
     scout: str
-    match_type: MatchLevel
+    match_type: MatchType
     match_number: int
     event_key: str
     team_number: int
