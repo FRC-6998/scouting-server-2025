@@ -223,10 +223,6 @@ class PitScoutData (BaseModel):
     net_confidence: bool
     driver_seniority: int
 
-# Data filter query params
-
-# TODO: Add analysis data return model.
-
 class PreloadCount(BaseModel):
     none: int
     coral: int
