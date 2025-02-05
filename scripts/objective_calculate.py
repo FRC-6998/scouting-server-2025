@@ -8,6 +8,12 @@ from scripts.initdb import init_collection
 raw_collection = init_collection(OBJECTIVE_DATA_COLLECTION)
 result_collection = init_collection(RESULT_DATA_COLLECTION)
 
+class ReefLevel(str, Enum):
+    L1 = "l1"
+    L2 = "l2"
+    L3 = "l3"
+    L4 = "l4"
+
 async def count_preload (team_number: int):
     raw_data = [
         await raw_collection.find(
@@ -54,7 +60,19 @@ async def calc_leave_success_rate (team_number:int, is_percentage : int = 0):
         case _:
             return count_success
 
-async def calc_auto_reef (team_number: int, level: str):
+def convert_reef_level (level: ReefLevel):
+    match level:
+        case ReefLevel.L1:
+            return ["l1ReefAB", "l1ReefCD", "l1ReefEF", "l1ReefGH", "l1ReefIJ", "l1ReefKL"]
+        case ReefLevel.L2:
+            return ["l2ReefAB", "l2ReefCD", "l2ReefEF", "l2ReefGH", "l2ReefIJ", "l2ReefKL"]
+        case ReefLevel.L3:
+            return ["l3ReefAB", "l3ReefCD", "l3ReefEF", "l3ReefGH", "l3ReefIJ", "l3ReefKL"]
+        case ReefLevel.L4:
+            return ["l4ReefAB", "l4ReefCD", "l4ReefEF", "l4ReefGH", "l4ReefIJ", "l4ReefKL"]
+
+async def calc_auto_reef (team_number: int, level: ReefLevel):
+    converted_level = convert_reef_level(level)
     raw_data = [
         await raw_collection.find(
             {"teamNumber": team_number},
@@ -64,11 +82,14 @@ async def calc_auto_reef (team_number: int, level: str):
             }
         )
     ]
-    reef_count = []
+
+    reef_matched = []
     for data in raw_data:
-        reef_count.append(data.count({"auto.auto_path.position": level}))
-    average = np.mean(reef_count)
-    standard_derivation = np.std(reef_count)
+        for pos in converted_level:
+            reef_matched.append(data.count({"path.position": pos}))
+
+    average = np.mean(reef_matched)
+    standard_derivation = np.std(reef_matched)
     """
     Unipards use "stability" as a measurement of the performance of the robot
     - stability is the reciprocal of coefficient of variation (CV)
