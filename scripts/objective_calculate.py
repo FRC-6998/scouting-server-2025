@@ -1,9 +1,6 @@
-import statistics
 from operator import itemgetter
-from typing import Any
 
 import numpy as np
-from scipy import stats
 
 from constants import RESULT_DATA_COLLECTION, OBJECTIVE_DATA_COLLECTION
 from scripts.initdb import init_collection
