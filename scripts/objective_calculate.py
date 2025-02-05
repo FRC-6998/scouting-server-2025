@@ -79,9 +79,10 @@ def convert_reef_level (level: ReefLevel):
         case ReefLevel.L4:
             return ["l4ReefAB", "l4ReefCD", "l4ReefEF", "l4ReefGH", "l4ReefIJ", "l4ReefKL"]
 
-async def calc_auto_reef (team_number: int, level: ReefLevel):
-    converted_level = convert_reef_level(level)
-    raw_data = [
+# TIPS: Use asyncio.run() to run async function in sync function, to make sure it returns the real value you want.
+
+async def async_get_auto_path (team_number: int):
+    data = [
         await raw_collection.find(
             {"teamNumber": team_number},
             {
@@ -91,8 +92,17 @@ async def calc_auto_reef (team_number: int, level: ReefLevel):
         )
     ]
 
+    return data
+
+def get_auto_path (team_number: int):
+    return asyncio.get_event_loop().run_until_complete(async_get_auto_path(team_number))
+
+async def calc_auto_reef (team_number: int, level: ReefLevel):
+    converted_level = convert_reef_level(level)
+    paths = get_auto_path(team_number)
+
     reef_matched = []
-    for data in raw_data:
+    for data in paths:
         for pos in converted_level:
             reef_matched.append(data.count({"path.position": pos}))
 
