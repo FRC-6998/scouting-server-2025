@@ -80,7 +80,7 @@ class AutoPathPoint (str, Enum):
 
 class AutoPath (BaseModel):
     timestamp: float = Field(10.0)
-    position: str = Field("None")
+    position: AutoPathPoint = None
     success: bool = False
 
 class AutoRaw (BaseModel):
