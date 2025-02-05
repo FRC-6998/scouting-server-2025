@@ -143,3 +143,33 @@ async def calc_reef_relative (team_number: int, level: ReefLevel):
     z_score = (sorted_np[rank-1] - np.average(sorted_np)) / np.std(sorted_np)
 
     return {"rank": rank, "zScore": z_score}
+
+def convert_reef_side (side: ReefSide):
+    match side:
+        case ReefSide.AB:
+            return ["l1ReefAB", "l2ReefAB", "l3ReefAB", "l4ReefAB"]
+        case ReefSide.CD:
+            return ["l1ReefCD", "l2ReefCD", "l3ReefCD", "l4ReefCD"]
+        case ReefSide.EF:
+            return ["l1ReefEF", "l2ReefEF", "l3ReefEF", "l4ReefEF"]
+        case ReefSide.GH:
+            return ["l1ReefGH", "l2ReefGH", "l3ReefGH", "l4ReefGH"]
+        case ReefSide.IJ:
+            return ["l1ReefIJ", "l2ReefIJ", "l3ReefIJ", "l4ReefIJ"]
+        case ReefSide.KL:
+            return ["l1ReefKL", "l2ReefKL", "l3ReefKL", "l4ReefKL"]
+
+async def calc_reef_side (team_number: int, side: ReefSide):
+    converted_side = convert_reef_side(side)
+    side_paths = get_auto_path(team_number)
+
+    side_matched = []
+    for data in side_paths:
+        for pos in converted_side:
+            side_matched.append(data.count({"path.position": pos}))
+
+    average = np.mean(side_matched)
+    standard_derivation = np.std(side_matched)
+    stability = average / standard_derivation
+
+    return {"average": average, "stability": stability}
