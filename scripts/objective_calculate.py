@@ -100,7 +100,7 @@ async def calc_auto_reef (team_number: int, level: ReefLevel):
     stability = average / standard_derivation
     return {'average': average, 'stability': stability}
 
-async def calc_reef_relative(team_number: int, level: str):
+async def calc_reef_relative (team_number: int, level: ReefLevel):
     rank = -1
     z_score = 0.0
     sorted_average = []
