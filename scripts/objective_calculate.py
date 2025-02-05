@@ -14,6 +14,14 @@ class ReefLevel(str, Enum):
     L3 = "l3"
     L4 = "l4"
 
+class ReefSide(str, Enum):
+    AB = "AB"
+    CD = "CD"
+    EF = "EF"
+    GH = "GH"
+    IJ = "IJ"
+    KL = "KL"
+
 async def count_preload (team_number: int):
     raw_data = [
         await raw_collection.find(
