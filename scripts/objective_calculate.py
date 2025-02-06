@@ -70,16 +70,87 @@ async def calc_leave_success_rate (team_number:int, is_percentage : int = 0):
         case _:
             return count_success
 
-def convert_reef_level (level: ReefLevel):
+def convert_reef_level_to_pos (level: str):
     match level:
         case ReefLevel.L1:
-            return ["l1ReefAB", "l1ReefCD", "l1ReefEF", "l1ReefGH", "l1ReefIJ", "l1ReefKL"]
+            return ["l1ReefAB", "l1ReefCD", "l1ReefEF", "l1ReefGH", "l1ReefIJ"]
         case ReefLevel.L2:
-            return ["l2ReefAB", "l2ReefCD", "l2ReefEF", "l2ReefGH", "l2ReefIJ", "l2ReefKL"]
+            return ["l2ReefAB", "l2ReefCD", "l2ReefEF", "l2ReefGH", "l2ReefIJ"]
         case ReefLevel.L3:
-            return ["l3ReefAB", "l3ReefCD", "l3ReefEF", "l3ReefGH", "l3ReefIJ", "l3ReefKL"]
+            return ["l3ReefAB", "l3ReefCD", "l3ReefEF", "l3ReefGH", "l3ReefIJ"]
         case ReefLevel.L4:
-            return ["l4ReefAB", "l4ReefCD", "l4ReefEF", "l4ReefGH", "l4ReefIJ", "l4ReefKL"]
+            return ["l4ReefAB", "l4ReefCD", "l4ReefEF", "l4ReefGH", "l4ReefIJ"]
+
+
+def convert_reef_level_side_to_pos (level: str, side: str):
+    match level:
+        case ReefLevel.L1:
+            match side:
+                case ReefSide.AB:
+                    return "l1ReefAB"
+                case ReefSide.CD:
+                    return "l1ReefCD"
+                case ReefSide.EF:
+                    return "l1ReefEF"
+                case ReefSide.GH:
+                    return "l1ReefGH"
+                case ReefSide.IJ:
+                    return "l1ReefIJ"
+                case ReefSide.KL:
+                    return "l1ReefKL"
+        case ReefLevel.L2:
+            match side:
+                case ReefSide.AB:
+                    return "l2ReefAB"
+                case ReefSide.CD:
+                    return "l2ReefCD"
+                case ReefSide.EF:
+                    return "l2ReefEF"
+                case ReefSide.GH:
+                    return "l2ReefGH"
+                case ReefSide.IJ:
+                    return "l2ReefIJ"
+                case ReefSide.KL:
+                    return "l2ReefKL"
+        case ReefLevel.L3:
+            match side:
+                case ReefSide.AB:
+                    return "l3ReefAB"
+                case ReefSide.CD:
+                    return "l3ReefCD"
+                case ReefSide.EF:
+                    return "l3ReefEF"
+                case ReefSide.GH:
+                    return "l3ReefGH"
+                case ReefSide.IJ:
+                    return "l3ReefIJ"
+                case ReefSide.KL:
+                    return "l3ReefKL"
+        case ReefLevel.L4:
+            match side:
+                case ReefSide.AB:
+                    return "l4ReefAB"
+                case ReefSide.CD:
+                    return "l4ReefCD"
+                case ReefSide.EF:
+                    return "l4ReefEF"
+                case ReefSide.GH:
+                    return "l4ReefGH"
+                case ReefSide.IJ:
+                    return "l4ReefIJ"
+                case ReefSide.KL:
+                    return "l4ReefKL"
+
+def convert_reef_pos_to_level (pos: str):
+    match pos:
+        case "l1ReefAB" | "l1ReefCD" | "l1ReefEF" | "l1ReefGH" | "l1ReefIJ" | "l1ReefKL":
+            return ReefLevel.L1
+        case "l2ReefAB" | "l2ReefCD" | "l2ReefEF" | "l2ReefGH" | "l2ReefIJ" | "l2ReefKL":
+            return ReefLevel.L2
+        case "l3ReefAB" | "l3ReefCD" | "l3ReefEF" | "l3ReefGH" | "l3ReefIJ" | "l3ReefKL":
+            return ReefLevel.L3
+        case "l4ReefAB" | "l4ReefCD" | "l4ReefEF" | "l4ReefGH" | "l4ReefIJ" | "l4ReefKL":
+            return ReefLevel.L4
 
 # TIPS: Use asyncio.run() to run async function in sync function, to make sure it returns the real value you want.
 
@@ -120,6 +191,25 @@ async def calc_auto_reef_level (team_number: int, level: ReefLevel):
     stability = average / standard_derivation
     return {'average': average, 'stability': stability}
 
+
+async def calc_auto_reef_score (team_number: int):
+    all_reef_level = ["l1", "l2", "l3", "l4"]
+    scores = []
+
+    paths = get_auto_path(team_number)
+    for data in paths:
+        reef_score = 0
+        for level in all_reef_level:
+            for pos in convert_reef_level_to_pos(level):
+                reef_score += data.count({"path.position": pos})*get_reef_level_score_weight(level, "auto")
+        scores.append(reef_score)
+
+    average = np.mean(scores)
+    standard_derivation = np.std(scores)
+    stability = average / standard_derivation
+
+    return {"average": average, "stability": stability}
+
 async def calc_auto_reef_level_relative (team_number: int, level: ReefLevel):
     rank = -1
     sorted_average = []
@@ -145,7 +235,7 @@ async def calc_auto_reef_level_relative (team_number: int, level: ReefLevel):
 
     return {"rank": rank, "zScore": z_score}
 
-def convert_reef_side (side: ReefSide):
+def convert_reef_side_to_pos (side: ReefSide):
     match side:
         case ReefSide.AB:
             return ["l1ReefAB", "l2ReefAB", "l3ReefAB", "l4ReefAB"]
@@ -160,14 +250,52 @@ def convert_reef_side (side: ReefSide):
         case ReefSide.KL:
             return ["l1ReefKL", "l2ReefKL", "l3ReefKL", "l4ReefKL"]
 
-async def calc_auto_reef_side (team_number: int, side: ReefSide):
-    converted_side = convert_reef_side(side)
+
+def get_reef_level_score_weight (level: str, period: str):
+    match period:
+        case "auto":
+            match level:
+                case ReefLevel.L1:
+                    return 3
+                case ReefLevel.L2:
+                    return 4
+                case ReefLevel.L3:
+                    return 6
+                case ReefLevel.L4:
+                    return 7
+        case "tele":
+            match level:
+                case ReefLevel.L1:
+                    return 2
+                case ReefLevel.L2:
+                    return 3
+                case ReefLevel.L3:
+                    return 4
+                case ReefLevel.L4:
+                    return 5
+
+async def calc_auto_reef_side (team_number: int, side: ReefSide, is_score: bool = False):
+    converted_side = convert_reef_side_to_pos(side)
     side_paths = get_auto_path(team_number)
 
     side_matched = []
-    for data in side_paths:
-        for pos in converted_side:
-            side_matched.append(data.count({"path.position": pos}))
+
+    match is_score:
+        case False:
+            for data in side_paths:
+                for pos in converted_side:
+                    side_matched.append(data.count({"path.position": pos}))
+        case True:
+            all_reef_level = ["l1", "l2", "l3", "l4"]
+            for data in side_paths:
+                score = 0
+                for side in converted_side:
+                    for level in all_reef_level:
+                        score += (data.count({"path.position": convert_reef_level_side_to_pos(level, side)})
+                                    *get_reef_level_score_weight(level, "auto"))
+
+                side_matched.append(score)
+
 
     average = np.mean(side_matched)
     standard_derivation = np.std(side_matched)
