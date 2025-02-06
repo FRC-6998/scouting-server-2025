@@ -99,7 +99,7 @@ async def async_get_auto_path (team_number: int):
 def get_auto_path (team_number: int):
     return asyncio.get_event_loop().run_until_complete(async_get_auto_path(team_number))
 
-async def calc_auto_reef (team_number: int, level: ReefLevel):
+async def calc_auto_reef_level (team_number: int, level: ReefLevel):
     converted_level = convert_reef_level(level)
     paths = get_auto_path(team_number)
 
@@ -120,7 +120,7 @@ async def calc_auto_reef (team_number: int, level: ReefLevel):
     stability = average / standard_derivation
     return {'average': average, 'stability': stability}
 
-async def calc_reef_relative (team_number: int, level: ReefLevel):
+async def calc_auto_reef_level_relative (team_number: int, level: ReefLevel):
     rank = -1
     sorted_average = []
 
@@ -160,7 +160,7 @@ def convert_reef_side (side: ReefSide):
         case ReefSide.KL:
             return ["l1ReefKL", "l2ReefKL", "l3ReefKL", "l4ReefKL"]
 
-async def calc_reef_side (team_number: int, side: ReefSide):
+async def calc_auto_reef_side (team_number: int, side: ReefSide):
     converted_side = convert_reef_side(side)
     side_paths = get_auto_path(team_number)
 
