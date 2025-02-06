@@ -171,7 +171,7 @@ def get_auto_path (team_number: int):
     return asyncio.get_event_loop().run_until_complete(async_get_auto_path(team_number))
 
 async def calc_auto_reef_level (team_number: int, level: ReefLevel):
-    converted_level = convert_reef_level(level)
+    converted_level = convert_reef_level_to_pos(level)
     paths = get_auto_path(team_number)
 
     reef_matched = []
