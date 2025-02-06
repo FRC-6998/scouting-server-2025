@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="feat: &gt;Auto period's reef relative datas calculation&#10;&#10;Added async function calc_reef_relative in objective_calculate. It allows user to calculate a team robot's rank and z-score of scored CORAL on the specific level of REEF, by specifying the team number and REEF level.">
+    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="feat: Adding calculating function for objective teleop data">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/objective_calculate.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/objective_calculate.py" afterDir="false" />
     </list>
@@ -134,7 +134,7 @@
       <workItem from="1738550328286" duration="3265000" />
       <workItem from="1738575262247" duration="17617000" />
       <workItem from="1738647712263" duration="2488000" />
-      <workItem from="1738758670635" duration="923000" />
+      <workItem from="1738758670635" duration="6617000" />
     </task>
     <task id="LOCAL-00001" summary="Adopt MongoDB client in this project.">
       <option name="closed" value="true" />
@@ -392,7 +392,135 @@
       <option name="project" value="LOCAL" />
       <updated>1738682575630</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="refactor: optimize input libraries&#10;&#10;Optimized some unused packages in objective_calculate.py">
+      <option name="closed" value="true" />
+      <created>1738759871812</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1738759871812</updated>
+    </task>
+    <task id="LOCAL-00034" summary="refactor: optimize input libraries&#10;&#10;Optimized some unused packages in objective_calculate.py">
+      <option name="closed" value="true" />
+      <created>1738759897107</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1738759897107</updated>
+    </task>
+    <task id="LOCAL-00035" summary="fix: change AutoPath model's class&#10;&#10;Change the position's class to AutoPathPoint in AutoPath at model.py.">
+      <option name="closed" value="true" />
+      <created>1738761582973</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1738761582973</updated>
+    </task>
+    <task id="LOCAL-00036" summary="fix: Fixing conflict of auto period's reef count-each-level">
+      <option name="closed" value="true" />
+      <created>1738762914461</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1738762914461</updated>
+    </task>
+    <task id="LOCAL-00037" summary="fix: Fixing conflict of auto period's reef count-each-level">
+      <option name="closed" value="true" />
+      <created>1738762919871</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1738762919871</updated>
+    </task>
+    <task id="LOCAL-00038" summary="fix: Fixing conflict of auto period's reef count-each-level">
+      <option name="closed" value="true" />
+      <created>1738762926764</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1738762926764</updated>
+    </task>
+    <task id="LOCAL-00039" summary="fix: Fixing conflict of auto period's reef count-each-level">
+      <option name="closed" value="true" />
+      <created>1738762931523</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1738762931523</updated>
+    </task>
+    <task id="LOCAL-00040" summary="refactor: update ReefLevel class in functions.">
+      <option name="closed" value="true" />
+      <created>1738763098980</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1738763098980</updated>
+    </task>
+    <task id="LOCAL-00041" summary="feat: Adding counting-each-side feature for reef-relative data">
+      <option name="closed" value="true" />
+      <created>1738763232845</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1738763232845</updated>
+    </task>
+    <task id="LOCAL-00042" summary="refactor: adding function to simplify getting auto path in each function.">
+      <option name="closed" value="true" />
+      <created>1738765098659</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1738765098659</updated>
+    </task>
+    <task id="LOCAL-00043" summary="refactor: adding function to simplify getting auto path in each function.">
+      <option name="closed" value="true" />
+      <created>1738765103599</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1738765103599</updated>
+    </task>
+    <task id="LOCAL-00044" summary="refactor: adding function to simplify getting auto path in each function.">
+      <option name="closed" value="true" />
+      <created>1738765748492</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1738765748492</updated>
+    </task>
+    <task id="LOCAL-00045" summary="refactor: adding function to simplify getting auto path in each function.">
+      <option name="closed" value="true" />
+      <created>1738765752545</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1738765752545</updated>
+    </task>
+    <task id="LOCAL-00046" summary="refactor: adding function to simplify getting auto path in each function.">
+      <option name="closed" value="true" />
+      <created>1738765759753</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1738765759753</updated>
+    </task>
+    <task id="LOCAL-00047" summary="refactor: adding function to simplify getting auto path in each function.">
+      <option name="closed" value="true" />
+      <created>1738765774915</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1738765774915</updated>
+    </task>
+    <task id="LOCAL-00048" summary="feat: Adding count_reef_side function">
+      <option name="closed" value="true" />
+      <created>1738766040460</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1738766040460</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -422,13 +550,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Adopt MongoDB client in this project." />
-    <MESSAGE value="Realized post and get temporary match data API." />
-    <MESSAGE value="Adding model.py to verify input post data." />
-    <MESSAGE value="Added some utilities for temp file modification." />
-    <MESSAGE value="Adding auto-uuid funtion in ObjectiveMatchData in model.py" />
-    <MESSAGE value="Modify mode.py to match the requirement according to the 1st scouting subteam meeting." />
-    <MESSAGE value="Modify model.py to match the requirement according to the 1st scouting subteam meeting." />
     <MESSAGE value="Adding SubjectiveMatchData." />
     <MESSAGE value="Adding pit scout data models in model.py." />
     <MESSAGE value="Several modification with dizzy in Vietnam ‍" />
@@ -447,30 +568,27 @@
     <MESSAGE value="Adding misc result calculating function." />
     <MESSAGE value="Adding return models for future usage." />
     <MESSAGE value="feat: &gt;Auto period's reef relative datas calculation&#10;&#10;Added async function calc_reef_relative in objective_calculate. It allows user to calculate a team robot's rank and z-score of scored CORAL on the specific level of REEF, by specifying the team number and REEF level." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: &gt;Auto period's reef relative datas calculation&#10;&#10;Added async function calc_reef_relative in objective_calculate. It allows user to calculate a team robot's rank and z-score of scored CORAL on the specific level of REEF, by specifying the team number and REEF level." />
+    <MESSAGE value="refactor: optimize input libraries&#10;&#10;Optimized some unused packages in objective_calculate.py" />
+    <MESSAGE value="fix: change AutoPath model's class&#10;&#10;Change the position's class to AutoPathPoint in AutoPath at model.py." />
+    <MESSAGE value="fix: Fixing conflict of auto period's reef count-each-level" />
+    <MESSAGE value="refactor: update ReefLevel class in functions." />
+    <MESSAGE value="feat: Adding counting-each-side feature for reef-relative data" />
+    <MESSAGE value="refactor: adding function to simplify getting auto path in each function." />
+    <MESSAGE value="feat: Adding count_reef_side function" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Adding count_reef_side function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model.py</url>
-          <line>265</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model.py</url>
-          <line>247</line>
-          <option name="timeStamp" value="16" />
+          <line>80</line>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/model.py</url>
           <line>241</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model.py</url>
-          <line>235</line>
-          <option name="timeStamp" value="19" />
+          <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

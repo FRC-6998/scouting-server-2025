@@ -1,3 +1,5 @@
+import asyncio
+from enum import Enum
 from operator import itemgetter
 
 import numpy as np
@@ -120,7 +122,6 @@ async def calc_auto_reef (team_number: int, level: ReefLevel):
 
 async def calc_reef_relative (team_number: int, level: ReefLevel):
     rank = -1
-    z_score = 0.0
     sorted_average = []
 
     average_data = [
