@@ -10,6 +10,27 @@ from scripts.initdb import init_collection
 raw_collection = init_collection(OBJECTIVE_DATA_COLLECTION)
 result_collection = init_collection(RESULT_DATA_COLLECTION)
 
+def get_abs_team_stats (data: list):
+    return {
+        "average": np.mean(data),
+        "stability": np.std(data)
+    }
+
+def get_rel_team_stats (data: list, team_number: int, key: str):
+    rank = 0
+    data = sorted(data, key=itemgetter(key + ".average"), reverse=True)
+    sorted_average = []
+
+    for item in data:
+        sorted_average.append(item[key + ".average"])
+        if item["teamNumber"] == team_number:
+            rank = data.index(item) + 1
+
+    sorted_np = np.array(sorted_average)
+    z_score = (sorted_np[rank - 1] - np.average(sorted_np)) / np.std(sorted_np)
+
+    return {"rank": rank, "z_score": z_score}
+
 class ReefLevel(str, Enum):
     L1 = "l1"
     L2 = "l2"
@@ -204,15 +225,9 @@ async def calc_auto_reef_score (team_number: int):
                 reef_score += data.count({"path.position": pos})*get_reef_level_score_weight(level, "auto")
         scores.append(reef_score)
 
-    average = np.mean(scores)
-    standard_derivation = np.std(scores)
-    stability = average / standard_derivation
-
-    return {"average": average, "stability": stability}
+    return get_abs_team_stats(scores)
 
 async def calc_auto_reef_level_relative (team_number: int, level: ReefLevel):
-    rank = -1
-    sorted_average = []
 
     average_data = [
         await result_collection.find(
@@ -223,17 +238,7 @@ async def calc_auto_reef_level_relative (team_number: int, level: ReefLevel):
         )
     ]
 
-    sorted_data = sorted(average_data, key= itemgetter(level + ".average"), reverse=True)
-
-    for item in sorted_data:
-        sorted_average.append(item[level + ".average"])
-        if item["teamNumber"] == team_number:
-            rank = sorted_data.index(item) + 1
-
-    sorted_np = np.array(sorted_average)
-    z_score = (sorted_np[rank-1] - np.average(sorted_np)) / np.std(sorted_np)
-
-    return {"rank": rank, "zScore": z_score}
+    return get_rel_team_stats(average_data, team_number, level)
 
 def convert_reef_side_to_pos (side: ReefSide):
     match side:
@@ -296,9 +301,4 @@ async def calc_auto_reef_side (team_number: int, side: ReefSide, is_score: bool 
 
                 side_matched.append(score)
 
-
-    average = np.mean(side_matched)
-    standard_derivation = np.std(side_matched)
-    stability = average / standard_derivation
-
-    return {"average": average, "stability": stability}
+    return get_abs_team_stats(side_matched)
