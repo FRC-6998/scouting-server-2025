@@ -264,7 +264,7 @@ def get_reef_level_score_weight (level: str, period: str):
                 case ReefLevel.L4:
                     return 5
 
-async def calc_auto_reef_side (team_number: int, side: ReefSide, is_score: bool = False):
+async def calc_auto_reef_score_by_side (team_number: int, side: ReefSide):
     converted_side = convert_reef_side_to_pos(side)
     side_paths = await get_auto_path(team_number)
 
