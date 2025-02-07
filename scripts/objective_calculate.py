@@ -299,10 +299,41 @@ async def calc_auto_reef_success_rate_by_side (team_number: int, side: ReefSide)
 
     return {side: rate}
 
-async def pack_auto_reef_data (team_number: int):
+# TODO: Add auto's processor and net data functions
+
+async def pack_auto_data (team_number: int):
     data = {
-        "level": {},
-        "side": {}
+        "preloadCount": await count_preload(team_number),
+        "startPositionCount": await count_start_pos(team_number),
+        "leaveSuccessRate": await calc_leave_success_rate(team_number),
+        "reef": {
+            "l1": (await calc_auto_reef_level(team_number, ReefLevel.L1))
+                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L1)),
+            "l2": (await calc_auto_reef_level(team_number, ReefLevel.L2))
+                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L2)),
+            "l3": (await calc_auto_reef_level(team_number, ReefLevel.L3))
+                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L3)),
+            "l4": (await calc_auto_reef_level(team_number, ReefLevel.L4))
+                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L4)),
+
+        },
+        "reefSuccessRateBySide":{
+            "AB": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.AB),
+            "CD": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.CD),
+            "EF": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.EF),
+            "GH": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.GH),
+            "IJ": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.IJ),
+            "KL": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.KL)
+        },
+        "reefScoreBySide": {
+            "AB": await calc_auto_reef_score_by_side(team_number, ReefSide.AB),
+            "CD": await calc_auto_reef_score_by_side(team_number, ReefSide.CD),
+            "EF": await calc_auto_reef_score_by_side(team_number, ReefSide.EF),
+            "GH": await calc_auto_reef_score_by_side(team_number, ReefSide.GH),
+            "IJ": await calc_auto_reef_score_by_side(team_number, ReefSide.IJ),
+            "KL": await calc_auto_reef_score_by_side(team_number, ReefSide.KL)
+        },
+        "reefScore": await calc_auto_reef_score(team_number)
     }
     for level in ReefLevel:
         data["level"][level] = await calc_auto_reef_level(team_number, level)
