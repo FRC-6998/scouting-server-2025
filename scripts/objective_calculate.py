@@ -277,7 +277,7 @@ async def calc_auto_reef_score_by_side (team_number: int, side: ReefSide):
                 score += (data.count({"path.position": convert_reef_level_side_to_pos(level, side)})
                             *get_reef_level_score_weight(level, "auto"))
 
-                side_matched.append(score)
+        side_matched.append(score)
 
     return get_abs_team_stats(side_matched)
 
