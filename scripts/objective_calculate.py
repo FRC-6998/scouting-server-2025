@@ -161,17 +161,6 @@ def convert_reef_level_side_to_pos (level: str, side: str):
                 case ReefSide.KL:
                     return "l4ReefKL"
 
-def convert_reef_pos_to_level (pos: str):
-    match pos:
-        case "l1ReefAB" | "l1ReefCD" | "l1ReefEF" | "l1ReefGH" | "l1ReefIJ" | "l1ReefKL":
-            return ReefLevel.L1
-        case "l2ReefAB" | "l2ReefCD" | "l2ReefEF" | "l2ReefGH" | "l2ReefIJ" | "l2ReefKL":
-            return ReefLevel.L2
-        case "l3ReefAB" | "l3ReefCD" | "l3ReefEF" | "l3ReefGH" | "l3ReefIJ" | "l3ReefKL":
-            return ReefLevel.L3
-        case "l4ReefAB" | "l4ReefCD" | "l4ReefEF" | "l4ReefGH" | "l4ReefIJ" | "l4ReefKL":
-            return ReefLevel.L4
-
 # TIPS: Use asyncio.run() to run async function in sync function, to make sure it returns the real value you want.
 
 async def get_auto_path (team_number: int):
@@ -280,20 +269,13 @@ async def calc_auto_reef_side (team_number: int, side: ReefSide, is_score: bool 
     side_paths = await get_auto_path(team_number)
 
     side_matched = []
-
-    match is_score:
-        case False:
-            for data in side_paths:
-                for pos in converted_side:
-                    side_matched.append(data.count({"path.position": pos}))
-        case True:
-            all_reef_level = ["l1", "l2", "l3", "l4"]
-            for data in side_paths:
-                score = 0
-                for side in converted_side:
-                    for level in all_reef_level:
-                        score += (data.count({"path.position": convert_reef_level_side_to_pos(level, side)})
-                                    *get_reef_level_score_weight(level, "auto"))
+    all_reef_level = ["l1", "l2", "l3", "l4"]
+    for data in side_paths:
+        score = 0
+        for side in converted_side:
+            for level in all_reef_level:
+                score += (data.count({"path.position": convert_reef_level_side_to_pos(level, side)})
+                            *get_reef_level_score_weight(level, "auto"))
 
                 side_matched.append(score)
 
