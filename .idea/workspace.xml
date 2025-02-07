@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="feat: Adding calculating function for objective teleop data">
+    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="refactor: optimized some unused variable">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/objective_calculate.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/objective_calculate.py" afterDir="false" />
     </list>
@@ -135,158 +135,8 @@
       <workItem from="1738575262247" duration="17617000" />
       <workItem from="1738647712263" duration="2488000" />
       <workItem from="1738758670635" duration="6617000" />
-    </task>
-    <task id="LOCAL-00001" summary="Adopt MongoDB client in this project.">
-      <option name="closed" value="true" />
-      <created>1737696426091</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1737696426091</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Realized post and get temporary match data API.">
-      <option name="closed" value="true" />
-      <created>1737704171698</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1737704171698</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Adding model.py to verify input post data.">
-      <option name="closed" value="true" />
-      <created>1737708566792</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1737708566792</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Added some utilities for temp file modification.">
-      <option name="closed" value="true" />
-      <created>1737796869713</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1737796869713</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Adding auto-uuid funtion in ObjectiveMatchData in model.py">
-      <option name="closed" value="true" />
-      <created>1737822465554</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1737822465555</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Modify mode.py to match the requirement according to the 1st scouting subteam meeting.">
-      <option name="closed" value="true" />
-      <created>1737912662681</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1737912662681</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Modify model.py to match the requirement according to the 1st scouting subteam meeting.">
-      <option name="closed" value="true" />
-      <created>1737949582894</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1737949582894</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Adding SubjectiveMatchData.">
-      <option name="closed" value="true" />
-      <created>1737951995874</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1737951995874</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Adding pit scout data models in model.py.">
-      <option name="closed" value="true" />
-      <created>1737994068104</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1737994068104</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Several modification with dizzy in Vietnam 😵‍💫">
-      <option name="closed" value="true" />
-      <created>1738082825361</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1738082825361</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Modify project structure to make dev more modular.">
-      <option name="closed" value="true" />
-      <created>1738087617959</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1738087617959</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Finished objective_scout.py and subjective_scout.py in routers.">
-      <option name="closed" value="true" />
-      <created>1738089914962</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1738089914962</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Adding constants.py to simplify the modification of factors.">
-      <option name="closed" value="true" />
-      <created>1738167140913</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1738167140913</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Adding constants.py to simplify the modification of factors.">
-      <option name="closed" value="true" />
-      <created>1738167164443</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1738167164443</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Adding pit_scout.py API routine.">
-      <option name="closed" value="true" />
-      <created>1738167186571</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1738167186571</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Change &quot;get by match&quot; routine.">
-      <option name="closed" value="true" />
-      <created>1738254350514</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1738254350514</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Adding &quot;get data by team number&quot; API.">
-      <option name="closed" value="true" />
-      <created>1738254446321</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1738254446321</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Adding analysis data model TODO.">
-      <option name="closed" value="true" />
-      <created>1738257932926</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1738257932926</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Rename some unclear variable model.">
-      <option name="closed" value="true" />
-      <created>1738258326766</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1738258326766</updated>
+      <workItem from="1738847269183" duration="5448000" />
+      <workItem from="1738929846288" duration="4160000" />
     </task>
     <task id="LOCAL-00020" summary="Rename some unclear variable model.">
       <option name="closed" value="true" />
@@ -520,7 +370,167 @@
       <option name="project" value="LOCAL" />
       <updated>1738766040460</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="refactor: optimized some unused variable">
+      <option name="closed" value="true" />
+      <created>1738848646171</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1738848646171</updated>
+    </task>
+    <task id="LOCAL-00050" summary="refactor: optimize some unclear function name">
+      <option name="closed" value="true" />
+      <created>1738849060963</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1738849060963</updated>
+    </task>
+    <task id="LOCAL-00051" summary="refactor: optimize some unclear function name">
+      <option name="closed" value="true" />
+      <created>1738849065691</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1738849065691</updated>
+    </task>
+    <task id="LOCAL-00052" summary="refactor: optimize some unclear function name">
+      <option name="closed" value="true" />
+      <created>1738849069493</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1738849069493</updated>
+    </task>
+    <task id="LOCAL-00053" summary="feat: adding reef calculation function by side for auto period">
+      <option name="closed" value="true" />
+      <created>1738853318413</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853318413</updated>
+    </task>
+    <task id="LOCAL-00054" summary="feat: adding reef calculation function by side for auto period">
+      <option name="closed" value="true" />
+      <created>1738853322119</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853322119</updated>
+    </task>
+    <task id="LOCAL-00055" summary="feat: adding reef calculation function by side for auto period">
+      <option name="closed" value="true" />
+      <created>1738853326954</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853326954</updated>
+    </task>
+    <task id="LOCAL-00056" summary="feat: adding reef calculation function by side for auto period">
+      <option name="closed" value="true" />
+      <created>1738853331604</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853331604</updated>
+    </task>
+    <task id="LOCAL-00057" summary="feat: adding reef calculation function by side for auto period">
+      <option name="closed" value="true" />
+      <created>1738853335917</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853335917</updated>
+    </task>
+    <task id="LOCAL-00058" summary="feat: adding reef calculation function by side for auto period">
+      <option name="closed" value="true" />
+      <created>1738853374513</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853374513</updated>
+    </task>
+    <task id="LOCAL-00059" summary="feat: adding reef calculation function by side for auto period">
+      <option name="closed" value="true" />
+      <created>1738853380163</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853380163</updated>
+    </task>
+    <task id="LOCAL-00060" summary="feat: adding reef calculation function by side for auto period">
+      <option name="closed" value="true" />
+      <created>1738853384272</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853384272</updated>
+    </task>
+    <task id="LOCAL-00061" summary="feat: adding reef calculation function by side for auto period">
+      <option name="closed" value="true" />
+      <created>1738853389341</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853389341</updated>
+    </task>
+    <task id="LOCAL-00062" summary="refactor: rename some confusing function name.">
+      <option name="closed" value="true" />
+      <created>1738853413041</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1738853413041</updated>
+    </task>
+    <task id="LOCAL-00063" summary="refactor: add some reusable function for easier recalling.">
+      <option name="closed" value="true" />
+      <created>1738932658677</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1738932658678</updated>
+    </task>
+    <task id="LOCAL-00064" summary="refactor: add some reusable function for easier recalling.">
+      <option name="closed" value="true" />
+      <created>1738932668024</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1738932668024</updated>
+    </task>
+    <task id="LOCAL-00065" summary="refactor: add some reusable function for easier recalling.">
+      <option name="closed" value="true" />
+      <created>1738933971010</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1738933971010</updated>
+    </task>
+    <task id="LOCAL-00066" summary="refactor: add some reusable function for easier recalling.">
+      <option name="closed" value="true" />
+      <created>1738933998563</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1738933998563</updated>
+    </task>
+    <task id="LOCAL-00067" summary="refactor: add some reusable function for easier recalling.">
+      <option name="closed" value="true" />
+      <created>1738934026851</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1738934026851</updated>
+    </task>
+    <task id="LOCAL-00068" summary="refactor: add some reusable function for easier recalling.">
+      <option name="closed" value="true" />
+      <created>1738934035922</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1738934035922</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -550,12 +560,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Adding SubjectiveMatchData." />
-    <MESSAGE value="Adding pit scout data models in model.py." />
-    <MESSAGE value="Several modification with dizzy in Vietnam ‍" />
-    <MESSAGE value="Modify project structure to make dev more modular." />
-    <MESSAGE value="Finished objective_scout.py and subjective_scout.py in routers." />
-    <MESSAGE value="Adding constants.py to simplify the modification of factors." />
     <MESSAGE value="Adding pit_scout.py API routine." />
     <MESSAGE value="Change &quot;get by match&quot; routine." />
     <MESSAGE value="Adding &quot;get data by team number&quot; API." />
@@ -575,20 +579,51 @@
     <MESSAGE value="feat: Adding counting-each-side feature for reef-relative data" />
     <MESSAGE value="refactor: adding function to simplify getting auto path in each function." />
     <MESSAGE value="feat: Adding count_reef_side function" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Adding count_reef_side function" />
+    <MESSAGE value="refactor: optimized some unused variable" />
+    <MESSAGE value="refactor: optimize some unclear function name" />
+    <MESSAGE value="refactor: rename some confusing function name" />
+    <MESSAGE value="feat: adding reef calculation function by side for auto period" />
+    <MESSAGE value="refactor: rename some confusing function name." />
+    <MESSAGE value="refactor: add some reusable function for easier recalling." />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: add some reusable function for easier recalling." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model.py</url>
-          <line>80</line>
-          <option name="timeStamp" value="23" />
+          <url>file://$PROJECT_DIR$/scripts/objective_calculate.py</url>
+          <line>234</line>
+          <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/model.py</url>
-          <line>241</line>
-          <option name="timeStamp" value="25" />
+          <url>file://$PROJECT_DIR$/scripts/objective_calculate.py</url>
+          <line>235</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/objective_calculate.py</url>
+          <line>236</line>
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/objective_calculate.py</url>
+          <line>237</line>
+          <option name="timeStamp" value="36" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/objective_calculate.py</url>
+          <line>239</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/objective_calculate.py</url>
+          <line>240</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/scripts/objective_calculate.py</url>
+          <line>232</line>
+          <option name="timeStamp" value="39" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

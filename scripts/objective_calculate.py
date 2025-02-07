@@ -1,4 +1,3 @@
-import asyncio
 from enum import Enum
 from operator import itemgetter
 
@@ -175,7 +174,7 @@ def convert_reef_pos_to_level (pos: str):
 
 # TIPS: Use asyncio.run() to run async function in sync function, to make sure it returns the real value you want.
 
-async def async_get_auto_path (team_number: int):
+async def get_auto_path (team_number: int):
     data = [
         await raw_collection.find(
             {"teamNumber": team_number},
@@ -188,12 +187,9 @@ async def async_get_auto_path (team_number: int):
 
     return data
 
-def get_auto_path (team_number: int):
-    return asyncio.get_event_loop().run_until_complete(async_get_auto_path(team_number))
-
 async def calc_auto_reef_level (team_number: int, level: ReefLevel):
     converted_level = convert_reef_level_to_pos(level)
-    paths = get_auto_path(team_number)
+    paths = await get_auto_path(team_number)
 
     reef_matched = []
     for data in paths:
@@ -217,7 +213,7 @@ async def calc_auto_reef_score (team_number: int):
     all_reef_level = ["l1", "l2", "l3", "l4"]
     scores = []
 
-    paths = get_auto_path(team_number)
+    paths = await get_auto_path(team_number)
     for data in paths:
         reef_score = 0
         for level in all_reef_level:
@@ -281,7 +277,7 @@ def get_reef_level_score_weight (level: str, period: str):
 
 async def calc_auto_reef_side (team_number: int, side: ReefSide, is_score: bool = False):
     converted_side = convert_reef_side_to_pos(side)
-    side_paths = get_auto_path(team_number)
+    side_paths = await get_auto_path(team_number)
 
     side_matched = []
 
@@ -302,3 +298,16 @@ async def calc_auto_reef_side (team_number: int, side: ReefSide, is_score: bool 
                 side_matched.append(score)
 
     return get_abs_team_stats(side_matched)
+
+async def pack_auto_reef_data (team_number: int):
+    data = {
+        "level": {},
+        "side": {}
+    }
+    for level in ReefLevel:
+        data["level"][level] = await calc_auto_reef_level(team_number, level)
+
+    for side in ReefSide:
+        data["side"][side] = await calc_auto_reef_side(team_number, side)
+
+    return data
