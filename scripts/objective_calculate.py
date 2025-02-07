@@ -281,6 +281,24 @@ async def calc_auto_reef_score_by_side (team_number: int, side: ReefSide):
 
     return get_abs_team_stats(side_matched)
 
+async def calc_auto_reef_success_rate_by_side (team_number: int, side: ReefSide):
+    converted_side = convert_reef_side_to_pos(side)
+    side_paths = await get_auto_path(team_number)
+
+    matched = 0
+    count_succeeded = 0
+    for data in side_paths:
+        for pos in converted_side:
+            for path in data:
+                if path["position"] == pos:
+                    matched += 1
+                    if path["success"]:
+                        count_succeeded += 1
+
+    rate = count_succeeded / matched
+
+    return {side: rate}
+
 async def pack_auto_reef_data (team_number: int):
     data = {
         "level": {},
