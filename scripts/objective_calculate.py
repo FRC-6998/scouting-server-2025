@@ -88,7 +88,7 @@ async def calc_leave_success_rate (team_number:int, is_percentage : int = 0):
         case 1:
             return count_success / count_try * 100
         case _:
-            return count_success
+            return count_success / count_try
 
 def convert_reef_level_to_pos (level: str):
     match level:
