@@ -323,10 +323,12 @@ async def count_net_score (team_number: int, period: str = "auto"):
         score = 0
         for path in data:
             if path["success"]:
-                score += 6
+                score += 4
         net_score.append(score)
-
     return get_abs_team_stats(net_score)
+
+async def count_net_score_relative (team_number: int, period: str = "auto"):
+    return await get_rel_team_stats(team_number, "net", period)
 
 async def pack_auto_data (team_number: int):
     data = {
@@ -362,7 +364,9 @@ async def pack_auto_data (team_number: int):
         },
         "reefScore": await calc_reef_score(team_number, "auto"),
         "processorScore": await count_processor_score(team_number, "auto")
-                          | await count_auto_processor_score_relative(team_number),
+                          | await count_processor_score_relative(team_number, "auto"),
+        "netScore": await count_net_score(team_number, "auto")
+                    | await count_net_score_relative(team_number, "auto")
     }
 
     return data
