@@ -161,24 +161,22 @@ def convert_reef_level_side_to_pos (level: str, side: str):
                 case ReefSide.KL:
                     return "l4ReefKL"
 
-# TIPS: Use asyncio.run() to run async function in sync function, to make sure it returns the real value you want.
-
-async def get_auto_path (team_number: int):
+async def get_path (team_number: int, period: str = "auto"):
     data = [
         await raw_collection.find(
             {"teamNumber": team_number},
             {
                 "_id": 0,
-                "path": "$auto.path"
+                "path": "$" + period + ".path"
             }
         )
     ]
 
     return data
 
-async def calc_auto_reef_level (team_number: int, level: ReefLevel):
+async def calc_reef_level (team_number: int, level: ReefLevel, period: str = "auto"):
     converted_level = convert_reef_level_to_pos(level)
-    paths = await get_auto_path(team_number)
+    paths = await get_path(team_number, period)
 
     reef_matched = []
     for data in paths:
@@ -198,11 +196,12 @@ async def calc_auto_reef_level (team_number: int, level: ReefLevel):
     return {'average': average, 'stability': stability}
 
 
-async def calc_auto_reef_score (team_number: int):
+async def calc_reef_score (team_number: int, period: str = "auto"):
     all_reef_level = ["l1", "l2", "l3", "l4"]
     scores = []
 
-    paths = await get_auto_path(team_number)
+    paths = await get_path(team_number, period)
+
     for data in paths:
         reef_score = 0
         for level in all_reef_level:
@@ -264,13 +263,13 @@ def get_reef_level_score_weight (level: str, period: str):
                 case ReefLevel.L4:
                     return 5
 
-async def calc_auto_reef_score_by_side (team_number: int, side: ReefSide):
+async def calc_reef_score_by_side (team_number: int, side: ReefSide, period: str = "auto"):
     converted_side = convert_reef_side_to_pos(side)
-    side_paths = await get_auto_path(team_number)
+    paths = await get_path(team_number, period)
 
     side_matched = []
     all_reef_level = ["l1", "l2", "l3", "l4"]
-    for data in side_paths:
+    for data in paths:
         score = 0
         for side in converted_side:
             for level in all_reef_level:
@@ -281,13 +280,13 @@ async def calc_auto_reef_score_by_side (team_number: int, side: ReefSide):
 
     return get_abs_team_stats(side_matched)
 
-async def calc_auto_reef_success_rate_by_side (team_number: int, side: ReefSide):
+async def calc_reef_success_rate_by_side (team_number: int, side: ReefSide, period: str = "auto"):
     converted_side = convert_reef_side_to_pos(side)
-    side_paths = await get_auto_path(team_number)
+    paths = await get_path(team_number, period)
 
     matched = 0
     count_succeeded = 0
-    for data in side_paths:
+    for data in paths:
         for pos in converted_side:
             for path in data:
                 if path["position"] == pos:
@@ -299,10 +298,10 @@ async def calc_auto_reef_success_rate_by_side (team_number: int, side: ReefSide)
 
     return {side: rate}
 
-# TODO: Add auto's processor and net data functions
+# TODO: Add auto's net data functions
 
-async def count_auto_processor_score (team_number: int):
-    paths = await get_auto_path(team_number)
+async def count_processor_score (team_number: int, period: str = "auto"):
+    paths = await get_path(team_number, period)
     processor_score = []
 
     for data in paths:
@@ -333,34 +332,34 @@ async def pack_auto_data (team_number: int):
         "startPositionCount": await count_start_pos(team_number),
         "leaveSuccessRate": await calc_leave_success_rate(team_number),
         "reef": {
-            "l1": (await calc_auto_reef_level(team_number, ReefLevel.L1))
+            "l1": (await calc_reef_level(team_number, ReefLevel.L1, "auto"))
                     | (await calc_auto_reef_level_relative(team_number, ReefLevel.L1)),
-            "l2": (await calc_auto_reef_level(team_number, ReefLevel.L2))
+            "l2": (await calc_reef_level(team_number, ReefLevel.L2, "auto"))
                     | (await calc_auto_reef_level_relative(team_number, ReefLevel.L2)),
-            "l3": (await calc_auto_reef_level(team_number, ReefLevel.L3))
+            "l3": (await calc_reef_level(team_number, ReefLevel.L3, "auto"))
                     | (await calc_auto_reef_level_relative(team_number, ReefLevel.L3)),
-            "l4": (await calc_auto_reef_level(team_number, ReefLevel.L4))
+            "l4": (await calc_reef_level(team_number, ReefLevel.L4, "auto"))
                     | (await calc_auto_reef_level_relative(team_number, ReefLevel.L4)),
 
         },
         "reefSuccessRateBySide":{
-            "AB": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.AB),
-            "CD": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.CD),
-            "EF": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.EF),
-            "GH": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.GH),
-            "IJ": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.IJ),
-            "KL": await calc_auto_reef_success_rate_by_side(team_number, ReefSide.KL)
+            "AB": await calc_reef_success_rate_by_side(team_number, ReefSide.AB, "auto"),
+            "CD": await calc_reef_success_rate_by_side(team_number, ReefSide.CD, "auto"),
+            "EF": await calc_reef_success_rate_by_side(team_number, ReefSide.EF, "auto"),
+            "GH": await calc_reef_success_rate_by_side(team_number, ReefSide.GH, "auto"),
+            "IJ": await calc_reef_success_rate_by_side(team_number, ReefSide.IJ, "auto"),
+            "KL": await calc_reef_success_rate_by_side(team_number, ReefSide.KL, "auto")
         },
         "reefScoreBySide": {
-            "AB": await calc_auto_reef_score_by_side(team_number, ReefSide.AB),
-            "CD": await calc_auto_reef_score_by_side(team_number, ReefSide.CD),
-            "EF": await calc_auto_reef_score_by_side(team_number, ReefSide.EF),
-            "GH": await calc_auto_reef_score_by_side(team_number, ReefSide.GH),
-            "IJ": await calc_auto_reef_score_by_side(team_number, ReefSide.IJ),
-            "KL": await calc_auto_reef_score_by_side(team_number, ReefSide.KL)
+            "AB": await calc_reef_score_by_side(team_number, ReefSide.AB, "auto"),
+            "CD": await calc_reef_score_by_side(team_number, ReefSide.CD, "auto"),
+            "EF": await calc_reef_score_by_side(team_number, ReefSide.EF, "auto"),
+            "GH": await calc_reef_score_by_side(team_number, ReefSide.GH, "auto"),
+            "IJ": await calc_reef_score_by_side(team_number, ReefSide.IJ, "auto"),
+            "KL": await calc_reef_score_by_side(team_number, ReefSide.KL, "auto")
         },
-        "reefScore": await calc_reef_score(team_number),
-        "processorScore": await count_auto_processor_score(team_number)
+        "reefScore": await calc_reef_score(team_number, "auto"),
+        "processorScore": await count_processor_score(team_number, "auto")
                           | await count_auto_processor_score_relative(team_number),
     }
 
