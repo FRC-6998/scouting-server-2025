@@ -239,25 +239,33 @@ class GamePieceActionResult (BaseModel):
     rank: int
     zScore: float
 
-class ReefCountResult(BaseModel):
+class ReefCountResultBySide(BaseModel):
     l1: GamePieceActionResult
     l2: GamePieceActionResult
     l3: GamePieceActionResult
     l4: GamePieceActionResult
 
+class ReefSuccessRateBySide(BaseModel):
+    AB: float
+    CD: float
+    EF: float
+    GH: float
+    IJ: float
+    KL: float
+
 class AutoResult(BaseModel):
     preloadCount: PreloadCount
     startPositionCount: StartPositionCount
     leaveSuccessRate: float
-    reef: ReefCountResult
-    reefBySide: ReefCountResult
-    reefScore: GamePieceActionResult
+    reef: ReefCountResultBySide
+    reefSuccessRateBySide: ReefSuccessRateBySide
     reefScoreBySide: GamePieceActionResult
+    reefScore: GamePieceActionResult
     processorScore: GamePieceActionResult
     netScore: GamePieceActionResult
 
 class TeleopResult(BaseModel):
-    reef: ReefCountResult
+    reef: ReefCountResultBySide
     processorScore: GamePieceActionResult
     netScore: GamePieceActionResult
     cycleTime: GamePieceActionResult
@@ -266,3 +274,4 @@ class TeleopResult(BaseModel):
 class ObjectiveResult (BaseModel):
     team_number: int
     auto: AutoResult
+    teleop: TeleopResult
