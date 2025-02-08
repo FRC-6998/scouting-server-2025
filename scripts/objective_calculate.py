@@ -301,6 +301,32 @@ async def calc_auto_reef_success_rate_by_side (team_number: int, side: ReefSide)
 
 # TODO: Add auto's processor and net data functions
 
+async def count_auto_processor_score (team_number: int):
+    paths = await get_auto_path(team_number)
+    processor_score = []
+
+    for data in paths:
+        score = 0
+        for path in data:
+            if path["success"]:
+                score += 6
+        processor_score.append(score)
+
+    return get_abs_team_stats(processor_score)
+
+async def count_auto_processor_score_relative (team_number: int):
+    average_data = [
+        await result_collection.find(
+            {"teamNumber": team_number},
+            {
+                "_id": 0,
+                "processor.average": "$auto.processor.average"
+            }
+        )
+    ]
+
+    return get_rel_team_stats(average_data, team_number, "processor")
+
 async def pack_auto_data (team_number: int):
     data = {
         "preloadCount": await count_preload(team_number),
@@ -333,7 +359,9 @@ async def pack_auto_data (team_number: int):
             "IJ": await calc_auto_reef_score_by_side(team_number, ReefSide.IJ),
             "KL": await calc_auto_reef_score_by_side(team_number, ReefSide.KL)
         },
-        "reefScore": await calc_auto_reef_score(team_number)
+        "reefScore": await calc_reef_score(team_number),
+        "processorScore": await count_auto_processor_score(team_number)
+                          | await count_auto_processor_score_relative(team_number),
     }
 
     return data
