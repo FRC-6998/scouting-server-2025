@@ -335,10 +335,5 @@ async def pack_auto_data (team_number: int):
         },
         "reefScore": await calc_auto_reef_score(team_number)
     }
-    for level in ReefLevel:
-        data["level"][level] = await calc_auto_reef_level(team_number, level)
-
-    for side in ReefSide:
-        data["side"][side] = await calc_auto_reef_side(team_number, side)
 
     return data
