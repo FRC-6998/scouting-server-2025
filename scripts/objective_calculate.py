@@ -15,9 +15,18 @@ def get_abs_team_stats (data: list):
         "stability": np.std(data)
     }
 
-def get_rel_team_stats (data: list, team_number: int, key: str):
+async def get_rel_team_stats (team_number: int, key: str, period: str):
     rank = 0
-    data = sorted(data, key=itemgetter(key + ".average"), reverse=True)
+    unsorted_data = [
+        await result_collection.find(
+            {"teamNumber": team_number},
+            {
+                "_id": 0,
+                key + ".average": "$" + period + "." + key + ".average"
+            }
+        )
+    ]
+    data = sorted(unsorted_data, key=itemgetter(key + ".average"), reverse=True)
     sorted_average = []
 
     for item in data:
@@ -212,17 +221,7 @@ async def calc_reef_score (team_number: int, period: str = "auto"):
     return get_abs_team_stats(scores)
 
 async def calc_auto_reef_level_relative (team_number: int, level: ReefLevel):
-
-    average_data = [
-        await result_collection.find(
-            {"teamNumber": team_number},
-            {
-                "_id": 0,
-                level + ".average": "$auto.reef." + level + ".average"}
-        )
-    ]
-
-    return get_rel_team_stats(average_data, team_number, level)
+    return await get_rel_team_stats(team_number, "reef." + level, "auto")
 
 def convert_reef_side_to_pos (side: ReefSide):
     match side:
@@ -313,18 +312,21 @@ async def count_processor_score (team_number: int, period: str = "auto"):
 
     return get_abs_team_stats(processor_score)
 
-async def count_auto_processor_score_relative (team_number: int):
-    average_data = [
-        await result_collection.find(
-            {"teamNumber": team_number},
-            {
-                "_id": 0,
-                "processor.average": "$auto.processor.average"
-            }
-        )
-    ]
+async def count_processor_score_relative (team_number: int, period: str = "auto"):
+    return await get_rel_team_stats(team_number, "processor", period)
 
-    return get_rel_team_stats(average_data, team_number, "processor")
+async def count_net_score (team_number: int, period: str = "auto"):
+    paths = await get_path(team_number, period)
+    net_score = []
+
+    for data in paths:
+        score = 0
+        for path in data:
+            if path["success"]:
+                score += 6
+        net_score.append(score)
+
+    return get_abs_team_stats(net_score)
 
 async def pack_auto_data (team_number: int):
     data = {
