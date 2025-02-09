@@ -400,7 +400,7 @@ def search_cycle_time(data: list, cycle_type: str):
     end_point = []
 
     match cycle_type:
-        case "CORAL":
+        case "algae":
             start_pos.append([
                 TeleopPathPoint.GROUND_CORAL,
                 TeleopPathPoint.CORAL_STATION
@@ -412,7 +412,7 @@ def search_cycle_time(data: list, cycle_type: str):
                 TeleopPathPoint.L4_REEF
             ])
 
-        case "ALGAE":
+        case "algae":
             start_pos.append([
                 TeleopPathPoint.REEF_ALGAE,
                 TeleopPathPoint.GROUND_ALGAE
@@ -435,17 +435,12 @@ def search_cycle_time(data: list, cycle_type: str):
 
     return cycle_time
 
-async def calc_cycle_time(team_number):
+async def calc_cycle_time_abs(team_number: int, cycle_type: str):
     data = await get_path(team_number, "teleop")
-    coral_cycle_array = search_cycle_time(data, "CORAL")
-    algae_cycle_array = search_cycle_time(data, "ALGAE")
+    cycle_times = search_cycle_time(data, cycle_type)
 
-    coral_cycle = (get_abs_team_stats(coral_cycle_array)
-                   | await get_rel_team_stats(team_number, "coralCycle", "teleop"))
-    algae_cycle = (get_abs_team_stats(algae_cycle_array)
-                   | await get_rel_team_stats(team_number, "algaeCycle", "teleop"))
+    return get_abs_team_stats(cycle_times)
 
-    return {"algae": algae_cycle, "coral": coral_cycle}
 
 async def count_hang(team_number):
     data = await get_path(team_number, "teleop")
@@ -469,7 +464,10 @@ async def pack_teleop_data (team_number: int):
                           | await count_processor_score_relative(team_number, "teleop"),
         "netScore": await count_net_score(team_number, "teleop")
                     | await count_net_score_relative(team_number, "teleop"),
-        "cycleTime": await calc_cycle_time(team_number),
+        "cycleTime": {
+            "coral": await calc_cycle_time_abs(team_number, "coral"),
+            "algae": await calc_cycle_time_abs(team_number, "algae")
+        },
         "hang": await count_hang(team_number)
     }
 
