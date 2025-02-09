@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="feat: adding auto-teleop changing ability for some reusable function.">
+    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="feat: make absolute and relative data model separate&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/objective_calculate.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/objective_calculate.py" afterDir="false" />
     </list>
@@ -137,303 +137,8 @@
       <workItem from="1738758670635" duration="6617000" />
       <workItem from="1738847269183" duration="5448000" />
       <workItem from="1738929846288" duration="12443000" />
-      <workItem from="1739018325422" duration="6622000" />
-    </task>
-    <task id="LOCAL-00047" summary="refactor: adding function to simplify getting auto path in each function.">
-      <option name="closed" value="true" />
-      <created>1738765774915</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1738765774915</updated>
-    </task>
-    <task id="LOCAL-00048" summary="feat: Adding count_reef_side function">
-      <option name="closed" value="true" />
-      <created>1738766040460</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1738766040460</updated>
-    </task>
-    <task id="LOCAL-00049" summary="refactor: optimized some unused variable">
-      <option name="closed" value="true" />
-      <created>1738848646171</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1738848646171</updated>
-    </task>
-    <task id="LOCAL-00050" summary="refactor: optimize some unclear function name">
-      <option name="closed" value="true" />
-      <created>1738849060963</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1738849060963</updated>
-    </task>
-    <task id="LOCAL-00051" summary="refactor: optimize some unclear function name">
-      <option name="closed" value="true" />
-      <created>1738849065691</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1738849065691</updated>
-    </task>
-    <task id="LOCAL-00052" summary="refactor: optimize some unclear function name">
-      <option name="closed" value="true" />
-      <created>1738849069493</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1738849069493</updated>
-    </task>
-    <task id="LOCAL-00053" summary="feat: adding reef calculation function by side for auto period">
-      <option name="closed" value="true" />
-      <created>1738853318413</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853318413</updated>
-    </task>
-    <task id="LOCAL-00054" summary="feat: adding reef calculation function by side for auto period">
-      <option name="closed" value="true" />
-      <created>1738853322119</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853322119</updated>
-    </task>
-    <task id="LOCAL-00055" summary="feat: adding reef calculation function by side for auto period">
-      <option name="closed" value="true" />
-      <created>1738853326954</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853326954</updated>
-    </task>
-    <task id="LOCAL-00056" summary="feat: adding reef calculation function by side for auto period">
-      <option name="closed" value="true" />
-      <created>1738853331604</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853331604</updated>
-    </task>
-    <task id="LOCAL-00057" summary="feat: adding reef calculation function by side for auto period">
-      <option name="closed" value="true" />
-      <created>1738853335917</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853335917</updated>
-    </task>
-    <task id="LOCAL-00058" summary="feat: adding reef calculation function by side for auto period">
-      <option name="closed" value="true" />
-      <created>1738853374513</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853374513</updated>
-    </task>
-    <task id="LOCAL-00059" summary="feat: adding reef calculation function by side for auto period">
-      <option name="closed" value="true" />
-      <created>1738853380163</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853380163</updated>
-    </task>
-    <task id="LOCAL-00060" summary="feat: adding reef calculation function by side for auto period">
-      <option name="closed" value="true" />
-      <created>1738853384272</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853384272</updated>
-    </task>
-    <task id="LOCAL-00061" summary="feat: adding reef calculation function by side for auto period">
-      <option name="closed" value="true" />
-      <created>1738853389341</created>
-      <option name="number" value="00061" />
-      <option name="presentableId" value="LOCAL-00061" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853389341</updated>
-    </task>
-    <task id="LOCAL-00062" summary="refactor: rename some confusing function name.">
-      <option name="closed" value="true" />
-      <created>1738853413041</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1738853413041</updated>
-    </task>
-    <task id="LOCAL-00063" summary="refactor: add some reusable function for easier recalling.">
-      <option name="closed" value="true" />
-      <created>1738932658677</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1738932658678</updated>
-    </task>
-    <task id="LOCAL-00064" summary="refactor: add some reusable function for easier recalling.">
-      <option name="closed" value="true" />
-      <created>1738932668024</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1738932668024</updated>
-    </task>
-    <task id="LOCAL-00065" summary="refactor: add some reusable function for easier recalling.">
-      <option name="closed" value="true" />
-      <created>1738933971010</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1738933971010</updated>
-    </task>
-    <task id="LOCAL-00066" summary="refactor: add some reusable function for easier recalling.">
-      <option name="closed" value="true" />
-      <created>1738933998563</created>
-      <option name="number" value="00066" />
-      <option name="presentableId" value="LOCAL-00066" />
-      <option name="project" value="LOCAL" />
-      <updated>1738933998563</updated>
-    </task>
-    <task id="LOCAL-00067" summary="refactor: add some reusable function for easier recalling.">
-      <option name="closed" value="true" />
-      <created>1738934026851</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
-      <option name="project" value="LOCAL" />
-      <updated>1738934026851</updated>
-    </task>
-    <task id="LOCAL-00068" summary="refactor: add some reusable function for easier recalling.">
-      <option name="closed" value="true" />
-      <created>1738934035922</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1738934035922</updated>
-    </task>
-    <task id="LOCAL-00069" summary="refactor: optimized some async function calling to await method">
-      <option name="closed" value="true" />
-      <created>1738934367528</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1738934367528</updated>
-    </task>
-    <task id="LOCAL-00070" summary="refactor: remove unusable functions.">
-      <option name="closed" value="true" />
-      <created>1738939087930</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1738939087930</updated>
-    </task>
-    <task id="LOCAL-00071" summary="refactor: remove unusable functions.">
-      <option name="closed" value="true" />
-      <created>1738939101384</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
-      <option name="project" value="LOCAL" />
-      <updated>1738939101385</updated>
-    </task>
-    <task id="LOCAL-00072" summary="refactor: specify function names">
-      <option name="closed" value="true" />
-      <created>1738939142779</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1738939142779</updated>
-    </task>
-    <task id="LOCAL-00073" summary="refactor: remove some unusable function">
-      <option name="closed" value="true" />
-      <created>1738939180069</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1738939180069</updated>
-    </task>
-    <task id="LOCAL-00074" summary="fix: wrong calculation">
-      <option name="closed" value="true" />
-      <created>1738941867963</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1738941867963</updated>
-    </task>
-    <task id="LOCAL-00075" summary="feat: adding success-rate calculation function for auto reef by each side">
-      <option name="closed" value="true" />
-      <created>1738942450744</created>
-      <option name="number" value="00075" />
-      <option name="presentableId" value="LOCAL-00075" />
-      <option name="project" value="LOCAL" />
-      <updated>1738942450744</updated>
-    </task>
-    <task id="LOCAL-00076" summary="feat: adding success-rate calculation function for auto reef by each side">
-      <option name="closed" value="true" />
-      <created>1738942926246</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1738942926246</updated>
-    </task>
-    <task id="LOCAL-00077" summary="feat: adding success-rate calculation function for auto reef by each side">
-      <option name="closed" value="true" />
-      <created>1738943459733</created>
-      <option name="number" value="00077" />
-      <option name="presentableId" value="LOCAL-00077" />
-      <option name="project" value="LOCAL" />
-      <updated>1738943459733</updated>
-    </task>
-    <task id="LOCAL-00078" summary="feat: Adding function which pack all auto data">
-      <option name="closed" value="true" />
-      <created>1738943689933</created>
-      <option name="number" value="00078" />
-      <option name="presentableId" value="LOCAL-00078" />
-      <option name="project" value="LOCAL" />
-      <updated>1738943689933</updated>
-    </task>
-    <task id="LOCAL-00079" summary="feat: Adding function which pack all auto data">
-      <option name="closed" value="true" />
-      <created>1738943703816</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1738943703816</updated>
-    </task>
-    <task id="LOCAL-00080" summary="feat: change models setting to fit requirements from driver team">
-      <option name="closed" value="true" />
-      <created>1739019231079</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1739019231079</updated>
-    </task>
-    <task id="LOCAL-00081" summary="feat: change models setting to fit requirements from driver team">
-      <option name="closed" value="true" />
-      <created>1739019238401</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1739019238401</updated>
-    </task>
-    <task id="LOCAL-00082" summary="feat: change models setting to fit requirements from driver team">
-      <option name="closed" value="true" />
-      <created>1739019243249</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1739019243249</updated>
-    </task>
-    <task id="LOCAL-00083" summary="feat: change models setting to fit requirements from driver team">
-      <option name="closed" value="true" />
-      <created>1739019246658</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1739019246658</updated>
+      <workItem from="1739018325422" duration="8209000" />
+      <workItem from="1739071518099" duration="23676000" />
     </task>
     <task id="LOCAL-00084" summary="feat: change models setting to fit requirements from driver team">
       <option name="closed" value="true" />
@@ -531,7 +236,303 @@
       <option name="project" value="LOCAL" />
       <updated>1739024106201</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="refactor: optimized functions for calculations">
+      <option name="closed" value="true" />
+      <created>1739027880491</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1739027880491</updated>
+    </task>
+    <task id="LOCAL-00097" summary="refactor: optimized functions for calculations">
+      <option name="closed" value="true" />
+      <created>1739028313007</created>
+      <option name="number" value="00097" />
+      <option name="presentableId" value="LOCAL-00097" />
+      <option name="project" value="LOCAL" />
+      <updated>1739028313007</updated>
+    </task>
+    <task id="LOCAL-00098" summary="refactor: optimized functions for calculations">
+      <option name="closed" value="true" />
+      <created>1739028317037</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1739028317037</updated>
+    </task>
+    <task id="LOCAL-00099" summary="refactor: optimized functions for calculations">
+      <option name="closed" value="true" />
+      <created>1739028774162</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1739028774162</updated>
+    </task>
+    <task id="LOCAL-00100" summary="feat: added net calculation">
+      <option name="closed" value="true" />
+      <created>1739028985107</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1739028985107</updated>
+    </task>
+    <task id="LOCAL-00101" summary="feat: added net calculation">
+      <option name="closed" value="true" />
+      <created>1739029033125</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1739029033125</updated>
+    </task>
+    <task id="LOCAL-00102" summary="feat: added to-be-finished calculation function for teleop results">
+      <option name="closed" value="true" />
+      <created>1739029423234</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1739029423234</updated>
+    </task>
+    <task id="LOCAL-00103" summary="feat: added to-be-finished calculation function for teleop results">
+      <option name="closed" value="true" />
+      <created>1739071653028</created>
+      <option name="number" value="00103" />
+      <option name="presentableId" value="LOCAL-00103" />
+      <option name="project" value="LOCAL" />
+      <updated>1739071653028</updated>
+    </task>
+    <task id="LOCAL-00104" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072585728</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072585728</updated>
+    </task>
+    <task id="LOCAL-00105" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072590124</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072590124</updated>
+    </task>
+    <task id="LOCAL-00106" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072869308</created>
+      <option name="number" value="00106" />
+      <option name="presentableId" value="LOCAL-00106" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072869308</updated>
+    </task>
+    <task id="LOCAL-00107" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072872371</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072872371</updated>
+    </task>
+    <task id="LOCAL-00108" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072879867</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072879867</updated>
+    </task>
+    <task id="LOCAL-00109" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072883811</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072883811</updated>
+    </task>
+    <task id="LOCAL-00110" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072887360</created>
+      <option name="number" value="00110" />
+      <option name="presentableId" value="LOCAL-00110" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072887360</updated>
+    </task>
+    <task id="LOCAL-00111" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072890787</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072890787</updated>
+    </task>
+    <task id="LOCAL-00112" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072904214</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072904214</updated>
+    </task>
+    <task id="LOCAL-00113" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072912922</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072912922</updated>
+    </task>
+    <task id="LOCAL-00114" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072978654</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072978654</updated>
+    </task>
+    <task id="LOCAL-00115" summary="perf: added numba jit to improve performance on numpy calc">
+      <option name="closed" value="true" />
+      <created>1739072982629</created>
+      <option name="number" value="00115" />
+      <option name="presentableId" value="LOCAL-00115" />
+      <option name="project" value="LOCAL" />
+      <updated>1739072982629</updated>
+    </task>
+    <task id="LOCAL-00116" summary="fix: fixed bad type hint.">
+      <option name="closed" value="true" />
+      <created>1739079561971</created>
+      <option name="number" value="00116" />
+      <option name="presentableId" value="LOCAL-00116" />
+      <option name="project" value="LOCAL" />
+      <updated>1739079561971</updated>
+    </task>
+    <task id="LOCAL-00117" summary="feat: adding cycle time calculation function">
+      <option name="closed" value="true" />
+      <created>1739088831608</created>
+      <option name="number" value="00117" />
+      <option name="presentableId" value="LOCAL-00117" />
+      <option name="project" value="LOCAL" />
+      <updated>1739088831608</updated>
+    </task>
+    <task id="LOCAL-00118" summary="feat: adding cycle time calculation function">
+      <option name="closed" value="true" />
+      <created>1739088836804</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1739088836805</updated>
+    </task>
+    <task id="LOCAL-00119" summary="feat: adding cycle time calculation function">
+      <option name="closed" value="true" />
+      <created>1739088936610</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1739088936610</updated>
+    </task>
+    <task id="LOCAL-00120" summary="feat: adding cycle time calculation function">
+      <option name="closed" value="true" />
+      <created>1739088944505</created>
+      <option name="number" value="00120" />
+      <option name="presentableId" value="LOCAL-00120" />
+      <option name="project" value="LOCAL" />
+      <updated>1739088944505</updated>
+    </task>
+    <task id="LOCAL-00121" summary="feat: adding cycle time calculation function">
+      <option name="closed" value="true" />
+      <created>1739088978169</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1739088978169</updated>
+    </task>
+    <task id="LOCAL-00122" summary="feat: adding cycle time calculation function">
+      <option name="closed" value="true" />
+      <created>1739088983091</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1739088983091</updated>
+    </task>
+    <task id="LOCAL-00123" summary="fix: fixed wrong string parameter">
+      <option name="closed" value="true" />
+      <created>1739090466845</created>
+      <option name="number" value="00123" />
+      <option name="presentableId" value="LOCAL-00123" />
+      <option name="project" value="LOCAL" />
+      <updated>1739090466845</updated>
+    </task>
+    <task id="LOCAL-00124" summary="fix: fixed wrong string parameter">
+      <option name="closed" value="true" />
+      <created>1739090471735</created>
+      <option name="number" value="00124" />
+      <option name="presentableId" value="LOCAL-00124" />
+      <option name="project" value="LOCAL" />
+      <updated>1739090471735</updated>
+    </task>
+    <task id="LOCAL-00125" summary="fix: fixed wrong string parameter">
+      <option name="closed" value="true" />
+      <created>1739090474774</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1739090474774</updated>
+    </task>
+    <task id="LOCAL-00126" summary="fix: fixed wrong string parameter">
+      <option name="closed" value="true" />
+      <created>1739090479675</created>
+      <option name="number" value="00126" />
+      <option name="presentableId" value="LOCAL-00126" />
+      <option name="project" value="LOCAL" />
+      <updated>1739090479675</updated>
+    </task>
+    <task id="LOCAL-00127" summary="fix: fixed wrong string parameter">
+      <option name="closed" value="true" />
+      <created>1739090485323</created>
+      <option name="number" value="00127" />
+      <option name="presentableId" value="LOCAL-00127" />
+      <option name="project" value="LOCAL" />
+      <updated>1739090485323</updated>
+    </task>
+    <task id="LOCAL-00128" summary="feat: finish cycle time calculation function">
+      <option name="closed" value="true" />
+      <created>1739093265384</created>
+      <option name="number" value="00128" />
+      <option name="presentableId" value="LOCAL-00128" />
+      <option name="project" value="LOCAL" />
+      <updated>1739093265384</updated>
+    </task>
+    <task id="LOCAL-00129" summary="feat: finish cycle time calculation function">
+      <option name="closed" value="true" />
+      <created>1739093483772</created>
+      <option name="number" value="00129" />
+      <option name="presentableId" value="LOCAL-00129" />
+      <option name="project" value="LOCAL" />
+      <updated>1739093483772</updated>
+    </task>
+    <task id="LOCAL-00130" summary="feat: finish cycle time calculation function">
+      <option name="closed" value="true" />
+      <created>1739093495871</created>
+      <option name="number" value="00130" />
+      <option name="presentableId" value="LOCAL-00130" />
+      <option name="project" value="LOCAL" />
+      <updated>1739093495871</updated>
+    </task>
+    <task id="LOCAL-00131" summary="feat: finished hang time calculation function">
+      <option name="closed" value="true" />
+      <created>1739104436863</created>
+      <option name="number" value="00131" />
+      <option name="presentableId" value="LOCAL-00131" />
+      <option name="project" value="LOCAL" />
+      <updated>1739104436863</updated>
+    </task>
+    <task id="LOCAL-00132" summary="feat: make absolute and relative data model separate&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database.">
+      <option name="closed" value="true" />
+      <created>1739106940000</created>
+      <option name="number" value="00132" />
+      <option name="presentableId" value="LOCAL-00132" />
+      <option name="project" value="LOCAL" />
+      <updated>1739106940000</updated>
+    </task>
+    <option name="localTasksCounter" value="133" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -561,16 +562,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="feat: &gt;Auto period's reef relative datas calculation&#10;&#10;Added async function calc_reef_relative in objective_calculate. It allows user to calculate a team robot's rank and z-score of scored CORAL on the specific level of REEF, by specifying the team number and REEF level." />
-    <MESSAGE value="refactor: optimize input libraries&#10;&#10;Optimized some unused packages in objective_calculate.py" />
-    <MESSAGE value="fix: change AutoPath model's class&#10;&#10;Change the position's class to AutoPathPoint in AutoPath at model.py." />
-    <MESSAGE value="fix: Fixing conflict of auto period's reef count-each-level" />
-    <MESSAGE value="refactor: update ReefLevel class in functions." />
-    <MESSAGE value="feat: Adding counting-each-side feature for reef-relative data" />
-    <MESSAGE value="refactor: adding function to simplify getting auto path in each function." />
-    <MESSAGE value="feat: Adding count_reef_side function" />
-    <MESSAGE value="refactor: optimized some unused variable" />
-    <MESSAGE value="refactor: optimize some unclear function name" />
     <MESSAGE value="refactor: rename some confusing function name" />
     <MESSAGE value="feat: adding reef calculation function by side for auto period" />
     <MESSAGE value="refactor: rename some confusing function name." />
@@ -586,7 +577,17 @@
     <MESSAGE value="fix: remove bad return" />
     <MESSAGE value="feat: create auto's processor_score result calculating function." />
     <MESSAGE value="feat: adding auto-teleop changing ability for some reusable function." />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="refactor: optimized functions for calculations" />
+    <MESSAGE value="feat: added net calculation" />
+    <MESSAGE value="feat: added to-be-finished calculation function for teleop results" />
+    <MESSAGE value="perf: added numba jit to improve performance on numpy calc" />
+    <MESSAGE value="fix: fixed bad type hint." />
+    <MESSAGE value="feat: adding cycle time calculation function" />
+    <MESSAGE value="fix: fixed wrong string parameter" />
+    <MESSAGE value="feat: finish cycle time calculation function" />
+    <MESSAGE value="feat: finished hang time calculation function" />
+    <MESSAGE value="feat: make absolute and relative data model separate&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: make absolute and relative data model separate&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Unipards_6998_Scouting_Field_Server$Unipards_6998_Scouting_Field_Server.coverage" NAME="Unipards-6998_Scouting-Field-Server Coverage Results" MODIFIED="1738679557533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

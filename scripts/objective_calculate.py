@@ -456,33 +456,50 @@ async def calc_cycle_time_abs(team_number: int, cycle_type: str):
     return get_abs_team_stats(cycle_times)
 
 
-async def count_hang(team_number):
+async def count_hang_abs(team_number):
     data = await get_path(team_number, "teleop")
     hang_time = [item["hangTime"] for item in data]
     return get_abs_team_stats(hang_time) | await get_rel_team_stats(team_number, "hangTime", "teleop")
 
-async def pack_teleop_data (team_number: int):
+async def count_hang_rel(team_number):
+    return await get_rel_team_stats(team_number, "hang", "teleop")
+
+async def pack_teleop_abs_data (team_number: int):
     data = {
         "reef": {
-            "l1": (await calc_reef_level(team_number, ReefLevel.L1, "teleop"))
-                    | (await calc_reef_level_relative(team_number, ReefLevel.L1)),
-            "l2": (await calc_reef_level(team_number, ReefLevel.L2, "teleop"))
-                    | (await calc_reef_level_relative(team_number, ReefLevel.L2)),
-            "l3": (await calc_reef_level(team_number, ReefLevel.L3, "teleop"))
-                    | (await calc_reef_level_relative(team_number, ReefLevel.L3)),
-            "l4": (await calc_reef_level(team_number, ReefLevel.L4, "teleop"))
-                    | (await calc_reef_level_relative(team_number, ReefLevel.L4)),
+            "l1": await calc_reef_level(team_number, ReefLevel.L1, "teleop"),
+            "l2": await calc_reef_level(team_number, ReefLevel.L2, "teleop"),
+            "l3": await calc_reef_level(team_number, ReefLevel.L3, "teleop"),
+            "l4": await calc_reef_level(team_number, ReefLevel.L4, "teleop"),
 
         },
-        "processorScore": await count_processor_score(team_number, "teleop")
-                          | await count_processor_score_relative(team_number, "teleop"),
-        "netScore": await count_net_score(team_number, "teleop")
-                    | await count_net_score_relative(team_number, "teleop"),
+        "processorScore": await count_processor_score(team_number, "teleop"),
+        "netScore": await count_net_score(team_number, "teleop"),
         "cycleTime": {
             "coral": await calc_cycle_time_abs(team_number, "coral"),
             "algae": await calc_cycle_time_abs(team_number, "algae")
         },
-        "hang": await count_hang(team_number)
+        "hang": await count_hang_abs(team_number)
+    }
+
+    return data
+
+async def pack_teleop_rel_data (team_number: int):
+    data = {
+        "reef": {
+            "l1": await calc_reef_level_relative(team_number, ReefLevel.L1),
+            "l2": await calc_reef_level_relative(team_number, ReefLevel.L2),
+            "l3": await calc_reef_level_relative(team_number, ReefLevel.L3),
+            "l4": await calc_reef_level_relative(team_number, ReefLevel.L4),
+
+        },
+        "processorScore": await count_processor_score_relative(team_number, "teleop"),
+        "netScore": await count_net_score_relative(team_number, "teleop"),
+        "cycleTime": {
+            "coral": await calc_cycle_time_abs(team_number, "coral"),
+            "algae": await calc_cycle_time_abs(team_number, "algae")
+        },
+        "hang": await count_hang_rel(team_number)
     }
 
     return data
