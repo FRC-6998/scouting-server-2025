@@ -253,7 +253,7 @@ class ReefCountRelativeResultBySide(BaseModel):
     l3: GamePieceActionRelativeResult
     l4: GamePieceActionRelativeResult
 
-class ReefSuccessRateBySide(BaseModel):
+class ReefResultBySide(BaseModel):
     AB: float
     CD: float
     EF: float
@@ -266,16 +266,14 @@ class AutoAbsoluteResult(BaseModel):
     startPositionCount: StartPositionCount
     leaveSuccessRate: float
     reef: ReefCountAbsoluteResultBySide
-    reefSuccessRateBySide: ReefSuccessRateBySide
-    reefScoreBySide: GamePieceActionAbsoluteResult
+    reefSuccessRateBySide: ReefResultBySide
+    reefScoreBySide: ReefResultBySide
     reefScore: GamePieceActionAbsoluteResult
     processorScore: GamePieceActionAbsoluteResult
     netScore: GamePieceActionAbsoluteResult
 
 class AutoRelativeResult(BaseModel):
     reef: ReefCountRelativeResultBySide
-    reefSuccessRateBySide: ReefSuccessRateBySide
-    reefScoreBySide: GamePieceActionRelativeResult
     reefScore: GamePieceActionRelativeResult
     processorScore: GamePieceActionRelativeResult
     netScore: GamePieceActionRelativeResult
