@@ -121,7 +121,7 @@ class TeleopPathPoint (str, Enum):
 
 class TeleopPath (BaseModel):
     second: float
-    position: str
+    position: TeleopPathPoint
     success: bool = False
 
 class TeleopRaw (BaseModel):
