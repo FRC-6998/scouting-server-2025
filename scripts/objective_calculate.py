@@ -1,6 +1,7 @@
 from enum import Enum
 from operator import itemgetter
 
+import numba
 import numpy as np
 
 from constants import RESULT_DATA_COLLECTION, OBJECTIVE_DATA_COLLECTION
@@ -9,6 +10,7 @@ from scripts.initdb import init_collection
 raw_collection = init_collection(OBJECTIVE_DATA_COLLECTION)
 result_collection = init_collection(RESULT_DATA_COLLECTION)
 
+@numba.jit(cache=True)
 def get_abs_team_stats (data: list):
     return {
         "average": np.mean(data),
@@ -16,7 +18,6 @@ def get_abs_team_stats (data: list):
     }
 
 async def get_rel_team_stats (team_number: int, key: str, period: str):
-    rank = 0
     unsorted_data = [
         await result_collection.find(
             {"teamNumber": team_number},
@@ -27,14 +28,19 @@ async def get_rel_team_stats (team_number: int, key: str, period: str):
         )
     ]
     data = sorted(unsorted_data, key=itemgetter(key + ".average"), reverse=True)
-    sorted_average = []
+
+    return calc_relative(team_number, data, key)
+
+@numba.jit(cache=True)
+def calc_relative (team_number: int, data: list, key: str):
+    rank = 0
 
     for item in data:
-        sorted_average.append(item[key + ".average"])
+        data.append(item[key+".average"])
         if item["teamNumber"] == team_number:
             rank = data.index(item) + 1
 
-    sorted_np = np.array(sorted_average)
+    sorted_np = np.array(data)
     z_score = (sorted_np[rank - 1] - np.average(sorted_np)) / np.std(sorted_np)
 
     return {"rank": rank, "z_score": z_score}
