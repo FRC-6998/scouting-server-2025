@@ -448,8 +448,9 @@ async def calc_cycle_time(team_number):
     return {"algae": algae_cycle, "coral": coral_cycle}
 
 async def count_hang(team_number):
-    pass
-
+    data = await get_path(team_number, "teleop")
+    hang_time = [item["hangTime"] for item in data]
+    return get_abs_team_stats(hang_time) | await get_rel_team_stats(team_number, "hangTime", "teleop")
 
 async def pack_teleop_data (team_number: int):
     data = {
