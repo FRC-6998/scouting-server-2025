@@ -264,11 +264,15 @@ class AutoResult(BaseModel):
     processorScore: GamePieceActionResult
     netScore: GamePieceActionResult
 
+class CycleTime(BaseModel):
+    algae: GamePieceActionResult
+    coral: GamePieceActionResult
+
 class TeleopResult(BaseModel):
     reef: ReefCountResultBySide
     processorScore: GamePieceActionResult
     netScore: GamePieceActionResult
-    cycleTime: GamePieceActionResult
+    cycleTime: CycleTime
     hang: GamePieceActionResult
 
 class ObjectiveResult (BaseModel):

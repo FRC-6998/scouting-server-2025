@@ -377,9 +377,67 @@ async def pack_auto_data (team_number: int):
 
 # TODO: Finish the following 2 functions
 
-async def count_cycle_time(team_number):
-    pass
+"""
+[Type of cycles]
+A. CORAL Cycle
+    - GROUND -> REEF
+    - CORAL STATION -> REEF
+B. ALGAE Cycle
+    - REEF -> NET
+    - GROUND -> NET
+    - REEF -> PROCESSOR
+    - GROUND -> PROCESSOR
 
+"""
+
+@numba.jit(cache=True)
+def search_cycle_time(data: list, cycle_type: str):
+    start_pos = []
+    end_pos = []
+
+    start_point =[]
+    end_point = []
+
+    match cycle_type:
+        case "CORAL":
+            start_pos.append([
+                TeleopPathPoint.GROUND_CORAL,
+                TeleopPathPoint.CORAL_STATION
+            ])
+            end_pos.append([
+                TeleopPathPoint.L1_REEF,
+                TeleopPathPoint.L2_REEF,
+                TeleopPathPoint.L3_REEF,
+                TeleopPathPoint.L4_REEF
+            ])
+
+        case "ALGAE":
+            start_pos.append([
+                TeleopPathPoint.REEF_ALGAE,
+                TeleopPathPoint.GROUND_ALGAE
+            ])
+            end_pos.append([
+                TeleopPathPoint.NET,
+                TeleopPathPoint.PROCESSOR
+            ])
+
+    for path in data:
+        if path["position"] in start_pos and path["success"] == True:
+            start_point.append(path)
+        elif path["position"] in end_pos:
+            end_point.append(path)
+            break
+
+    cycle_time = []
+    for start, end in zip(start_point, end_point):
+        cycle_time.append(end["time"] - start["time"])
+
+    return cycle_time
+
+async def calc_cycle_time(team_number):
+    data = await get_path(team_number, "teleop")
+    coral_cycle = search_cycle_time(data, "CORAL")
+    algae_cycle = search_cycle_time(data, "ALGAE")
 
 async def count_hang(team_number):
     pass
@@ -402,7 +460,7 @@ async def pack_teleop_data (team_number: int):
                           | await count_processor_score_relative(team_number, "tele"),
         "netScore": await count_net_score(team_number, "tele")
                     | await count_net_score_relative(team_number, "tele"),
-        "cycleTime": await count_cycle_time(team_number),
+        "cycleTime": await calc_cycle_time(team_number),
         "hang": await count_hang(team_number)
     }
 
