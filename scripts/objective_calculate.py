@@ -5,6 +5,7 @@ import numba
 import numpy as np
 
 from constants import RESULT_DATA_COLLECTION, OBJECTIVE_DATA_COLLECTION
+from model import TeleopPathPoint
 from scripts.initdb import init_collection
 
 raw_collection = init_collection(OBJECTIVE_DATA_COLLECTION)
@@ -257,7 +258,7 @@ def get_reef_level_score_weight (level: str, period: str):
                     return 6
                 case ReefLevel.L4:
                     return 7
-        case "tele":
+        case "teleop":
             match level:
                 case ReefLevel.L1:
                     return 2
@@ -436,8 +437,15 @@ def search_cycle_time(data: list, cycle_type: str):
 
 async def calc_cycle_time(team_number):
     data = await get_path(team_number, "teleop")
-    coral_cycle = search_cycle_time(data, "CORAL")
-    algae_cycle = search_cycle_time(data, "ALGAE")
+    coral_cycle_array = search_cycle_time(data, "CORAL")
+    algae_cycle_array = search_cycle_time(data, "ALGAE")
+
+    coral_cycle = (get_abs_team_stats(coral_cycle_array)
+                   | await get_rel_team_stats(team_number, "coralCycle", "teleop"))
+    algae_cycle = (get_abs_team_stats(algae_cycle_array)
+                   | await get_rel_team_stats(team_number, "algaeCycle", "teleop"))
+
+    return {"algae": algae_cycle, "coral": coral_cycle}
 
 async def count_hang(team_number):
     pass
