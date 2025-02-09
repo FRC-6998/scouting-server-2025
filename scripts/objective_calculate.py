@@ -227,7 +227,10 @@ async def calc_reef_score (team_number: int, period: str = "auto"):
 
     return get_abs_team_stats(scores)
 
-async def calc_auto_reef_level_relative (team_number: int, level: ReefLevel):
+async def calc_reef_score_relative (team_number: int, period: str = "auto"):
+    return await get_rel_team_stats(team_number, "reefScore", period)
+
+async def calc_reef_level_relative (team_number: int, level: ReefLevel):
     return await get_rel_team_stats(team_number, "reef." + level, "auto")
 
 def convert_reef_side_to_pos (side: ReefSide):
@@ -335,20 +338,16 @@ async def count_net_score (team_number: int, period: str = "auto"):
 async def count_net_score_relative (team_number: int, period: str = "auto"):
     return await get_rel_team_stats(team_number, "net", period)
 
-async def pack_auto_data (team_number: int):
+async def pack_auto_abs_data (team_number: int):
     data = {
         "preloadCount": await count_preload(team_number),
         "startPositionCount": await count_start_pos(team_number),
         "leaveSuccessRate": await calc_leave_success_rate(team_number),
         "reef": {
-            "l1": (await calc_reef_level(team_number, ReefLevel.L1, "auto"))
-                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L1)),
-            "l2": (await calc_reef_level(team_number, ReefLevel.L2, "auto"))
-                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L2)),
-            "l3": (await calc_reef_level(team_number, ReefLevel.L3, "auto"))
-                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L3)),
-            "l4": (await calc_reef_level(team_number, ReefLevel.L4, "auto"))
-                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L4)),
+            "l1": await calc_reef_level(team_number, ReefLevel.L1, "auto"),
+            "l2": await calc_reef_level(team_number, ReefLevel.L2, "auto"),
+            "l3": await calc_reef_level(team_number, ReefLevel.L3, "auto"),
+            "l4": await calc_reef_level(team_number, ReefLevel.L4, "auto"),
 
         },
         "reefSuccessRateBySide":{
@@ -368,15 +367,30 @@ async def pack_auto_data (team_number: int):
             "KL": await calc_reef_score_by_side(team_number, ReefSide.KL, "auto")
         },
         "reefScore": await calc_reef_score(team_number, "auto"),
-        "processorScore": await count_processor_score(team_number, "auto")
-                          | await count_processor_score_relative(team_number, "auto"),
+        "processorScore": await count_processor_score(team_number, "auto"),
         "netScore": await count_net_score(team_number, "auto")
-                    | await count_net_score_relative(team_number, "auto")
     }
 
     return data
 
-# TODO: Finish the following 2 functions
+async def pack_auto_rel_data (team_number: int):
+    data = {
+        "preloadCount": await count_preload(team_number),
+        "startPositionCount": await count_start_pos(team_number),
+        "leaveSuccessRate": await calc_leave_success_rate(team_number),
+        "reef": {
+            "l1": await calc_reef_level_relative(team_number, ReefLevel.L1),
+            "l2": await calc_reef_level_relative(team_number, ReefLevel.L2),
+            "l3": await calc_reef_level_relative(team_number, ReefLevel.L3),
+            "l4": await calc_reef_level_relative(team_number, ReefLevel.L4),
+
+        },
+        "reefScore": await calc_reef_score_relative(team_number, "auto"),
+        "processorScore": await count_processor_score_relative(team_number, "auto"),
+        "netScore": await count_net_score_relative(team_number, "auto")
+    }
+
+    return data
 
 """
 [Type of cycles]
@@ -451,13 +465,13 @@ async def pack_teleop_data (team_number: int):
     data = {
         "reef": {
             "l1": (await calc_reef_level(team_number, ReefLevel.L1, "teleop"))
-                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L1)),
+                    | (await calc_reef_level_relative(team_number, ReefLevel.L1)),
             "l2": (await calc_reef_level(team_number, ReefLevel.L2, "teleop"))
-                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L2)),
+                    | (await calc_reef_level_relative(team_number, ReefLevel.L2)),
             "l3": (await calc_reef_level(team_number, ReefLevel.L3, "teleop"))
-                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L3)),
+                    | (await calc_reef_level_relative(team_number, ReefLevel.L3)),
             "l4": (await calc_reef_level(team_number, ReefLevel.L4, "teleop"))
-                    | (await calc_auto_reef_level_relative(team_number, ReefLevel.L4)),
+                    | (await calc_reef_level_relative(team_number, ReefLevel.L4)),
 
         },
         "processorScore": await count_processor_score(team_number, "teleop")
