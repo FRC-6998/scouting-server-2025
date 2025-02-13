@@ -503,3 +503,19 @@ async def pack_teleop_rel_data (team_number: int):
     }
 
     return data
+
+async def pack_obj_abs_data (team_number: int):
+    data = {
+        "teamNumber": team_number,
+        "auto": await pack_auto_abs_data(team_number),
+        "teleop": await pack_teleop_abs_data(team_number),
+    }
+
+    return data
+
+async def pack_obj_rel_data (team_number: int):
+    data = {
+        "teamNumber": team_number,
+        "auto": await pack_auto_rel_data(team_number),
+        "teleop": await pack_teleop_rel_data(team_number)
+    }
