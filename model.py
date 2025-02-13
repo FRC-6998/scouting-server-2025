@@ -297,11 +297,11 @@ class TeleopRelativeResult(BaseModel):
     hang: GamePieceActionRelativeResult
 
 class ObjectiveAbsoluteResult (BaseModel):
-    team_number: int
+    teamNumber: int
     auto: AutoAbsoluteResult
     teleop: TeleopAbsoluteResult
 
 class ObjectiveRelativeResult (BaseModel):
-    team_number: int
+    teamNumber: int
     auto: AutoRelativeResult
     teleop: TeleopRelativeResult
