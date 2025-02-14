@@ -14,7 +14,7 @@ router = APIRouter(
 )
 
 @router.post(
-    "",
+    "/raw",
     name= "Adding objective match data",
     description= "Post a new objective match data in the server database.",
     response_description="Added a new objective match data successfully",
@@ -26,7 +26,7 @@ async def add_obj_match_data(data: ObjectiveMatchRawData = Body(...)):
     return data
 
 @router.get(
-    "",
+    "/raw",
     name= "Getting objective match data",
     description="Getting objective match data from the database.",
     response_description="Got objective match data successfully",
