@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, BackgroundTasks
 from fastapi.params import Query
 from starlette import status
 from typing_extensions import Annotated
@@ -6,6 +6,8 @@ from typing_extensions import Annotated
 from constants import SUBJECTIVE_RAW_COLLECTION
 from model import SubjectiveMatchRawData  # , MatchRawDataFilterParams
 from scripts.initdb import init_collection
+from scripts.objective_calculate import post_obj_results
+from scripts.subjective_calculate import post_sbj_results
 
 subjective_collection = init_collection(SUBJECTIVE_RAW_COLLECTION)
 
@@ -36,3 +38,27 @@ async def add_sbj_match_data(data: SubjectiveMatchRawData = Body(...)):
 )
 async def get_sbj_match_data(data_query: Annotated[SubjectiveMatchRawData, Query()]):
     return data_query
+
+@router.delete(
+    "/raw/{match_id}",
+    name= "Deleting subjective match data",
+    description="Deleting subjective match data from the database.",
+    response_description="Deleted subjective match data successfully",
+    response_model=SubjectiveMatchRawData,
+    status_code=status.HTTP_200_OK,
+)
+async def delete_sbj_match_data(match_id: str):
+    await subjective_collection.delete_one({"match_id": match_id})
+    return {"message": "Data with id [" + match_id + "] deleted successfully"}
+
+@router.get(
+    "/result",
+    name= "Getting subjective match results",
+    description="Getting subjective match results from the database.",
+    response_description="Got subjective match results successfully",
+    response_model=list[SubjectiveMatchRawData],
+    status_code=status.HTTP_200_OK,
+)
+async def get_sbj_match_results(team_number: int):
+    await post_sbj_results(team_number)
+    return await subjective_collection.find()
