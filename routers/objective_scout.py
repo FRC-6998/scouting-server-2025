@@ -49,7 +49,7 @@ async def get_obj_match_data(data_query: Annotated[ObjectiveMatchRawData, Query(
 )
 async def delete_obj_match_data(match_id: str):
     await objective_raw.delete_one({"match_id": match_id})
-    return match_id
+    return {"message": "Data with id [" + match_id + "] deleted successfully"}
 
 @router.get(
     "/result",
