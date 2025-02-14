@@ -4,11 +4,11 @@ from operator import itemgetter
 import numba
 import numpy as np
 
-from constants import RESULT_DATA_COLLECTION, OBJECTIVE_DATA_COLLECTION
+from constants import RESULT_DATA_COLLECTION, OBJECTIVE_RAW_COLLECTION
 from model import TeleopPathPoint
 from scripts.initdb import init_collection
 
-raw_collection = init_collection(OBJECTIVE_DATA_COLLECTION)
+raw_collection = init_collection(OBJECTIVE_RAW_COLLECTION)
 result_collection = init_collection(RESULT_DATA_COLLECTION)
 
 @numba.jit(cache=True)

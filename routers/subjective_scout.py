@@ -3,11 +3,11 @@ from fastapi.params import Query
 from starlette import status
 from typing_extensions import Annotated
 
-from constants import SUBJECTIVE_DATA_COLLECTION
+from constants import SUBJECTIVE_RAW_COLLECTION
 from model import SubjectiveMatchRawData  # , MatchRawDataFilterParams
 from scripts.initdb import init_collection
 
-subjective_collection = init_collection(SUBJECTIVE_DATA_COLLECTION)
+subjective_collection = init_collection(SUBJECTIVE_RAW_COLLECTION)
 
 router = APIRouter(
     prefix="/subjective",

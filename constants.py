@@ -4,8 +4,9 @@ MONGO_URL = "mongodb://localhost:27017"
 DATABASE_NAME = "scouting-field"
 
 # MongoDB Collections
-OBJECTIVE_DATA_COLLECTION = "objective"
-SUBJECTIVE_DATA_COLLECTION = "subjective"
+OBJECTIVE_RAW_COLLECTION = "objective_raw"
+SUBJECTIVE_RAW_COLLECTION = "subjective_raw"
+OBJECTIVE_RESULT_COLLECTION = "objective_result"
+SUBJECTIVE_RESULT_COLLECTION = "subjective_result"
 PIT_DATA_COLLECTION = "pit"
-PROCESSED_DATA_COLLECTION = "processed"
 RESULT_DATA_COLLECTION = "result"

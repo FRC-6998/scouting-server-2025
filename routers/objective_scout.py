@@ -2,11 +2,11 @@ from fastapi import APIRouter, Body, Query
 from starlette import status
 from typing_extensions import Annotated
 
-from constants import OBJECTIVE_DATA_COLLECTION
+from constants import OBJECTIVE_RAW_COLLECTION
 from model import ObjectiveMatchRawData  # , MatchRawDataFilterParams
 from scripts.initdb import init_collection
 
-objective_collection = init_collection(OBJECTIVE_DATA_COLLECTION) # db[OBJECTIVE_DATA_COLLECTION]
+objective_raw = init_collection(OBJECTIVE_RAW_COLLECTION) # db[OBJECTIVE_DATA_COLLECTION]
 
 router = APIRouter(
     prefix="/objective",
@@ -22,7 +22,7 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 async def add_obj_match_data(data: ObjectiveMatchRawData = Body(...)):
-    await objective_collection.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
+    await objective_raw.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
     return data
 
 @router.get(
@@ -38,6 +38,6 @@ async def get_obj_match_data(data_query: Annotated[ObjectiveMatchRawData, Query(
 
 async def get_obj_match_data_by_team(team_number: int):
     data = []
-    async for obj in objective_collection.find({"team_number": team_number}):
+    async for obj in objective_raw.find({"team_number": team_number}):
         data.append(obj)
     return data
