@@ -35,9 +35,3 @@ async def add_obj_match_data(data: ObjectiveMatchRawData = Body(...)):
 )
 async def get_obj_match_data(data_query: Annotated[ObjectiveMatchRawData, Query()]):
     return data_query
-
-async def get_obj_match_data_by_team(team_number: int):
-    data = []
-    async for obj in objective_raw.find({"team_number": team_number}):
-        data.append(obj)
-    return data
