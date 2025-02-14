@@ -35,3 +35,15 @@ async def add_obj_match_data(data: ObjectiveMatchRawData = Body(...)):
 )
 async def get_obj_match_data(data_query: Annotated[ObjectiveMatchRawData, Query()]):
     return data_query
+
+@router.delete(
+    "/raw/{match_id}",
+    name= "Deleting objective match data",
+    description="Deleting objective match data from the database.",
+    response_description="Deleted objective match data successfully",
+    response_model=ObjectiveMatchRawData,
+    status_code=status.HTTP_200_OK,
+)
+async def delete_obj_match_data(match_id: str):
+    await objective_raw.delete_one({"match_id": match_id})
+    return match_id
