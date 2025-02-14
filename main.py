@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from pymongo import AsyncMongoClient
 
 from routers import objective_scout, subjective_scout, pit_scout
 
