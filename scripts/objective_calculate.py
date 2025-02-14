@@ -24,6 +24,7 @@ async def get_rel_team_stats (team_number: int, key: str, period: str):
             {"team_number": team_number},
             {
                 "_id": 0,
+                "team_number": 1,
                 key + ".average": "$" + period + "." + key + ".average"
             }
         )
