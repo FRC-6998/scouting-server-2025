@@ -93,10 +93,10 @@ class AutoRaw (BaseModel):
 
 class BargeAction (str, Enum):
     UNSET = "unset"
-    NONE = "None"
-    PARK = "Park"
-    DEEP = "Deep"
-    SHALLOW = "Shallow"
+    NONE = "none"
+    PARK = "park"
+    DEEP = "deep"
+    SHALLOW = "shallow"
 
 class BargePosition (str, Enum):
     UNSET = "unset"
