@@ -85,7 +85,7 @@ class AutoPath (BaseModel):
 
 class AutoRaw (BaseModel):
     preload: Preload = "None"
-    startPosition: AutoStartPosition
+    start_position: AutoStartPosition
     leave: bool = False
     path: List[AutoPath]
 
@@ -126,10 +126,10 @@ class TeleopPath (BaseModel):
 
 class TeleopRaw (BaseModel):
     path: List[TeleopPath]
-    hangTime: float
-    bargeTried: BargeAction
-    bargeResult: BargeAction
-    bargePosition: BargePosition
+    hang_time: float
+    barge_tried: BargeAction
+    barge_result: BargeAction
+    barge_position: BargePosition
 
 # General Model
 
