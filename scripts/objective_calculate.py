@@ -62,43 +62,37 @@ class ReefSide(str, Enum):
     KL = "KL"
 
 async def count_preload (team_number: int):
-    raw_data = [
-        await raw_collection.find(
+    raw_data = await raw_collection.find(
             {"team_number": team_number},
             {
                 "_id": 0,
                 "preload": "$auto.preload"
             }
-        )
-    ]
+    ).to_list(None)
     none = raw_data.count({"preload": "none"})
     coral = raw_data.count({"preload": "coral"})
     algae = raw_data.count({"preload": "algae"})
     return {"none": none, "coral": coral, "algae": algae}
 
 async def count_start_pos (team_number: int):
-    raw_data = [
-        await raw_collection.find(
+    raw_data = await raw_collection.find(
             {"team_number": team_number},
             {
                 "_id": 0,
                 "start_position": "auto.start_position"
             }
-        )
-    ]
+    ).to_list(None)
     left = raw_data.count({"start_position": "left"})
     center = raw_data.count({"start_position": "center"})
     right = raw_data.count({"start_position": "right"})
     return {"left": left, "center": center, "right": right}
 
 async def calc_leave_success_rate (team_number:int, is_percentage : int = 0):
-    raw_data = [
-        await raw_collection.find(
+    raw_data = await raw_collection.find(
             {"team_number": team_number},
             {"_id": 0,
              "leave": "auto.leave"}
-        )
-    ]
+    ).to_list(None)
     count_try = len(raw_data)
     count_success = raw_data.count({"leave": True})
     match is_percentage:
@@ -179,15 +173,13 @@ def convert_reef_level_side_to_pos (level: str, side: str):
                     return "l4ReefKL"
 
 async def get_path (team_number: int, period: str = "auto"):
-    data = [
-        await raw_collection.find(
+    data = await raw_collection.find(
             {"team_number": team_number},
             {
                 "_id": 0,
                 "path": "$" + period + ".path"
             }
-        )
-    ]
+    ).to_list(None)
 
     return data
 
@@ -196,9 +188,12 @@ async def calc_reef_level (team_number: int, level: ReefLevel, period: str = "au
     paths = await get_path(team_number, period)
 
     reef_matched = []
-    for data in paths:
-        for pos in converted_level:
-            reef_matched.append(data.count({"path.position": pos}))
+    for path in paths:
+        count = 0
+        for point in path:
+            if point["position"] in converted_level and point["success"]:
+                count += 1
+        reef_matched.append(count)
 
     return get_abs_team_stats(reef_matched) | await get_rel_team_stats(team_number, "reef." + level, period)
 

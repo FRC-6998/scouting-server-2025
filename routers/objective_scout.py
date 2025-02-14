@@ -20,7 +20,6 @@ router = APIRouter(
     name= "Adding objective match data",
     description= "Post a new objective match data in the server database.",
     response_description="Added a new objective match data successfully",
-    response_model=ObjectiveMatchRawData,
     status_code=status.HTTP_201_CREATED,
 )
 async def add_obj_match_data(data: ObjectiveMatchRawData, background_tasks: BackgroundTasks):

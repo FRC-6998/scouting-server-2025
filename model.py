@@ -84,7 +84,7 @@ class AutoPath (BaseModel):
     success: bool = False
 
 class AutoRaw (BaseModel):
-    preload: Preload = "None"
+    preload: Preload = "none"
     start_position: AutoStartPosition
     leave: bool = False
     path: List[AutoPath]
@@ -135,7 +135,7 @@ class TeleopRaw (BaseModel):
 
 class ObjectiveMatchRawData (BaseModel):
     # "_id" field: Making sure that the data in temp and db has same id
-    ulid: ULID
+    ulid: str
     scout: str
     match_level: MatchLevel
     match_number: int
