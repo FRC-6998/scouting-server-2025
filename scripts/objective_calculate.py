@@ -519,3 +519,5 @@ async def pack_obj_rel_data (team_number: int):
         "auto": await pack_auto_rel_data(team_number),
         "teleop": await pack_teleop_rel_data(team_number)
     }
+
+    return data
