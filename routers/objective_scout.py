@@ -1,12 +1,14 @@
-from fastapi import APIRouter, Body, Query
+from fastapi import APIRouter, Query, BackgroundTasks
 from starlette import status
 from typing_extensions import Annotated
 
-from constants import OBJECTIVE_RAW_COLLECTION
+from constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
 from model import ObjectiveMatchRawData  # , MatchRawDataFilterParams
 from scripts.initdb import init_collection
+from scripts.objective_calculate import post_obj_results
 
 objective_raw = init_collection(OBJECTIVE_RAW_COLLECTION) # db[OBJECTIVE_DATA_COLLECTION]
+objective_result = init_collection(OBJECTIVE_RESULT_COLLECTION) # db[OBJECTIVE_RESULT_COLLECTION]
 
 router = APIRouter(
     prefix="/objective",
@@ -21,8 +23,9 @@ router = APIRouter(
     response_model=ObjectiveMatchRawData,
     status_code=status.HTTP_201_CREATED,
 )
-async def add_obj_match_data(data: ObjectiveMatchRawData ):
+async def add_obj_match_data(data: ObjectiveMatchRawData, background_tasks: BackgroundTasks):
     await objective_raw.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
+    background_tasks.add_task(post_obj_results, data.team_number)
     return data
 
 @router.get(
