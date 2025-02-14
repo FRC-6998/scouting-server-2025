@@ -50,3 +50,15 @@ async def get_obj_match_data(data_query: Annotated[ObjectiveMatchRawData, Query(
 async def delete_obj_match_data(match_id: str):
     await objective_raw.delete_one({"match_id": match_id})
     return match_id
+
+@router.get(
+    "/result",
+    name= "Getting objective match results",
+    description="Getting objective match results from the database.",
+    response_description="Got objective match results successfully",
+    response_model=list[ObjectiveMatchRawData],
+    status_code=status.HTTP_200_OK,
+)
+async def get_obj_match_results(team_number: int):
+    await post_obj_results(team_number)
+    return objective_result.find({"team_number": team_number})
