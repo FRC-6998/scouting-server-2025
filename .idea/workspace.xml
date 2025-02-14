@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="feat: make absolute and relative data model separate&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database.">
+    <list default="true" id="90501a21-e3a1-4f0e-b840-5a85ad06a797" name="Changes" comment="feat: adding subjective result analysis function">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/objective_calculate.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/objective_calculate.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routers/subjective_scout.py" beforeDir="false" afterPath="$PROJECT_DIR$/routers/subjective_scout.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +33,7 @@
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -138,401 +139,406 @@
       <workItem from="1738847269183" duration="5448000" />
       <workItem from="1738929846288" duration="12443000" />
       <workItem from="1739018325422" duration="8209000" />
-      <workItem from="1739071518099" duration="23676000" />
+      <workItem from="1739071518099" duration="25432000" />
+      <workItem from="1739264354838" duration="607000" />
+      <workItem from="1739439596817" duration="1454000" />
+      <workItem from="1739444829427" duration="255000" />
+      <workItem from="1739533655781" duration="339000" />
+      <workItem from="1739534007493" duration="15191000" />
     </task>
-    <task id="LOCAL-00084" summary="feat: change models setting to fit requirements from driver team">
+    <task id="LOCAL-00165" summary="perf: deleting unused Body()">
       <option name="closed" value="true" />
-      <created>1739019253633</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
+      <created>1739539261971</created>
+      <option name="number" value="00165" />
+      <option name="presentableId" value="LOCAL-00165" />
       <option name="project" value="LOCAL" />
-      <updated>1739019253633</updated>
+      <updated>1739539261971</updated>
     </task>
-    <task id="LOCAL-00085" summary="feat: change models setting to fit requirements from driver team">
+    <task id="LOCAL-00166" summary="style: change naming method to snake to fit frontend">
       <option name="closed" value="true" />
-      <created>1739019258853</created>
-      <option name="number" value="00085" />
-      <option name="presentableId" value="LOCAL-00085" />
+      <created>1739539663282</created>
+      <option name="number" value="00166" />
+      <option name="presentableId" value="LOCAL-00166" />
       <option name="project" value="LOCAL" />
-      <updated>1739019258853</updated>
+      <updated>1739539663282</updated>
     </task>
-    <task id="LOCAL-00086" summary="fix: remove bad return">
+    <task id="LOCAL-00167" summary="style: change naming method to snake to fit frontend">
       <option name="closed" value="true" />
-      <created>1739019623567</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
+      <created>1739539704981</created>
+      <option name="number" value="00167" />
+      <option name="presentableId" value="LOCAL-00167" />
       <option name="project" value="LOCAL" />
-      <updated>1739019623567</updated>
+      <updated>1739539704981</updated>
     </task>
-    <task id="LOCAL-00087" summary="feat: create auto's processor_score result calculating function.">
+    <task id="LOCAL-00168" summary="fix: fixing wrong enum strings">
       <option name="closed" value="true" />
-      <created>1739022367792</created>
-      <option name="number" value="00087" />
-      <option name="presentableId" value="LOCAL-00087" />
+      <created>1739539955010</created>
+      <option name="number" value="00168" />
+      <option name="presentableId" value="LOCAL-00168" />
       <option name="project" value="LOCAL" />
-      <updated>1739022367792</updated>
+      <updated>1739539955010</updated>
     </task>
-    <task id="LOCAL-00088" summary="feat: create auto's processor_score result calculating function.">
+    <task id="LOCAL-00169" summary="style: change naming method to fit frontend">
       <option name="closed" value="true" />
-      <created>1739022377874</created>
-      <option name="number" value="00088" />
-      <option name="presentableId" value="LOCAL-00088" />
+      <created>1739540197223</created>
+      <option name="number" value="00169" />
+      <option name="presentableId" value="LOCAL-00169" />
       <option name="project" value="LOCAL" />
-      <updated>1739022377874</updated>
+      <updated>1739540197223</updated>
     </task>
-    <task id="LOCAL-00089" summary="feat: create auto's processor_score result calculating function.">
+    <task id="LOCAL-00170" summary="style: change naming method to fit frontend">
       <option name="closed" value="true" />
-      <created>1739022826558</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
+      <created>1739541453860</created>
+      <option name="number" value="00170" />
+      <option name="presentableId" value="LOCAL-00170" />
       <option name="project" value="LOCAL" />
-      <updated>1739022826558</updated>
+      <updated>1739541453861</updated>
     </task>
-    <task id="LOCAL-00090" summary="feat: adding auto-teleop changing ability for some reusable function.">
+    <task id="LOCAL-00171" summary="style: change naming method to fit frontend">
       <option name="closed" value="true" />
-      <created>1739022969662</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
+      <created>1739541458759</created>
+      <option name="number" value="00171" />
+      <option name="presentableId" value="LOCAL-00171" />
       <option name="project" value="LOCAL" />
-      <updated>1739022969662</updated>
+      <updated>1739541458759</updated>
     </task>
-    <task id="LOCAL-00091" summary="feat: adding auto-teleop changing ability for some reusable function.">
+    <task id="LOCAL-00172" summary="style: change naming method to fit frontend">
       <option name="closed" value="true" />
-      <created>1739023506267</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
+      <created>1739541462970</created>
+      <option name="number" value="00172" />
+      <option name="presentableId" value="LOCAL-00172" />
       <option name="project" value="LOCAL" />
-      <updated>1739023506267</updated>
+      <updated>1739541462970</updated>
     </task>
-    <task id="LOCAL-00092" summary="feat: adding auto-teleop changing ability for some reusable function.">
+    <task id="LOCAL-00173" summary="style: change naming method to fit frontend">
       <option name="closed" value="true" />
-      <created>1739023511166</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
+      <created>1739541467881</created>
+      <option name="number" value="00173" />
+      <option name="presentableId" value="LOCAL-00173" />
       <option name="project" value="LOCAL" />
-      <updated>1739023511166</updated>
+      <updated>1739541467881</updated>
     </task>
-    <task id="LOCAL-00093" summary="feat: adding auto-teleop changing ability for some reusable function.">
+    <task id="LOCAL-00174" summary="style: change naming method to fit frontend">
       <option name="closed" value="true" />
-      <created>1739023546796</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
+      <created>1739541511630</created>
+      <option name="number" value="00174" />
+      <option name="presentableId" value="LOCAL-00174" />
       <option name="project" value="LOCAL" />
-      <updated>1739023546796</updated>
+      <updated>1739541511630</updated>
     </task>
-    <task id="LOCAL-00094" summary="feat: adding auto-teleop changing ability for some reusable function.">
+    <task id="LOCAL-00175" summary="style: change naming method to fit frontend">
       <option name="closed" value="true" />
-      <created>1739024071880</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
+      <created>1739541515905</created>
+      <option name="number" value="00175" />
+      <option name="presentableId" value="LOCAL-00175" />
       <option name="project" value="LOCAL" />
-      <updated>1739024071880</updated>
+      <updated>1739541515905</updated>
     </task>
-    <task id="LOCAL-00095" summary="feat: adding auto-teleop changing ability for some reusable function.">
+    <task id="LOCAL-00176" summary="style: change naming method to fit frontend">
       <option name="closed" value="true" />
-      <created>1739024106201</created>
-      <option name="number" value="00095" />
-      <option name="presentableId" value="LOCAL-00095" />
+      <created>1739541559076</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
       <option name="project" value="LOCAL" />
-      <updated>1739024106201</updated>
+      <updated>1739541559076</updated>
     </task>
-    <task id="LOCAL-00096" summary="refactor: optimized functions for calculations">
+    <task id="LOCAL-00177" summary="style: change naming method to fit frontend">
       <option name="closed" value="true" />
-      <created>1739027880491</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
+      <created>1739541643751</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
       <option name="project" value="LOCAL" />
-      <updated>1739027880491</updated>
+      <updated>1739541643751</updated>
     </task>
-    <task id="LOCAL-00097" summary="refactor: optimized functions for calculations">
+    <task id="LOCAL-00178" summary="feat: update objective data packing functions">
       <option name="closed" value="true" />
-      <created>1739028313007</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
+      <created>1739542168156</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
       <option name="project" value="LOCAL" />
-      <updated>1739028313007</updated>
+      <updated>1739542168156</updated>
     </task>
-    <task id="LOCAL-00098" summary="refactor: optimized functions for calculations">
+    <task id="LOCAL-00179" summary="feat: update objective data packing functions">
       <option name="closed" value="true" />
-      <created>1739028317037</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
+      <created>1739542316734</created>
+      <option name="number" value="00179" />
+      <option name="presentableId" value="LOCAL-00179" />
       <option name="project" value="LOCAL" />
-      <updated>1739028317037</updated>
+      <updated>1739542316734</updated>
     </task>
-    <task id="LOCAL-00099" summary="refactor: optimized functions for calculations">
+    <task id="LOCAL-00180" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739028774162</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
+      <created>1739543487394</created>
+      <option name="number" value="00180" />
+      <option name="presentableId" value="LOCAL-00180" />
       <option name="project" value="LOCAL" />
-      <updated>1739028774162</updated>
+      <updated>1739543487394</updated>
     </task>
-    <task id="LOCAL-00100" summary="feat: added net calculation">
+    <task id="LOCAL-00181" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739028985107</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
+      <created>1739544340447</created>
+      <option name="number" value="00181" />
+      <option name="presentableId" value="LOCAL-00181" />
       <option name="project" value="LOCAL" />
-      <updated>1739028985107</updated>
+      <updated>1739544340447</updated>
     </task>
-    <task id="LOCAL-00101" summary="feat: added net calculation">
+    <task id="LOCAL-00182" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739029033125</created>
-      <option name="number" value="00101" />
-      <option name="presentableId" value="LOCAL-00101" />
+      <created>1739544350720</created>
+      <option name="number" value="00182" />
+      <option name="presentableId" value="LOCAL-00182" />
       <option name="project" value="LOCAL" />
-      <updated>1739029033125</updated>
+      <updated>1739544350720</updated>
     </task>
-    <task id="LOCAL-00102" summary="feat: added to-be-finished calculation function for teleop results">
+    <task id="LOCAL-00183" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739029423234</created>
-      <option name="number" value="00102" />
-      <option name="presentableId" value="LOCAL-00102" />
+      <created>1739544355317</created>
+      <option name="number" value="00183" />
+      <option name="presentableId" value="LOCAL-00183" />
       <option name="project" value="LOCAL" />
-      <updated>1739029423234</updated>
+      <updated>1739544355317</updated>
     </task>
-    <task id="LOCAL-00103" summary="feat: added to-be-finished calculation function for teleop results">
+    <task id="LOCAL-00184" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739071653028</created>
-      <option name="number" value="00103" />
-      <option name="presentableId" value="LOCAL-00103" />
+      <created>1739544358533</created>
+      <option name="number" value="00184" />
+      <option name="presentableId" value="LOCAL-00184" />
       <option name="project" value="LOCAL" />
-      <updated>1739071653028</updated>
+      <updated>1739544358533</updated>
     </task>
-    <task id="LOCAL-00104" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00185" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739072585728</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
+      <created>1739544361733</created>
+      <option name="number" value="00185" />
+      <option name="presentableId" value="LOCAL-00185" />
       <option name="project" value="LOCAL" />
-      <updated>1739072585728</updated>
+      <updated>1739544361733</updated>
     </task>
-    <task id="LOCAL-00105" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00186" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739072590124</created>
-      <option name="number" value="00105" />
-      <option name="presentableId" value="LOCAL-00105" />
+      <created>1739547478567</created>
+      <option name="number" value="00186" />
+      <option name="presentableId" value="LOCAL-00186" />
       <option name="project" value="LOCAL" />
-      <updated>1739072590124</updated>
+      <updated>1739547478567</updated>
     </task>
-    <task id="LOCAL-00106" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00187" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739072869308</created>
-      <option name="number" value="00106" />
-      <option name="presentableId" value="LOCAL-00106" />
+      <created>1739547490002</created>
+      <option name="number" value="00187" />
+      <option name="presentableId" value="LOCAL-00187" />
       <option name="project" value="LOCAL" />
-      <updated>1739072869308</updated>
+      <updated>1739547490002</updated>
     </task>
-    <task id="LOCAL-00107" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00188" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739072872371</created>
-      <option name="number" value="00107" />
-      <option name="presentableId" value="LOCAL-00107" />
+      <created>1739547493177</created>
+      <option name="number" value="00188" />
+      <option name="presentableId" value="LOCAL-00188" />
       <option name="project" value="LOCAL" />
-      <updated>1739072872371</updated>
+      <updated>1739547493177</updated>
     </task>
-    <task id="LOCAL-00108" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00189" summary="feat: embed objective result calculation as a background task">
       <option name="closed" value="true" />
-      <created>1739072879867</created>
-      <option name="number" value="00108" />
-      <option name="presentableId" value="LOCAL-00108" />
+      <created>1739547503841</created>
+      <option name="number" value="00189" />
+      <option name="presentableId" value="LOCAL-00189" />
       <option name="project" value="LOCAL" />
-      <updated>1739072879867</updated>
+      <updated>1739547503841</updated>
     </task>
-    <task id="LOCAL-00109" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00190" summary="feat: adding commenting function">
       <option name="closed" value="true" />
-      <created>1739072883811</created>
-      <option name="number" value="00109" />
-      <option name="presentableId" value="LOCAL-00109" />
+      <created>1739548757273</created>
+      <option name="number" value="00190" />
+      <option name="presentableId" value="LOCAL-00190" />
       <option name="project" value="LOCAL" />
-      <updated>1739072883811</updated>
+      <updated>1739548757273</updated>
     </task>
-    <task id="LOCAL-00110" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00191" summary="feat: adding commenting function">
       <option name="closed" value="true" />
-      <created>1739072887360</created>
-      <option name="number" value="00110" />
-      <option name="presentableId" value="LOCAL-00110" />
+      <created>1739548887071</created>
+      <option name="number" value="00191" />
+      <option name="presentableId" value="LOCAL-00191" />
       <option name="project" value="LOCAL" />
-      <updated>1739072887360</updated>
+      <updated>1739548887071</updated>
     </task>
-    <task id="LOCAL-00111" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00192" summary="feat: adding commenting function">
       <option name="closed" value="true" />
-      <created>1739072890787</created>
-      <option name="number" value="00111" />
-      <option name="presentableId" value="LOCAL-00111" />
+      <created>1739548982408</created>
+      <option name="number" value="00192" />
+      <option name="presentableId" value="LOCAL-00192" />
       <option name="project" value="LOCAL" />
-      <updated>1739072890787</updated>
+      <updated>1739548982408</updated>
     </task>
-    <task id="LOCAL-00112" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00193" summary="feat: adding commenting function">
       <option name="closed" value="true" />
-      <created>1739072904214</created>
-      <option name="number" value="00112" />
-      <option name="presentableId" value="LOCAL-00112" />
+      <created>1739548985366</created>
+      <option name="number" value="00193" />
+      <option name="presentableId" value="LOCAL-00193" />
       <option name="project" value="LOCAL" />
-      <updated>1739072904214</updated>
+      <updated>1739548985366</updated>
     </task>
-    <task id="LOCAL-00113" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00194" summary="feat: adding commenting function">
       <option name="closed" value="true" />
-      <created>1739072912922</created>
-      <option name="number" value="00113" />
-      <option name="presentableId" value="LOCAL-00113" />
+      <created>1739548988892</created>
+      <option name="number" value="00194" />
+      <option name="presentableId" value="LOCAL-00194" />
       <option name="project" value="LOCAL" />
-      <updated>1739072912922</updated>
+      <updated>1739548988892</updated>
     </task>
-    <task id="LOCAL-00114" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00195" summary="feat: adding commenting function">
       <option name="closed" value="true" />
-      <created>1739072978654</created>
-      <option name="number" value="00114" />
-      <option name="presentableId" value="LOCAL-00114" />
+      <created>1739548999741</created>
+      <option name="number" value="00195" />
+      <option name="presentableId" value="LOCAL-00195" />
       <option name="project" value="LOCAL" />
-      <updated>1739072978654</updated>
+      <updated>1739548999741</updated>
     </task>
-    <task id="LOCAL-00115" summary="perf: added numba jit to improve performance on numpy calc">
+    <task id="LOCAL-00196" summary="feat: adding commenting function">
       <option name="closed" value="true" />
-      <created>1739072982629</created>
-      <option name="number" value="00115" />
-      <option name="presentableId" value="LOCAL-00115" />
+      <created>1739549003981</created>
+      <option name="number" value="00196" />
+      <option name="presentableId" value="LOCAL-00196" />
       <option name="project" value="LOCAL" />
-      <updated>1739072982629</updated>
+      <updated>1739549003981</updated>
     </task>
-    <task id="LOCAL-00116" summary="fix: fixed bad type hint.">
+    <task id="LOCAL-00197" summary="feat: adding commenting function">
       <option name="closed" value="true" />
-      <created>1739079561971</created>
-      <option name="number" value="00116" />
-      <option name="presentableId" value="LOCAL-00116" />
+      <created>1739549022290</created>
+      <option name="number" value="00197" />
+      <option name="presentableId" value="LOCAL-00197" />
       <option name="project" value="LOCAL" />
-      <updated>1739079561971</updated>
+      <updated>1739549022290</updated>
     </task>
-    <task id="LOCAL-00117" summary="feat: adding cycle time calculation function">
+    <task id="LOCAL-00198" summary="feat: adding commenting function">
       <option name="closed" value="true" />
-      <created>1739088831608</created>
-      <option name="number" value="00117" />
-      <option name="presentableId" value="LOCAL-00117" />
+      <created>1739549025387</created>
+      <option name="number" value="00198" />
+      <option name="presentableId" value="LOCAL-00198" />
       <option name="project" value="LOCAL" />
-      <updated>1739088831608</updated>
+      <updated>1739549025387</updated>
     </task>
-    <task id="LOCAL-00118" summary="feat: adding cycle time calculation function">
+    <task id="LOCAL-00199" summary="fix: fix relative data's filter">
       <option name="closed" value="true" />
-      <created>1739088836804</created>
-      <option name="number" value="00118" />
-      <option name="presentableId" value="LOCAL-00118" />
+      <created>1739551153763</created>
+      <option name="number" value="00199" />
+      <option name="presentableId" value="LOCAL-00199" />
       <option name="project" value="LOCAL" />
-      <updated>1739088836805</updated>
+      <updated>1739551153763</updated>
     </task>
-    <task id="LOCAL-00119" summary="feat: adding cycle time calculation function">
+    <task id="LOCAL-00200" summary="fix: fixing lost team_number field">
       <option name="closed" value="true" />
-      <created>1739088936610</created>
-      <option name="number" value="00119" />
-      <option name="presentableId" value="LOCAL-00119" />
+      <created>1739551327393</created>
+      <option name="number" value="00200" />
+      <option name="presentableId" value="LOCAL-00200" />
       <option name="project" value="LOCAL" />
-      <updated>1739088936610</updated>
+      <updated>1739551327393</updated>
     </task>
-    <task id="LOCAL-00120" summary="feat: adding cycle time calculation function">
+    <task id="LOCAL-00201" summary="feat: adding get function for objective results">
       <option name="closed" value="true" />
-      <created>1739088944505</created>
-      <option name="number" value="00120" />
-      <option name="presentableId" value="LOCAL-00120" />
+      <created>1739551658853</created>
+      <option name="number" value="00201" />
+      <option name="presentableId" value="LOCAL-00201" />
       <option name="project" value="LOCAL" />
-      <updated>1739088944505</updated>
+      <updated>1739551658853</updated>
     </task>
-    <task id="LOCAL-00121" summary="feat: adding cycle time calculation function">
+    <task id="LOCAL-00202" summary="feat: adding get function for objective results">
       <option name="closed" value="true" />
-      <created>1739088978169</created>
-      <option name="number" value="00121" />
-      <option name="presentableId" value="LOCAL-00121" />
+      <created>1739551702272</created>
+      <option name="number" value="00202" />
+      <option name="presentableId" value="LOCAL-00202" />
       <option name="project" value="LOCAL" />
-      <updated>1739088978169</updated>
+      <updated>1739551702272</updated>
     </task>
-    <task id="LOCAL-00122" summary="feat: adding cycle time calculation function">
+    <task id="LOCAL-00203" summary="fix: fixed wrong filter for getting relative data from db">
       <option name="closed" value="true" />
-      <created>1739088983091</created>
-      <option name="number" value="00122" />
-      <option name="presentableId" value="LOCAL-00122" />
+      <created>1739551952002</created>
+      <option name="number" value="00203" />
+      <option name="presentableId" value="LOCAL-00203" />
       <option name="project" value="LOCAL" />
-      <updated>1739088983091</updated>
+      <updated>1739551952002</updated>
     </task>
-    <task id="LOCAL-00123" summary="fix: fixed wrong string parameter">
+    <task id="LOCAL-00204" summary="fix: fixed wrong array getting method">
       <option name="closed" value="true" />
-      <created>1739090466845</created>
-      <option name="number" value="00123" />
-      <option name="presentableId" value="LOCAL-00123" />
+      <created>1739552560640</created>
+      <option name="number" value="00204" />
+      <option name="presentableId" value="LOCAL-00204" />
       <option name="project" value="LOCAL" />
-      <updated>1739090466845</updated>
+      <updated>1739552560640</updated>
     </task>
-    <task id="LOCAL-00124" summary="fix: fixed wrong string parameter">
+    <task id="LOCAL-00205" summary="fix: fixed wrong return">
       <option name="closed" value="true" />
-      <created>1739090471735</created>
-      <option name="number" value="00124" />
-      <option name="presentableId" value="LOCAL-00124" />
+      <created>1739553363170</created>
+      <option name="number" value="00205" />
+      <option name="presentableId" value="LOCAL-00205" />
       <option name="project" value="LOCAL" />
-      <updated>1739090471735</updated>
+      <updated>1739553363170</updated>
     </task>
-    <task id="LOCAL-00125" summary="fix: fixed wrong string parameter">
+    <task id="LOCAL-00206" summary="feat: adding subjective result analysis function">
       <option name="closed" value="true" />
-      <created>1739090474774</created>
-      <option name="number" value="00125" />
-      <option name="presentableId" value="LOCAL-00125" />
+      <created>1739553636243</created>
+      <option name="number" value="00206" />
+      <option name="presentableId" value="LOCAL-00206" />
       <option name="project" value="LOCAL" />
-      <updated>1739090474774</updated>
+      <updated>1739553636243</updated>
     </task>
-    <task id="LOCAL-00126" summary="fix: fixed wrong string parameter">
+    <task id="LOCAL-00207" summary="feat: adding subjective result analysis function">
       <option name="closed" value="true" />
-      <created>1739090479675</created>
-      <option name="number" value="00126" />
-      <option name="presentableId" value="LOCAL-00126" />
+      <created>1739553959721</created>
+      <option name="number" value="00207" />
+      <option name="presentableId" value="LOCAL-00207" />
       <option name="project" value="LOCAL" />
-      <updated>1739090479675</updated>
+      <updated>1739553959721</updated>
     </task>
-    <task id="LOCAL-00127" summary="fix: fixed wrong string parameter">
+    <task id="LOCAL-00208" summary="feat: adding subjective result analysis function">
       <option name="closed" value="true" />
-      <created>1739090485323</created>
-      <option name="number" value="00127" />
-      <option name="presentableId" value="LOCAL-00127" />
+      <created>1739554028747</created>
+      <option name="number" value="00208" />
+      <option name="presentableId" value="LOCAL-00208" />
       <option name="project" value="LOCAL" />
-      <updated>1739090485323</updated>
+      <updated>1739554028747</updated>
     </task>
-    <task id="LOCAL-00128" summary="feat: finish cycle time calculation function">
+    <task id="LOCAL-00209" summary="feat: adding subjective result analysis function">
       <option name="closed" value="true" />
-      <created>1739093265384</created>
-      <option name="number" value="00128" />
-      <option name="presentableId" value="LOCAL-00128" />
+      <created>1739554046672</created>
+      <option name="number" value="00209" />
+      <option name="presentableId" value="LOCAL-00209" />
       <option name="project" value="LOCAL" />
-      <updated>1739093265384</updated>
+      <updated>1739554046672</updated>
     </task>
-    <task id="LOCAL-00129" summary="feat: finish cycle time calculation function">
+    <task id="LOCAL-00210" summary="feat: adding subjective result analysis function">
       <option name="closed" value="true" />
-      <created>1739093483772</created>
-      <option name="number" value="00129" />
-      <option name="presentableId" value="LOCAL-00129" />
+      <created>1739554050368</created>
+      <option name="number" value="00210" />
+      <option name="presentableId" value="LOCAL-00210" />
       <option name="project" value="LOCAL" />
-      <updated>1739093483772</updated>
+      <updated>1739554050368</updated>
     </task>
-    <task id="LOCAL-00130" summary="feat: finish cycle time calculation function">
+    <task id="LOCAL-00211" summary="fix: fixed bad return for requests">
       <option name="closed" value="true" />
-      <created>1739093495871</created>
-      <option name="number" value="00130" />
-      <option name="presentableId" value="LOCAL-00130" />
+      <created>1739554090722</created>
+      <option name="number" value="00211" />
+      <option name="presentableId" value="LOCAL-00211" />
       <option name="project" value="LOCAL" />
-      <updated>1739093495871</updated>
+      <updated>1739554090722</updated>
     </task>
-    <task id="LOCAL-00131" summary="feat: finished hang time calculation function">
+    <task id="LOCAL-00212" summary="fix: fixed bad return for requests">
       <option name="closed" value="true" />
-      <created>1739104436863</created>
-      <option name="number" value="00131" />
-      <option name="presentableId" value="LOCAL-00131" />
+      <created>1739554103571</created>
+      <option name="number" value="00212" />
+      <option name="presentableId" value="LOCAL-00212" />
       <option name="project" value="LOCAL" />
-      <updated>1739104436863</updated>
+      <updated>1739554103571</updated>
     </task>
-    <task id="LOCAL-00132" summary="feat: make absolute and relative data model separate&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database.">
+    <task id="LOCAL-00213" summary="feat: adding background tasks to do auto analysis">
       <option name="closed" value="true" />
-      <created>1739106940000</created>
-      <option name="number" value="00132" />
-      <option name="presentableId" value="LOCAL-00132" />
+      <created>1739554126687</created>
+      <option name="number" value="00213" />
+      <option name="presentableId" value="LOCAL-00213" />
       <option name="project" value="LOCAL" />
-      <updated>1739106940000</updated>
+      <updated>1739554126687</updated>
     </task>
-    <option name="localTasksCounter" value="133" />
+    <option name="localTasksCounter" value="214" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -562,32 +568,32 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="refactor: rename some confusing function name" />
-    <MESSAGE value="feat: adding reef calculation function by side for auto period" />
-    <MESSAGE value="refactor: rename some confusing function name." />
-    <MESSAGE value="refactor: add some reusable function for easier recalling." />
-    <MESSAGE value="refactor: optimized some async function calling to await method" />
-    <MESSAGE value="refactor: remove unusable functions." />
-    <MESSAGE value="refactor: specify function names" />
-    <MESSAGE value="refactor: remove some unusable function" />
-    <MESSAGE value="fix: wrong calculation" />
-    <MESSAGE value="feat: adding success-rate calculation function for auto reef by each side" />
-    <MESSAGE value="feat: Adding function which pack all auto data" />
-    <MESSAGE value="feat: change models setting to fit requirements from driver team" />
-    <MESSAGE value="fix: remove bad return" />
-    <MESSAGE value="feat: create auto's processor_score result calculating function." />
-    <MESSAGE value="feat: adding auto-teleop changing ability for some reusable function." />
-    <MESSAGE value="refactor: optimized functions for calculations" />
-    <MESSAGE value="feat: added net calculation" />
-    <MESSAGE value="feat: added to-be-finished calculation function for teleop results" />
-    <MESSAGE value="perf: added numba jit to improve performance on numpy calc" />
-    <MESSAGE value="fix: fixed bad type hint." />
-    <MESSAGE value="feat: adding cycle time calculation function" />
-    <MESSAGE value="fix: fixed wrong string parameter" />
-    <MESSAGE value="feat: finish cycle time calculation function" />
-    <MESSAGE value="feat: finished hang time calculation function" />
-    <MESSAGE value="feat: make absolute and relative data model separate&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: make absolute and relative data model separate&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database." />
+    <MESSAGE value="fix: fixed bad pydantic models" />
+    <MESSAGE value="feat: make absolute and relative auto calculation seperated&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database." />
+    <MESSAGE value="feat: make absolute and relative teleop calculation seperated&#10;&#10;To reduce the difficulty of development, I want to let absolute result data (e.g. average, stability) and relative ones (e.g. rank, z-score) to be separately proceed.&#10;&#10;By doing so, I can make sure that the relative results would always be calculated after the absolute one record into the database." />
+    <MESSAGE value="fix: fix missing return" />
+    <MESSAGE value="fix: fix wrong model of subjective raw data" />
+    <MESSAGE value="feat: update path for objective routers." />
+    <MESSAGE value="feat: update models to fit future usage" />
+    <MESSAGE value="fix: remove unused function" />
+    <MESSAGE value="feat: adding deleting function in the objective data routers" />
+    <MESSAGE value="perf: deleting unused Body()" />
+    <MESSAGE value="style: change naming method to snake to fit frontend" />
+    <MESSAGE value="fix: fixing wrong enum strings" />
+    <MESSAGE value="style: change naming method to fit frontend" />
+    <MESSAGE value="feat: update objective data packing functions" />
+    <MESSAGE value="feat: embed objective result calculation as a background task" />
+    <MESSAGE value="feat: adding commenting function" />
+    <MESSAGE value="fix: fix relative data's filter" />
+    <MESSAGE value="fix: fixing lost team_number field" />
+    <MESSAGE value="feat: adding get function for objective results" />
+    <MESSAGE value="fix: fixed wrong filter for getting relative data from db" />
+    <MESSAGE value="fix: fixed wrong array getting method" />
+    <MESSAGE value="fix: fixed wrong return" />
+    <MESSAGE value="feat: adding subjective result analysis function" />
+    <MESSAGE value="fix: fixed bad return for requests" />
+    <MESSAGE value="feat: adding background tasks to do auto analysis" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: adding background tasks to do auto analysis" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Unipards_6998_Scouting_Field_Server$Unipards_6998_Scouting_Field_Server.coverage" NAME="Unipards-6998_Scouting-Field-Server Coverage Results" MODIFIED="1738679557533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
