@@ -26,7 +26,7 @@ router = APIRouter(
 async def add_obj_match_data(data: ObjectiveMatchRawData, background_tasks: BackgroundTasks):
     await objective_raw.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
     background_tasks.add_task(post_obj_results, data.team_number)
-    return data
+    return {"message": "Data added successfully"}
 
 @router.get(
     "/raw",
