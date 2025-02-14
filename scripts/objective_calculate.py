@@ -42,7 +42,7 @@ def calc_relative (team_number: int, data: list, key: str):
         if item["team_number"] == team_number:
             rank = data.index(item) + 1
 
-    sorted_np = np.array(data)
+    sorted_np = np.array(d[key] for d in data)
     z_score = (sorted_np[rank - 1] - np.average(sorted_np)) / np.std(sorted_np)
 
     return {"rank": rank, "z_score": z_score}
