@@ -17,7 +17,7 @@ router = APIRouter(
 )
 
 @router.post(
-    "",
+    "/raw",
     name= "Adding subjective match data",
     description= "Post a new subjective match data in the server database.",
     response_description="Added a new subjective match data successfully",
@@ -30,7 +30,7 @@ async def add_sbj_match_data(data: SubjectiveMatchRawData, background_tasks: Bac
     return {"message": "Data added successfully"}
 
 @router.get(
-    "",
+    "/raw",
     name= "Getting subjective match data",
     description="Getting subjective match data from the database.",
     response_description="Got subjective match data successfully",
