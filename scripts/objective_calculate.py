@@ -1,5 +1,6 @@
 from enum import Enum
 from operator import itemgetter
+from typing import Dict
 
 import numba
 import numpy as np
@@ -13,22 +14,26 @@ result_collection = init_collection(OBJECTIVE_RESULT_COLLECTION)
 
 @numba.jit(cache=True)
 def get_abs_team_stats (data: list):
+    data_array = np.array(data)
     return {
-        "average": np.mean(data),
-        "stability": np.std(data)
+        "average": np.mean(data_array),
+        "stability": np.std(data_array)
     }
 
 async def get_rel_team_stats (team_number: int, key: str, period: str):
-    unsorted_data = [
-        await result_collection.find(
+    unsorted_data = await result_collection.find(
             {},
             {
                 "_id": 0,
                 "team_number": 1,
                 key + ".average": "$" + period + "." + key + ".average"
             }
-        )
-    ]
+    ).to_list(None)
+
+    if not unsorted_data:  # Handle empty result case
+        # Return default relative stats if no relevant data was found
+        return {"relative_rank": None, "relative_percentile": None}
+
     data = sorted(unsorted_data, key=itemgetter(key + ".average"), reverse=True)
 
     return calc_relative(team_number, data, key)
@@ -183,20 +188,32 @@ async def get_path (team_number: int, period: str = "auto"):
 
     return data
 
-async def calc_reef_level (team_number: int, level: ReefLevel, period: str = "auto"):
+async def calc_reef_level(team_number: int, level: ReefLevel, period: str = "auto"):
     converted_level = convert_reef_level_to_pos(level)
     paths = await get_path(team_number, period)
 
     reef_matched = []
     for path in paths:
+        if not isinstance(path, list):  # Ensure each path is a list
+            continue
+
         count = 0
         for point in path:
-            if point["position"] in converted_level and point["success"]:
-                count += 1
+            if isinstance(point, dict):  # Ensure each point is a dictionary
+                if "position" in point and "success" in point:  # Validate keys
+                    if point["position"] in converted_level and point["success"]:
+                        count += 1
         reef_matched.append(count)
 
-    return get_abs_team_stats(reef_matched) | await get_rel_team_stats(team_number, "reef." + level, period)
+    # Handle edge case where reef_matched is empty
+    if not reef_matched:
+        reef_matched = [0]  # Assign a default value (e.g., no matches)
 
+    abs_stats = get_abs_team_stats(reef_matched)
+    rel_stats = await get_rel_team_stats(team_number, "reef." + str(level), period)
+
+    merged_stats = {**abs_stats, **rel_stats}
+    return merged_stats  # Use the merged dictionary
 
 async def calc_reef_score (team_number: int, period: str = "auto"):
     all_reef_level = ["l1", "l2", "l3", "l4"]
@@ -208,10 +225,18 @@ async def calc_reef_score (team_number: int, period: str = "auto"):
         reef_score = 0
         for level in all_reef_level:
             for pos in convert_reef_level_to_pos(level):
-                reef_score += data.count({"path.position": pos})*get_reef_level_score_weight(level, "auto")
-        scores.append(reef_score)
+                if isinstance(data, dict) and data.get("path.position") == pos:
+                    reef_score += get_reef_level_score_weight(level, "auto")
 
-    return get_abs_team_stats(scores) | await get_rel_team_stats(team_number, "reef_core", period)
+                scores.append(reef_score)
+
+    abs_team_stats = get_abs_team_stats(scores)
+    rel_team_stats = await get_rel_team_stats(team_number, "reef_core", period)
+
+    # Merging the dictionaries
+    merged_stats = {**abs_team_stats, **rel_team_stats}
+
+    return merged_stats
 
 
 def convert_reef_side_to_pos (side: ReefSide):
@@ -263,8 +288,8 @@ async def calc_reef_score_by_side (team_number: int, side: ReefSide, period: str
         score = 0
         for side in converted_side:
             for level in all_reef_level:
-                score += (data.count({"path.position": convert_reef_level_side_to_pos(level, side)})
-                            *get_reef_level_score_weight(level, "auto"))
+                if data.get("path.position") == convert_reef_level_side_to_pos(level, side):
+                    score += get_reef_level_score_weight(level, "auto")
 
         side_matched.append(score)
 
@@ -276,13 +301,20 @@ async def calc_reef_success_rate_by_side (team_number: int, side: ReefSide, peri
 
     matched = 0
     count_succeeded = 0
-    for data in paths:
+
+    if not isinstance(paths, list) or not all(isinstance(data, dict) for data in paths):
+        raise ValueError(
+            f"Expected 'paths' to be a list of dictionaries, got {type(paths)} with elements of type {type(paths[0]) if paths else 'unknown'}.")
+
+    for path in paths:  # Iterate through each dictionary in 'paths'
         for pos in converted_side:
-            for path in data:
-                if path["position"] == pos:
-                    matched += 1
-                    if path["success"]:
-                        count_succeeded += 1
+            if path.get("position") == pos:  # Match the position
+                matched += 1
+                if path.get("success"):  # Success if key exists and is truthy
+                    count_succeeded += 1
+
+    if matched == 0:  # Avoid division by zero
+        return {side: 0.0}
 
     rate = count_succeeded / matched
 
@@ -295,11 +327,16 @@ async def count_processor_score (team_number: int, period: str = "auto"):
     for data in paths:
         score = 0
         for path in data:
-            if path["success"]:
-                score += 6
+            if isinstance(path, Dict) and "success" in path:
+                if path["success"]:
+                    score += 6
         processor_score.append(score)
 
-    return get_abs_team_stats(processor_score) | await get_rel_team_stats(team_number, "processor", period)
+    abs_team_stats = get_abs_team_stats(processor_score)
+    rel_team_stats = await get_rel_team_stats(team_number, "processor", period)
+    # Use dictionary unpacking to merge them safely.
+    return {**abs_team_stats, **rel_team_stats}
+
 
 async def count_net_score (team_number: int, period: str = "auto"):
     paths = await get_path(team_number, period)
@@ -308,10 +345,17 @@ async def count_net_score (team_number: int, period: str = "auto"):
     for data in paths:
         score = 0
         for path in data:
-            if path["success"]:
+            if isinstance(path, dict) and path.get("success", False):  # Default to False if no "success" key
                 score += 4
+
         net_score.append(score)
-    return get_abs_team_stats(net_score) | await get_rel_team_stats(team_number, "net", period)
+
+    # Return computed stats
+    abs_stats = get_abs_team_stats(net_score)
+    rel_stats = await get_rel_team_stats(team_number, "net", period)
+    return {**abs_stats, **rel_stats}
+
+
 
 async def pack_auto_data (team_number: int):
     data = {
@@ -361,6 +405,7 @@ B. ALGAE Cycle
 
 """
 
+# FIXME: This function is not working as expected
 @numba.jit(cache=True)
 def search_cycle_time(data: list, cycle_type: str):
     start_pos = []
@@ -369,35 +414,36 @@ def search_cycle_time(data: list, cycle_type: str):
     start_point =[]
     end_point = []
 
-    match cycle_type:
-        case "algae":
-            start_pos.append([
-                TeleopPathPoint.GROUND_CORAL,
-                TeleopPathPoint.CORAL_STATION
-            ])
-            end_pos.append([
-                TeleopPathPoint.L1_REEF,
-                TeleopPathPoint.L2_REEF,
-                TeleopPathPoint.L3_REEF,
-                TeleopPathPoint.L4_REEF
-            ])
+    if cycle_type == "coral":
+        start_pos.extend([
+            TeleopPathPoint.GROUND_CORAL,
+            TeleopPathPoint.CORAL_STATION
+        ])
+        end_pos.extend([
+            TeleopPathPoint.L1_REEF,
+            TeleopPathPoint.L2_REEF,
+            TeleopPathPoint.L3_REEF,
+            TeleopPathPoint.L4_REEF
+        ])
+    elif cycle_type == "algae":
+        start_pos.extend([
+            TeleopPathPoint.REEF_ALGAE,
+            TeleopPathPoint.GROUND_ALGAE
+        ])
+        end_pos.extend([
+            TeleopPathPoint.NET,
+            TeleopPathPoint.PROCESSOR
+        ])
 
-        case "algae":
-            start_pos.append([
-                TeleopPathPoint.REEF_ALGAE,
-                TeleopPathPoint.GROUND_ALGAE
-            ])
-            end_pos.append([
-                TeleopPathPoint.NET,
-                TeleopPathPoint.PROCESSOR
-            ])
+    # Filter the data for start and end points
+    start_points = []
+    end_points = []
 
     for path in data:
-        if path["position"] in start_pos and path["success"] == True:
-            start_point.append(path)
+        if path["position"] in start_pos and path["success"]:
+            start_points.append(path)
         elif path["position"] in end_pos:
-            end_point.append(path)
-            break
+            end_points.append(path)
 
     cycle_time = []
     for start, end in zip(start_point, end_point):
