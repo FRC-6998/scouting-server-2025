@@ -156,19 +156,24 @@ class SubjectiveRanking2 (IntEnum):
     FIRST = 1
     SECOND = 2
 
+class SubjectiveTeamRaw(BaseModel):
+    team_number: int
+    driver_awareness: SubjectiveRanking3
+    coral_station_awareness: SubjectiveRanking2
+    num_score_on_net: int
+    mobility: SubjectiveRanking3
+    defense: SubjectiveRanking3
+
 class SubjectiveMatchRawData (BaseModel):
     ulid: ULID
     scout: str
     match_type: MatchLevel
     match_number: int
     event_key: str
-    team_number: int
     alliance: Alliance
-    driver_awareness: SubjectiveRanking3
-    coral_station_awareness: SubjectiveRanking2
-    num_score_on_net: int
-    mobility: SubjectiveRanking3
-    defense: SubjectiveRanking3
+    team1: SubjectiveTeamRaw
+    team2: SubjectiveTeamRaw
+    team3: SubjectiveTeamRaw
 
 # Pit Scout Data
 
