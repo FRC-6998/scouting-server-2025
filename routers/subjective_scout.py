@@ -24,7 +24,7 @@ router = APIRouter(
     response_model=SubjectiveMatchRawData,
     status_code=status.HTTP_201_CREATED,
 )
-async def add_sbj_match_data(data: SubjectiveMatchRawData = Body(...)):
+async def add_sbj_match_data(data: SubjectiveMatchRawData, background_tasks: BackgroundTasks):
     await subjective_collection.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
     background_tasks.add_task(post_obj_results, data.team_number)
     return {"message": "Data added successfully"}
