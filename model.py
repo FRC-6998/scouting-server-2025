@@ -137,10 +137,10 @@ class ObjectiveMatchRawData (BaseModel):
     # "_id" field: Making sure that the data in temp and db has same id
     ulid: ULID
     scout: str
-    matchLevel: MatchLevel
-    matchNumber: int
-    eventKey: str
-    teamNumber: int
+    match_level: MatchLevel
+    match_number: int
+    event_key: str
+    team_number: int
     alliance: Alliance
     auto : AutoRaw
     teleop: TeleopRaw

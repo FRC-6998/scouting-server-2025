@@ -21,7 +21,7 @@ def get_abs_team_stats (data: list):
 async def get_rel_team_stats (team_number: int, key: str, period: str):
     unsorted_data = [
         await result_collection.find(
-            {"teamNumber": team_number},
+            {"team_number": team_number},
             {
                 "_id": 0,
                 key + ".average": "$" + period + "." + key + ".average"
@@ -38,7 +38,7 @@ def calc_relative (team_number: int, data: list, key: str):
 
     for item in data:
         data.append(item[key+".average"])
-        if item["teamNumber"] == team_number:
+        if item["team_number"] == team_number:
             rank = data.index(item) + 1
 
     sorted_np = np.array(data)
@@ -63,25 +63,25 @@ class ReefSide(str, Enum):
 async def count_preload (team_number: int):
     raw_data = [
         await raw_collection.find(
-            {"teamNumber": team_number},
+            {"team_number": team_number},
             {
                 "_id": 0,
                 "preload": "$auto.preload"
             }
         )
     ]
-    none = raw_data.count({"preload": "None"})
-    coral = raw_data.count({"preload": "Coral"})
-    algae = raw_data.count({"preload": "Algae"})
+    none = raw_data.count({"preload": "none"})
+    coral = raw_data.count({"preload": "coral"})
+    algae = raw_data.count({"preload": "algae"})
     return {"none": none, "coral": coral, "algae": algae}
 
 async def count_start_pos (team_number: int):
     raw_data = [
         await raw_collection.find(
-            {"teamNumber": team_number},
+            {"team_number": team_number},
             {
                 "_id": 0,
-                "startPosition": "auto.startPosition"
+                "start_position": "auto.start_position"
             }
         )
     ]
@@ -93,7 +93,7 @@ async def count_start_pos (team_number: int):
 async def calc_leave_success_rate (team_number:int, is_percentage : int = 0):
     raw_data = [
         await raw_collection.find(
-            {"teamNumber": team_number},
+            {"team_number": team_number},
             {"_id": 0,
              "leave": "auto.leave"}
         )
@@ -180,7 +180,7 @@ def convert_reef_level_side_to_pos (level: str, side: str):
 async def get_path (team_number: int, period: str = "auto"):
     data = [
         await raw_collection.find(
-            {"teamNumber": team_number},
+            {"team_number": team_number},
             {
                 "_id": 0,
                 "path": "$" + period + ".path"
