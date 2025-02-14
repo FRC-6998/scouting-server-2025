@@ -21,7 +21,7 @@ router = APIRouter(
     response_model=ObjectiveMatchRawData,
     status_code=status.HTTP_201_CREATED,
 )
-async def add_obj_match_data(data: ObjectiveMatchRawData = Body(...)):
+async def add_obj_match_data(data: ObjectiveMatchRawData ):
     await objective_raw.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
     return data
 
