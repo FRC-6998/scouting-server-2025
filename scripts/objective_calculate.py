@@ -21,7 +21,7 @@ def get_abs_team_stats (data: list):
 async def get_rel_team_stats (team_number: int, key: str, period: str):
     unsorted_data = [
         await result_collection.find(
-            {"team_number": team_number},
+            {},
             {
                 "_id": 0,
                 "team_number": 1,
