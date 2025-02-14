@@ -4,12 +4,12 @@ from operator import itemgetter
 import numba
 import numpy as np
 
-from constants import RESULT_DATA_COLLECTION, OBJECTIVE_RAW_COLLECTION
+from constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
 from model import TeleopPathPoint
 from scripts.initdb import init_collection
 
 raw_collection = init_collection(OBJECTIVE_RAW_COLLECTION)
-result_collection = init_collection(RESULT_DATA_COLLECTION)
+result_collection = init_collection(OBJECTIVE_RESULT_COLLECTION)
 
 @numba.jit(cache=True)
 def get_abs_team_stats (data: list):
@@ -449,3 +449,7 @@ async def pack_obj_data (team_number: int):
     }
 
     return data
+
+async def post_obj_results(team_number: int):
+    data = await pack_obj_data(team_number)
+    await result_collection.replace_one(data, bypass_document_validation=False, session=None, upsert= True)
