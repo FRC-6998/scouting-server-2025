@@ -238,25 +238,17 @@ class StartPositionCount(BaseModel):
     center: int
     right: int
 
-class GamePieceActionAbsoluteResult (BaseModel):
+class GamePieceActionResult (BaseModel):
     average: float
     stability: float
-
-class GamePieceActionRelativeResult (BaseModel):
     rank: int
     zScore: float
 
 class ReefCountAbsoluteResultBySide(BaseModel):
-    l1: GamePieceActionAbsoluteResult
-    l2: GamePieceActionAbsoluteResult
-    l3: GamePieceActionAbsoluteResult
-    l4: GamePieceActionAbsoluteResult
-
-class ReefCountRelativeResultBySide(BaseModel):
-    l1: GamePieceActionRelativeResult
-    l2: GamePieceActionRelativeResult
-    l3: GamePieceActionRelativeResult
-    l4: GamePieceActionRelativeResult
+    l1: GamePieceActionResult
+    l2: GamePieceActionResult
+    l3: GamePieceActionResult
+    l4: GamePieceActionResult
 
 class ReefResultBySide(BaseModel):
     AB: float
@@ -267,46 +259,28 @@ class ReefResultBySide(BaseModel):
     KL: float
 
 class AutoAbsoluteResult(BaseModel):
-    preloadCount: PreloadCount
-    startPositionCount: StartPositionCount
-    leaveSuccessRate: float
+    preload_count: PreloadCount
+    start_position_count: StartPositionCount
+    leave_success_rate: float
     reef: ReefCountAbsoluteResultBySide
-    reefSuccessRateBySide: ReefResultBySide
-    reefScoreBySide: ReefResultBySide
-    reefScore: GamePieceActionAbsoluteResult
-    processorScore: GamePieceActionAbsoluteResult
-    netScore: GamePieceActionAbsoluteResult
+    reef_success_rate_by_side: ReefResultBySide
+    reef_score_by_side: ReefResultBySide
+    reef_score: GamePieceActionResult
+    processor_score: GamePieceActionResult
+    net_score: GamePieceActionResult
 
-class AutoRelativeResult(BaseModel):
-    reef: ReefCountRelativeResultBySide
-    reefScore: GamePieceActionRelativeResult
-    processorScore: GamePieceActionRelativeResult
-    netScore: GamePieceActionRelativeResult
-
-class AbsoluteCycleTime(BaseModel):
-    algae: GamePieceActionAbsoluteResult
-    coral: GamePieceActionAbsoluteResult
+class CycleTime(BaseModel):
+    algae: GamePieceActionResult
+    coral: GamePieceActionResult
 
 class TeleopAbsoluteResult(BaseModel):
     reef: ReefCountAbsoluteResultBySide
-    processorScore: GamePieceActionAbsoluteResult
-    netScore: GamePieceActionAbsoluteResult
-    cycleTime: AbsoluteCycleTime
-    hang: GamePieceActionAbsoluteResult
-
-class TeleopRelativeResult(BaseModel):
-    reef: ReefCountRelativeResultBySide
-    processorScore: GamePieceActionRelativeResult
-    netScore: GamePieceActionRelativeResult
-    cycleTime: AbsoluteCycleTime
-    hang: GamePieceActionRelativeResult
+    processor_score: GamePieceActionResult
+    net_score: GamePieceActionResult
+    cycle_time: CycleTime
+    hang: GamePieceActionResult
 
 class ObjectiveAbsoluteResult (BaseModel):
-    teamNumber: int
+    team_number: int
     auto: AutoAbsoluteResult
     teleop: TeleopAbsoluteResult
-
-class ObjectiveRelativeResult (BaseModel):
-    teamNumber: int
-    auto: AutoRelativeResult
-    teleop: TeleopRelativeResult
