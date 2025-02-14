@@ -67,6 +67,7 @@ async def count_preload (team_number: int):
             {"team_number": team_number},
             {
                 "_id": 0,
+                "team_number": 1,
                 "preload": "$auto.preload"
             }
         )
