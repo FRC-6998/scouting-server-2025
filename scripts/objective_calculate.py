@@ -440,12 +440,25 @@ async def pack_teleop_data (team_number: int):
 
     return data
 
+async def get_comments (team_number: int):
+    data = [
+        await raw_collection.find(
+            {"team_number": team_number},
+            {
+                "_id": 0,
+                "comments": "$comments"
+            }
+        )
+    ]
+
+    return data
 
 async def pack_obj_data (team_number: int):
     data = {
         "team_number": team_number,
         "auto": await pack_auto_data(team_number),
         "teleop": await pack_teleop_data(team_number),
+        "comments": await get_comments(team_number)
     }
 
     return data

@@ -144,6 +144,7 @@ class ObjectiveMatchRawData (BaseModel):
     alliance: Alliance
     auto : AutoRaw
     teleop: TeleopRaw
+    comments: str
 
 # Subjective Match Data (formerly known as Super Scout Data)
 
@@ -242,7 +243,7 @@ class GamePieceActionResult (BaseModel):
     average: float
     stability: float
     rank: int
-    zScore: float
+    z_score: float
 
 class ReefCountAbsoluteResultBySide(BaseModel):
     l1: GamePieceActionResult
@@ -258,7 +259,7 @@ class ReefResultBySide(BaseModel):
     IJ: float
     KL: float
 
-class AutoAbsoluteResult(BaseModel):
+class AutoResult(BaseModel):
     preload_count: PreloadCount
     start_position_count: StartPositionCount
     leave_success_rate: float
@@ -273,14 +274,15 @@ class CycleTime(BaseModel):
     algae: GamePieceActionResult
     coral: GamePieceActionResult
 
-class TeleopAbsoluteResult(BaseModel):
+class TeleopResult(BaseModel):
     reef: ReefCountAbsoluteResultBySide
     processor_score: GamePieceActionResult
     net_score: GamePieceActionResult
     cycle_time: CycleTime
     hang: GamePieceActionResult
 
-class ObjectiveAbsoluteResult (BaseModel):
+class ObjectiveResult (BaseModel):
     team_number: int
-    auto: AutoAbsoluteResult
-    teleop: TeleopAbsoluteResult
+    auto: AutoResult
+    teleop: TeleopResult
+    comments: List[str]
