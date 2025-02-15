@@ -421,8 +421,6 @@ B. ALGAE Cycle
 
 """
 
-# FIXME: This function is not working as expected
-
 def search_cycle_time(data: list, cycle_type: str):
     start_pos = []
     end_pos = []
