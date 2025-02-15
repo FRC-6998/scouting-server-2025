@@ -23,8 +23,9 @@ def get_abs_team_stats(data: list):
 
 
 async def get_rel_team_stats(team_number: int, key: str, period: str):
+    # Query to find documents in result_collection
     unsorted_data = await result_collection.find(
-        {},
+        {},  # Query criteria
         {
             "_id": 0,
             "team_number": 1,
@@ -32,13 +33,23 @@ async def get_rel_team_stats(team_number: int, key: str, period: str):
         }
     ).to_list(None)
 
-    if not unsorted_data:  # Handle empty result case
-        # Return default relative stats if no relevant data was found
+    if not unsorted_data:  # Handle case where no data is returned by the query
+        # Default relative statistics when no data is found
         return {"relative_rank": None, "relative_percentile": None}
 
-    data = sorted(unsorted_data, key=itemgetter(
-        key + ".average"), reverse=True)
+    # Remove entries where the key ".average" does not exist in the result
+    valid_data = [
+        entry for entry in unsorted_data
+        if key + ".average" in entry  # Only include items containing the key
+    ]
 
+    if not valid_data:  # Handle case where no documents include the desired key
+        return {"relative_rank": None, "relative_percentile": None}
+
+    # Sort only the valid data by the key
+    data = sorted(valid_data, key=itemgetter(key + ".average"), reverse=True)
+
+    # Calculate the relative stats for the current team
     return calc_relative(team_number, data, key)
 
 
@@ -222,7 +233,11 @@ async def calc_reef_level(team_number: int, level: ReefLevel, period: str = "aut
         reef_matched = [0]  # Assign a default value (e.g., no matches)
 
     abs_stats = get_abs_team_stats(reef_matched)
-    rel_stats = await get_rel_team_stats(team_number, "reef." + str(level), period)
+
+    # Transform ReefLevel into a valid string for database querying
+    level_key = f"reef.{level.value}"  # Assuming ReefLevel has a `.value` that maps to valid database keys
+
+    rel_stats = await get_rel_team_stats(team_number, level_key, period)
 
     merged_stats = {**abs_stats, **rel_stats}
     return merged_stats  # Use the merged dictionary
