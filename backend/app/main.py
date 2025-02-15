@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from routers import objective_scout, subjective_scout, pit_scout
+from .routers import objective_scout, subjective_scout, pit_scout
 
 scouting_app = FastAPI(
     title="Scouting Field Server API",

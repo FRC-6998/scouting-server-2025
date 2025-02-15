@@ -5,41 +5,45 @@ from typing import Dict
 import numba
 import numpy as np
 
-from constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
-from model import TeleopPathPoint
-from scripts.initdb import init_collection
+from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
+from ..model import TeleopPathPoint
+from ..scripts.initdb import init_collection
 
 raw_collection = init_collection(OBJECTIVE_RAW_COLLECTION)
 result_collection = init_collection(OBJECTIVE_RESULT_COLLECTION)
 
+
 @numba.jit(cache=True)
-def get_abs_team_stats (data: list):
+def get_abs_team_stats(data: list):
     data_array = np.array(data)
     return {
         "average": np.mean(data_array),
         "stability": np.std(data_array)
     }
 
-async def get_rel_team_stats (team_number: int, key: str, period: str):
+
+async def get_rel_team_stats(team_number: int, key: str, period: str):
     unsorted_data = await result_collection.find(
-            {},
-            {
-                "_id": 0,
-                "team_number": 1,
-                key + ".average": "$" + period + "." + key + ".average"
-            }
+        {},
+        {
+            "_id": 0,
+            "team_number": 1,
+            key + ".average": "$" + period + "." + key + ".average"
+        }
     ).to_list(None)
 
     if not unsorted_data:  # Handle empty result case
         # Return default relative stats if no relevant data was found
         return {"relative_rank": None, "relative_percentile": None}
 
-    data = sorted(unsorted_data, key=itemgetter(key + ".average"), reverse=True)
+    data = sorted(unsorted_data, key=itemgetter(
+        key + ".average"), reverse=True)
 
     return calc_relative(team_number, data, key)
 
+
 @numba.jit(cache=True)
-def calc_relative (team_number: int, data: list, key: str):
+def calc_relative(team_number: int, data: list, key: str):
     rank = 0
 
     for item in data:
@@ -52,11 +56,13 @@ def calc_relative (team_number: int, data: list, key: str):
 
     return {"rank": rank, "z_score": z_score}
 
+
 class ReefLevel(str, Enum):
     L1 = "l1"
     L2 = "l2"
     L3 = "l3"
     L4 = "l4"
+
 
 class ReefSide(str, Enum):
     AB = "AB"
@@ -66,37 +72,40 @@ class ReefSide(str, Enum):
     IJ = "IJ"
     KL = "KL"
 
-async def count_preload (team_number: int):
+
+async def count_preload(team_number: int):
     raw_data = await raw_collection.find(
-            {"team_number": team_number},
-            {
-                "_id": 0,
-                "preload": "$auto.preload"
-            }
+        {"team_number": team_number},
+        {
+            "_id": 0,
+            "preload": "$auto.preload"
+        }
     ).to_list(None)
     none = raw_data.count({"preload": "none"})
     coral = raw_data.count({"preload": "coral"})
     algae = raw_data.count({"preload": "algae"})
     return {"none": none, "coral": coral, "algae": algae}
 
-async def count_start_pos (team_number: int):
+
+async def count_start_pos(team_number: int):
     raw_data = await raw_collection.find(
-            {"team_number": team_number},
-            {
-                "_id": 0,
-                "start_position": "auto.start_position"
-            }
+        {"team_number": team_number},
+        {
+            "_id": 0,
+            "start_position": "auto.start_position"
+        }
     ).to_list(None)
     left = raw_data.count({"start_position": "left"})
     center = raw_data.count({"start_position": "center"})
     right = raw_data.count({"start_position": "right"})
     return {"left": left, "center": center, "right": right}
 
-async def calc_leave_success_rate (team_number:int, is_percentage : int = 0):
+
+async def calc_leave_success_rate(team_number: int, is_percentage: int = 0):
     raw_data = await raw_collection.find(
-            {"team_number": team_number},
-            {"_id": 0,
-             "leave": "auto.leave"}
+        {"team_number": team_number},
+        {"_id": 0,
+         "leave": "auto.leave"}
     ).to_list(None)
     count_try = len(raw_data)
     count_success = raw_data.count({"leave": True})
@@ -106,7 +115,8 @@ async def calc_leave_success_rate (team_number:int, is_percentage : int = 0):
         case _:
             return count_success / count_try
 
-def convert_reef_level_to_pos (level: str):
+
+def convert_reef_level_to_pos(level: str):
     match level:
         case ReefLevel.L1:
             return ["l1ReefAB", "l1ReefCD", "l1ReefEF", "l1ReefGH", "l1ReefIJ"]
@@ -118,7 +128,7 @@ def convert_reef_level_to_pos (level: str):
             return ["l4ReefAB", "l4ReefCD", "l4ReefEF", "l4ReefGH", "l4ReefIJ"]
 
 
-def convert_reef_level_side_to_pos (level: str, side: str):
+def convert_reef_level_side_to_pos(level: str, side: str):
     match level:
         case ReefLevel.L1:
             match side:
@@ -177,16 +187,18 @@ def convert_reef_level_side_to_pos (level: str, side: str):
                 case ReefSide.KL:
                     return "l4ReefKL"
 
-async def get_path (team_number: int, period: str = "auto"):
+
+async def get_path(team_number: int, period: str = "auto"):
     data = await raw_collection.find(
-            {"team_number": team_number},
-            {
-                "_id": 0,
-                "path": "$" + period + ".path"
-            }
+        {"team_number": team_number},
+        {
+            "_id": 0,
+            "path": "$" + period + ".path"
+        }
     ).to_list(None)
 
     return data
+
 
 async def calc_reef_level(team_number: int, level: ReefLevel, period: str = "auto"):
     converted_level = convert_reef_level_to_pos(level)
@@ -215,7 +227,8 @@ async def calc_reef_level(team_number: int, level: ReefLevel, period: str = "aut
     merged_stats = {**abs_stats, **rel_stats}
     return merged_stats  # Use the merged dictionary
 
-async def calc_reef_score (team_number: int, period: str = "auto"):
+
+async def calc_reef_score(team_number: int, period: str = "auto"):
     all_reef_level = ["l1", "l2", "l3", "l4"]
     scores = []
 
@@ -239,7 +252,7 @@ async def calc_reef_score (team_number: int, period: str = "auto"):
     return merged_stats
 
 
-def convert_reef_side_to_pos (side: ReefSide):
+def convert_reef_side_to_pos(side: ReefSide):
     match side:
         case ReefSide.AB:
             return ["l1ReefAB", "l2ReefAB", "l3ReefAB", "l4ReefAB"]
@@ -255,7 +268,7 @@ def convert_reef_side_to_pos (side: ReefSide):
             return ["l1ReefKL", "l2ReefKL", "l3ReefKL", "l4ReefKL"]
 
 
-def get_reef_level_score_weight (level: str, period: str):
+def get_reef_level_score_weight(level: str, period: str):
     match period:
         case "auto":
             match level:
@@ -278,7 +291,8 @@ def get_reef_level_score_weight (level: str, period: str):
                 case ReefLevel.L4:
                     return 5
 
-async def calc_reef_score_by_side (team_number: int, side: ReefSide, period: str = "auto"):
+
+async def calc_reef_score_by_side(team_number: int, side: ReefSide, period: str = "auto"):
     converted_side = convert_reef_side_to_pos(side)
     paths = await get_path(team_number, period)
 
@@ -295,7 +309,8 @@ async def calc_reef_score_by_side (team_number: int, side: ReefSide, period: str
 
     return get_abs_team_stats(side_matched)
 
-async def calc_reef_success_rate_by_side (team_number: int, side: ReefSide, period: str = "auto"):
+
+async def calc_reef_success_rate_by_side(team_number: int, side: ReefSide, period: str = "auto"):
     converted_side = convert_reef_side_to_pos(side)
     paths = await get_path(team_number, period)
 
@@ -320,7 +335,8 @@ async def calc_reef_success_rate_by_side (team_number: int, side: ReefSide, peri
 
     return {side: rate}
 
-async def count_processor_score (team_number: int, period: str = "auto"):
+
+async def count_processor_score(team_number: int, period: str = "auto"):
     paths = await get_path(team_number, period)
     processor_score = []
 
@@ -338,14 +354,15 @@ async def count_processor_score (team_number: int, period: str = "auto"):
     return {**abs_team_stats, **rel_team_stats}
 
 
-async def count_net_score (team_number: int, period: str = "auto"):
+async def count_net_score(team_number: int, period: str = "auto"):
     paths = await get_path(team_number, period)
     net_score = []
 
     for data in paths:
         score = 0
         for path in data:
-            if isinstance(path, dict) and path.get("success", False):  # Default to False if no "success" key
+            # Default to False if no "success" key
+            if isinstance(path, dict) and path.get("success", False):
                 score += 4
 
         net_score.append(score)
@@ -356,8 +373,7 @@ async def count_net_score (team_number: int, period: str = "auto"):
     return {**abs_stats, **rel_stats}
 
 
-
-async def pack_auto_data (team_number: int):
+async def pack_auto_data(team_number: int):
     data = {
         "preload_count": await count_preload(team_number),
         "start_position_count": await count_start_pos(team_number),
@@ -369,7 +385,7 @@ async def pack_auto_data (team_number: int):
             "l4": await calc_reef_level(team_number, ReefLevel.L4, "auto"),
 
         },
-        "reef_success_rate_by_side":{
+        "reef_success_rate_by_side": {
             "AB": await calc_reef_success_rate_by_side(team_number, ReefSide.AB, "auto"),
             "CD": await calc_reef_success_rate_by_side(team_number, ReefSide.CD, "auto"),
             "EF": await calc_reef_success_rate_by_side(team_number, ReefSide.EF, "auto"),
@@ -406,12 +422,14 @@ B. ALGAE Cycle
 """
 
 # FIXME: This function is not working as expected
+
+
 @numba.jit(cache=True)
 def search_cycle_time(data: list, cycle_type: str):
     start_pos = []
     end_pos = []
 
-    start_point =[]
+    start_point = []
     end_point = []
 
     if cycle_type == "coral":
@@ -451,18 +469,21 @@ def search_cycle_time(data: list, cycle_type: str):
 
     return cycle_time
 
+
 async def calc_cycle_time(team_number: int, cycle_type: str):
     data = await get_path(team_number, "teleop")
     cycle_times = search_cycle_time(data, cycle_type)
 
     return get_abs_team_stats(cycle_times) | await get_rel_team_stats(team_number, "cycle_time", "teleop")
 
+
 async def count_hang(team_number):
     data = await get_path(team_number, "teleop")
     hang_time = [item["hangTime"] for item in data]
     return get_abs_team_stats(hang_time) | await get_rel_team_stats(team_number, "hang_time", "teleop")
 
-async def pack_teleop_data (team_number: int):
+
+async def pack_teleop_data(team_number: int):
     data = {
         "reef": {
             "l1": await calc_reef_level(team_number, ReefLevel.L1, "teleop"),
@@ -482,7 +503,8 @@ async def pack_teleop_data (team_number: int):
 
     return data
 
-async def get_comments (team_number: int):
+
+async def get_comments(team_number: int):
     data = [
         await raw_collection.find(
             {"team_number": team_number},
@@ -495,7 +517,8 @@ async def get_comments (team_number: int):
 
     return data
 
-async def pack_obj_data (team_number: int):
+
+async def pack_obj_data(team_number: int):
     data = {
         "team_number": team_number,
         "auto": await pack_auto_data(team_number),
@@ -505,6 +528,7 @@ async def pack_obj_data (team_number: int):
 
     return data
 
+
 async def post_obj_results(team_number: int):
     data = await pack_obj_data(team_number)
-    await result_collection.replace_one(data, bypass_document_validation=False, session=None, upsert= True)
+    await result_collection.replace_one(data, bypass_document_validation=False, session=None, upsert=True)

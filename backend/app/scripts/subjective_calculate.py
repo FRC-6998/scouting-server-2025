@@ -3,11 +3,12 @@ from operator import itemgetter
 import numba
 import numpy as np
 
-from constants import SUBJECTIVE_RAW_COLLECTION, SUBJECTIVE_RESULT_COLLECTION
-from scripts.initdb import init_collection
+from ..constants import SUBJECTIVE_RAW_COLLECTION, SUBJECTIVE_RESULT_COLLECTION
+from ..scripts.initdb import init_collection
 
 subjective_raw = init_collection(SUBJECTIVE_RAW_COLLECTION)
 subjective_result = init_collection(SUBJECTIVE_RESULT_COLLECTION)
+
 
 async def get_team_datas(team_number: int, key: str):
     data = [
@@ -35,8 +36,9 @@ async def get_team_datas(team_number: int, key: str):
     ]
     return data
 
+
 @numba.jit(cache=True)
-def analysis_absolute (data: list[dict], key: str):
+def analysis_absolute(data: list[dict], key: str):
     data_np = np.array([])
     for i in data:
         data_np = np.append(data_np, i[key])
@@ -45,7 +47,8 @@ def analysis_absolute (data: list[dict], key: str):
     stability = average / np.std(data_np)
     return {"average": average, "stability": stability}
 
-async def analysis_relative (team_number: int, key: str, is_descending: bool = False):
+
+async def analysis_relative(team_number: int, key: str, is_descending: bool = False):
     unsorted_data = [
         await subjective_result.find(
             {},
@@ -56,11 +59,13 @@ async def analysis_relative (team_number: int, key: str, is_descending: bool = F
             }
         )
     ]
-    data = sorted(unsorted_data, key=itemgetter(key), reverse=is_descending) # Cus less is better
+    data = sorted(unsorted_data, key=itemgetter(key),
+                  reverse=is_descending)  # Cus less is better
     return calc_relative(team_number, data, key)
 
+
 @numba.jit(cache=True)
-def calc_relative (team_number:int, data: list, key: str):
+def calc_relative(team_number: int, data: list, key: str):
     rank = 0
     for i in data:
         if i["team_number"] == team_number:
@@ -72,27 +77,33 @@ def calc_relative (team_number:int, data: list, key: str):
 
     return {"rank": rank, "z_score": z_score}
 
+
 async def get_driver_awareness(team_number: int):
     data = await get_team_datas(team_number, "driver_awareness")
     return analysis_absolute(data) | await analysis_relative(team_number, "driver_awareness", False)
+
 
 async def get_coral_station_awareness(team_number: int):
     data = await get_team_datas(team_number, "coral_station_awareness")
     return analysis_absolute(data) | await analysis_relative(team_number, "coral_station_awareness", False)
 
+
 async def get_num_score_on_net(team_number: int):
     data = await get_team_datas(team_number, "num_score_on_net")
     return analysis_absolute(data) | await analysis_relative(team_number, "num_score_on_net", True)
+
 
 async def get_mobility(team_number: int):
     data = await get_team_datas(team_number, "mobility")
     return analysis_absolute(data) | await analysis_relative(team_number, "mobility", False)
 
+
 async def get_defense(team_number: int):
     data = await get_team_datas(team_number, "defense")
     return analysis_absolute(data) | await analysis_relative(team_number, "defense", False)
 
-async def pack_result (team_number: int):
+
+async def pack_result(team_number: int):
     return {
         "team_number": team_number,
         "driver_awareness": await get_driver_awareness(team_number),
@@ -102,6 +113,7 @@ async def pack_result (team_number: int):
         "defense": await get_defense(team_number),
     }
 
-async def post_sbj_results (team_number: int):
+
+async def post_sbj_results(team_number: int):
     data = await pack_result(team_number)
     await subjective_result.insert_one(data, bypass_document_validation=False, session=None)
