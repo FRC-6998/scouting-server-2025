@@ -1,7 +1,3 @@
-"""
-FIXME: This script is not working as expected. It is not returning the expected results.
-"""
-
 from enum import Enum
 from operator import itemgetter
 from typing import Dict
@@ -224,7 +220,7 @@ async def get_path(team_number: str, period: str = "auto"):
     print({"get_path": data})
     return data
 
-
+# FIXME: Fix the following functions to return the correct values
 async def calc_reef_level(team_number: str, level: ReefLevel, period: str = "auto"):
     converted_level = convert_reef_level_to_pos(level)
     paths = await get_path(team_number, period)
