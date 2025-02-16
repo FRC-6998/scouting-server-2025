@@ -2,11 +2,9 @@ from os import getenv
 # MongoDB connection setting
 
 MONGO_HOST = getenv("MONGO_HOST", "localhost")
-MONGO_URL = "mongodb://db:27017"
+MONGO_PORT = getenv("MONGO_PORT", "27017")
+MONGO_URL = f"mongodb://{MONGO_HOST}:{MONGO_PORT}"
 DATABASE_NAME = "scouting-field"
-
-TEST_MONGO_URL = "mongodb://localhost:27017"
-TEST_DATABASE_NAME = "scouting-field"
 
 # MongoDB Collections
 OBJECTIVE_RAW_COLLECTION = "objective_raw"
