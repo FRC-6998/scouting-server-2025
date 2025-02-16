@@ -220,23 +220,19 @@ async def get_path(team_number: str, period: str = "auto"):
     print({"get_path": data})
     return data
 
-# FIXME: Fix the following functions to return the correct values
-async def calc_reef_level(team_number: str, level: ReefLevel, period: str = "auto"):
+async def calc_reef_level(team_number: str, level: str, period: str = "auto"):
     converted_level = convert_reef_level_to_pos(level)
-    paths = await get_path(team_number, period)
+    print (converted_level)
+    matches = await get_path(team_number, period)
 
-    reef_matched = []
-    for path in paths:
-        if not isinstance(path, list):  # Ensure each path is a list
-            continue
+    reef_matched = 0
+    for paths in matches:
+        for single_path in paths["path"]:
+            if single_path.get("point") in converted_level:
+                reef_matched += 1
+                print ("got it")
 
-        count = 0
-        for point in path:
-            if isinstance(point, dict):  # Ensure each point is a dictionary
-                if "position" in point and "success" in point:  # Validate keys
-                    if point["position"] in converted_level and point["success"]:
-                        count += 1
-        reef_matched.append(count)
+    print (reef_matched)
 
     # Handle edge case where reef_matched is empty
     if not reef_matched:
@@ -244,15 +240,13 @@ async def calc_reef_level(team_number: str, level: ReefLevel, period: str = "aut
 
     abs_stats = get_abs_team_stats(reef_matched)
 
-    # Transform ReefLevel into a valid string for database querying
-    level_key = f"reef.{level.value}"  # Assuming ReefLevel has a `.value` that maps to valid database keys
-
-    rel_stats = await get_rel_team_stats(team_number, level_key, period)
+    rel_stats = await get_rel_team_stats(team_number, level, period)
 
     merged_stats = {**abs_stats, **rel_stats}
     print({"calc_reef_level": merged_stats})
     return merged_stats  # Use the merged dictionary
 
+# FIXME: Fix the following functions to return the correct values
 
 async def calc_reef_score(team_number: str, period: str = "auto"):
     all_reef_level = ["l1", "l2", "l3", "l4"]
