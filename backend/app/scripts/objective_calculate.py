@@ -109,7 +109,7 @@ async def count_start_pos(team_number: str):
         {"team_number": team_number},
         {
             "_id": 0,
-            "start_position": "auto.start_position"
+            "start_position": "$auto.start_position"
         }
     ).to_list(None)
     left = raw_data.count({"start_position": "left"})
