@@ -1,6 +1,6 @@
 from pymongo import AsyncMongoClient
 
-from ..constants import MONGO_URL, DATABASE_NAME, TEST_MONGO_URL
+from ..constants import MONGO_URL, DATABASE_NAME
 
 
 def init_collection(collection_name: str):
