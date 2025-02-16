@@ -17,6 +17,7 @@ class MatchLevel (str, Enum):
 
 class Alliance (str, Enum):
     UNSET = "unset"
+    NONE = "none"
     RED = "red"
     BLUE = "blue"
 
@@ -80,7 +81,7 @@ class AutoPathPoint (str, Enum):
 
 class AutoPath (BaseModel):
     timestamp: float = Field(10.0)
-    position: AutoPathPoint = None
+    point: AutoPathPoint = None
     success: bool = False
 
 class AutoRaw (BaseModel):
@@ -100,6 +101,7 @@ class BargeAction (str, Enum):
 
 class BargePosition (str, Enum):
     UNSET = "unset"
+    NONE = "none"
     LEFT = "left"
     CENTER = "center"
     RIGHT = "right"
@@ -120,9 +122,8 @@ class TeleopPathPoint (str, Enum):
     L4_REEF = "l4Reef"
 
 class TeleopPath (BaseModel):
-    second: float
-    position: TeleopPathPoint
-    success: bool = False
+    point: TeleopPathPoint
+    timestamp: float
 
 class TeleopRaw (BaseModel):
     path: List[TeleopPath]
@@ -138,13 +139,13 @@ class ObjectiveMatchRawData (BaseModel):
     ulid: str
     scout: str
     match_level: MatchLevel
-    match_number: int
+    match_number: str
     event_key: str
-    team_number: int
+    team_number: str
     alliance: Alliance
     auto : AutoRaw
     teleop: TeleopRaw
-    comments: str
+    comment: str
 
 # Subjective Match Data (formerly known as Super Scout Data)
 
@@ -158,10 +159,10 @@ class SubjectiveRanking2 (IntEnum):
     SECOND = 2
 
 class SubjectiveTeamRaw(BaseModel):
-    team_number: int
+    team_number: str
     driver_awareness: SubjectiveRanking3
     coral_station_awareness: SubjectiveRanking2
-    num_score_on_net: int
+    num_score_on_net: str
     mobility: SubjectiveRanking3
     defense: SubjectiveRanking3
 
@@ -285,4 +286,4 @@ class ObjectiveResult (BaseModel):
     team_number: int
     auto: AutoResult
     teleop: TeleopResult
-    comments: List[str]
+    comment: str
