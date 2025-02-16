@@ -243,8 +243,6 @@ async def calc_reef_level_objective(team_number: str, level: str, period: str = 
 async def calc_reef_level_subjective(team_number: str, level: str, period: str):
     return await get_rel_team_stats(team_number, level, period)
 
-# FIXME: Fix the following functions to return the correct values
-
 async def calc_reef_score(team_number: str, period: str = "auto"):
     all_reef_level = ["l1", "l2", "l3", "l4"]
     scores = []
@@ -325,7 +323,7 @@ def get_reef_level_score_weight(level: str, period: str):
                 case ReefLevel.L4:
                     return 5
 
-
+# FIXME: Fix the following functions to return the correct values
 async def calc_reef_score_by_side(team_number: str, side: ReefSide, period: str = "auto"):
     converted_side = convert_reef_side_to_pos(side)
     paths = await get_path(team_number, period)  # Fetch paths
