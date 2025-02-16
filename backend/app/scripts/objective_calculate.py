@@ -240,6 +240,9 @@ async def calc_reef_level_objective(team_number: str, level: str, period: str = 
 
     return get_abs_team_stats(reef_matched)
 
+async def calc_reef_level_subjective(team_number: str, level: str, period: str):
+    return await get_rel_team_stats(team_number, level, period)
+
 # FIXME: Fix the following functions to return the correct values
 
 async def calc_reef_score(team_number: str, period: str = "auto"):
@@ -626,7 +629,7 @@ async def pack_obj_data(team_number: str):
     data = {
         "team_number": team_number,
         "auto": await pack_auto_data(team_number),
-        "teleop": await pack_teleop_data(team_number),
+        "teleop": await pack_teleop_data_objective(team_number),
         "comments": await get_comments(team_number)
     }
     print({"pack_data": data})
