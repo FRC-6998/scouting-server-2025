@@ -36,7 +36,7 @@ async def get_rel_team_stats(team_number: str, key: str, period: str):
 
     if not unsorted_data:  # Handle case where no data is returned by the query
         # Default relative statistics when no data is found
-        return {"relative_rank": None, "relative_percentile": None}
+        return {"rank": None, "z_score": None}
 
     # Remove entries where the key ".average" does not exist in the result
     valid_data = [
@@ -220,9 +220,9 @@ async def get_path(team_number: str, period: str = "auto"):
     print({"get_path": data})
     return data
 
-async def calc_reef_level(team_number: str, level: str, period: str = "auto"):
+async def calc_reef_level_objective(team_number: str, level: str, period: str = "auto"):
     converted_level = convert_reef_level_to_pos(level)
-    print (converted_level)
+    # print (converted_level)
     matches = await get_path(team_number, period)
 
     reef_matched = 0
@@ -230,21 +230,15 @@ async def calc_reef_level(team_number: str, level: str, period: str = "auto"):
         for single_path in paths["path"]:
             if single_path.get("point") in converted_level:
                 reef_matched += 1
-                print ("got it")
+                # print ("got it")
 
-    print (reef_matched)
+    # print (reef_matched)
 
     # Handle edge case where reef_matched is empty
     if not reef_matched:
         reef_matched = [0]  # Assign a default value (e.g., no matches)
 
-    abs_stats = get_abs_team_stats(reef_matched)
-
-    rel_stats = await get_rel_team_stats(team_number, level, period)
-
-    merged_stats = {**abs_stats, **rel_stats}
-    print({"calc_reef_level": merged_stats})
-    return merged_stats  # Use the merged dictionary
+    return get_abs_team_stats(reef_matched)
 
 # FIXME: Fix the following functions to return the correct values
 
@@ -477,10 +471,10 @@ async def pack_auto_data(team_number: str):
         "start_position_count": await count_start_pos(team_number),
         "leave_success_rate": await calc_leave_success_rate(team_number),
         "reef": {
-            "l1": await calc_reef_level(team_number, ReefLevel.L1, "auto"),
-            "l2": await calc_reef_level(team_number, ReefLevel.L2, "auto"),
-            "l3": await calc_reef_level(team_number, ReefLevel.L3, "auto"),
-            "l4": await calc_reef_level(team_number, ReefLevel.L4, "auto"),
+            "l1": await calc_reef_level_objective(team_number, ReefLevel.L1, "auto"),
+            "l2": await calc_reef_level_objective(team_number, ReefLevel.L2, "auto"),
+            "l3": await calc_reef_level_objective(team_number, ReefLevel.L3, "auto"),
+            "l4": await calc_reef_level_objective(team_number, ReefLevel.L4, "auto"),
 
         },
         "reef_success_rate_by_side": {
@@ -596,10 +590,10 @@ async def count_hang(team_number):
 async def pack_teleop_data(team_number: str):
     data = {
         "reef": {
-            "l1": await calc_reef_level(team_number, ReefLevel.L1, "teleop"),
-            "l2": await calc_reef_level(team_number, ReefLevel.L2, "teleop"),
-            "l3": await calc_reef_level(team_number, ReefLevel.L3, "teleop"),
-            "l4": await calc_reef_level(team_number, ReefLevel.L4, "teleop"),
+            "l1": await calc_reef_level_objective(team_number, ReefLevel.L1, "teleop"),
+            "l2": await calc_reef_level_objective(team_number, ReefLevel.L2, "teleop"),
+            "l3": await calc_reef_level_objective(team_number, ReefLevel.L3, "teleop"),
+            "l4": await calc_reef_level_objective(team_number, ReefLevel.L4, "teleop"),
 
         },
         "processor_score": await count_processor_score(team_number, "teleop"),
