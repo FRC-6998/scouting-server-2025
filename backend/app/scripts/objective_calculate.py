@@ -123,7 +123,7 @@ async def calc_leave_success_rate(team_number: str, is_percentage: int = 0):
     raw_data = await raw_collection.find(
         {"team_number": team_number},
         {"_id": 0,
-         "leave": "auto.leave"}
+         "leave": "$auto.leave"}
     ).to_list(None)
     count_try = len(raw_data)
     count_success = raw_data.count({"leave": True})
