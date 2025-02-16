@@ -250,48 +250,40 @@ async def calc_reef_score(team_number: str, period: str = "auto"):
     scores = []
 
     # Get paths for the given team and period
-    paths = await get_path(team_number, period)
+    matches = await get_path(team_number, period)
 
-    # If paths are empty, log and return default values
-    if not paths:
-        print(f"Warning: No paths found for team {team_number} in period {period}.")
-        return {
-            "abs_stats": {},
-            "rel_stats": {},
-            "scores": scores  # Return empty scores for debugging purposes
-        }
+    for paths in matches:
+        score = 0
+        for single_path in paths["path"]:
+            for level in all_reef_level:
+                d_score = 0
+                match level, period:
+                    case "l1", "auto":
+                        d_score = 3
+                    case "l2", "auto":
+                        d_score = 4
+                    case "l3", "auto":
+                        d_score = 6
+                    case "l4", "auto":
+                        d_score = 7
+                    case "l1", "teleop":
+                        d_score = 2
+                    case "l2", "teleop":
+                        d_score = 3
+                    case "l3", "teleop":
+                        d_score = 4
+                    case "l4", "teleop":
+                        d_score = 5
 
-    for data in paths:
-        reef_score = 0
-        for level in all_reef_level:
-            positions = convert_reef_level_to_pos(level)  # Ensure valid positions
-            if not positions:
-                print(f"Warning: No positions returned for reef level {level}. Skipping.")
-                continue
+                for pos in convert_reef_level_to_pos(level):
+                    if single_path.get("point") == pos:
+                        score += d_score
+                        break
+        print(score)
+        scores.append(score)
 
-            for pos in positions:
-                if isinstance(data, dict) and data.get("path.position") == pos:
-                    reef_score += get_reef_level_score_weight(level, "auto")
-
-                scores.append(reef_score)
-
-    # If scores is still empty after processing, handle it gracefully
-    if not scores:
-        print(f"Warning: No scores computed for team {team_number} in period {period}.")
-        return {
-            "abs_stats": {},
-            "rel_stats": {},
-            "scores": scores  # Return empty scores for debugging purposes
-        }
-
-    # Calculate absolute and relative stats for the scores
-    abs_team_stats = get_abs_team_stats(scores)
-    rel_team_stats = await get_rel_team_stats(team_number, "reef_core", period)
-
-    # Merging the dictionaries
-    merged_stats = {**abs_team_stats, **rel_team_stats}
-    print({"calc_reef_level": merged_stats})
-    return merged_stats
+    print (scores)
+    return get_abs_team_stats(scores)
 
 
 def convert_reef_side_to_pos(side: ReefSide):
@@ -590,7 +582,7 @@ async def count_hang(team_number):
     return abs_stats | rel_stats
 
 
-async def pack_teleop_data(team_number: str):
+async def pack_teleop_data_objective(team_number: str):
     data = {
         "reef": {
             "l1": await calc_reef_level_objective(team_number, ReefLevel.L1, "teleop"),
