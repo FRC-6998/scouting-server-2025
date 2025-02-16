@@ -20,6 +20,7 @@ result_collection = init_collection(OBJECTIVE_RESULT_COLLECTION)
 @numba.jit(cache=True)
 def get_abs_team_stats(data: list):
     data_array = np.array(data)
+
     return {
         "average": np.mean(data_array),
         "stability": np.std(data_array)
@@ -99,6 +100,7 @@ async def count_preload(team_number: str):
     none = raw_data.count({"preload": "none"})
     coral = raw_data.count({"preload": "coral"})
     algae = raw_data.count({"preload": "algae"})
+    print({"count_preload":{"none": none, "coral": coral, "algae": algae}})
     return {"none": none, "coral": coral, "algae": algae}
 
 
@@ -113,6 +115,7 @@ async def count_start_pos(team_number: str):
     left = raw_data.count({"start_position": "left"})
     center = raw_data.count({"start_position": "center"})
     right = raw_data.count({"start_position": "right"})
+    print({"count_start_pos": {"left": left, "center": center, "right": right}})
     return {"left": left, "center": center, "right": right}
 
 
@@ -127,6 +130,8 @@ async def calc_leave_success_rate(team_number: str, is_percentage: int = 0):
 
     if count_try == 0:
         return 0
+
+    print({"calc_leave_success_rate": count_success / count_try})
 
     match is_percentage:
         case 1:
@@ -216,6 +221,7 @@ async def get_path(team_number: str, period: str = "auto"):
         }
     ).to_list(None)
 
+    print({"get_path": data})
     return data
 
 
@@ -248,6 +254,7 @@ async def calc_reef_level(team_number: str, level: ReefLevel, period: str = "aut
     rel_stats = await get_rel_team_stats(team_number, level_key, period)
 
     merged_stats = {**abs_stats, **rel_stats}
+    print({"calc_reef_level": merged_stats})
     return merged_stats  # Use the merged dictionary
 
 
@@ -296,7 +303,7 @@ async def calc_reef_score(team_number: str, period: str = "auto"):
 
     # Merging the dictionaries
     merged_stats = {**abs_team_stats, **rel_team_stats}
-
+    print({"calc_reef_level": merged_stats})
     return merged_stats
 
 
@@ -364,6 +371,8 @@ async def calc_reef_score_by_side(team_number: str, side: ReefSide, period: str 
     if not side_matched:
         return 0  # Return a default value
 
+    print({"calc_reef_score_by_side": get_abs_team_stats(side_matched)})
+
     return get_abs_team_stats(side_matched)  # Compute stats if side_matched has values
 
 
@@ -389,6 +398,8 @@ async def calc_reef_success_rate_by_side(team_number: str, side: ReefSide, perio
         return {side: 0.0}
 
     rate = count_succeeded / matched
+
+    print({"calc_reef_success_rate_by_side": {side: rate}})
 
     return {side: rate}
 
@@ -424,6 +435,7 @@ async def count_processor_score(team_number: str, period: str = "auto"):
     rel_team_stats = await get_rel_team_stats(team_number, "processor", period)
 
     # Use dictionary unpacking to merge them safely.
+    print({"count_processor_score": {**abs_team_stats, **rel_team_stats}})
     return {**abs_team_stats, **rel_team_stats}
 
 
@@ -465,6 +477,7 @@ async def count_net_score(team_number: str, period: str = "auto"):
     # Compute stats if net_score has data
     abs_stats = get_abs_team_stats(net_score)
     rel_stats = await get_rel_team_stats(team_number, "net", period)
+    print({"count_net_score": {**abs_stats, **rel_stats}})
     return {**abs_stats, **rel_stats}
 
 
@@ -500,7 +513,7 @@ async def pack_auto_data(team_number: str):
         "processor_score": await count_processor_score(team_number, "auto"),
         "net_score": await count_net_score(team_number, "auto")
     }
-
+    print({"pack_auto_data": data})
     return data
 
 """
@@ -586,6 +599,7 @@ async def count_hang(team_number):
         abs_stats = get_abs_team_stats(hang_time)
         rel_stats = await get_rel_team_stats(team_number, "hang_time", "teleop")
 
+    print({"calc_cycle_time": abs_stats | rel_stats})
     return abs_stats | rel_stats
 
 
@@ -606,7 +620,7 @@ async def pack_teleop_data(team_number: str):
         },
         "hang": await count_hang(team_number)
     }
-
+    print({"pack_teleop_data": data})
     return data
 
 
@@ -631,12 +645,13 @@ async def pack_obj_data(team_number: str):
         "teleop": await pack_teleop_data(team_number),
         "comments": await get_comments(team_number)
     }
-
+    print({"pack_data": data})
     return data
 
 
 async def post_obj_results(team_number: str):
     data = await pack_obj_data(team_number)
+    print(data)
     filter_query = {"team_number": team_number}
     replacement = data
     await result_collection.replace_one(filter_query, replacement, bypass_document_validation=False, session=None, upsert=True)

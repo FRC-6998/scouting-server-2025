@@ -7,7 +7,8 @@ from typing_extensions import Annotated
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
 from ..model import ObjectiveMatchRawData, ObjectiveResult  # , MatchRawDataFilterParams
 from ..scripts.initdb import init_collection
-from ..scripts.objective_calculate import post_obj_results
+from ..scripts.objective_calculate import post_obj_results, pack_obj_data
+from ..scripts.subjective_calculate import pack_result
 
 # db[OBJECTIVE_DATA_COLLECTION]
 objective_raw = init_collection(OBJECTIVE_RAW_COLLECTION)
@@ -63,8 +64,7 @@ async def delete_obj_match_data(match_id: str):
     name="Getting objective match results",
     description="Getting objective match results from the database.",
     response_description="Got objective match results successfully",
-    response_model=ObjectiveResult,
     status_code=status.HTTP_200_OK,
 )
-async def get_obj_match_results(data_query: Annotated[ObjectiveResult, Query()]):
-    return data_query
+async def get_obj_match_results():
+    return await pack_obj_data("6998")
