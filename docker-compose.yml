@@ -6,8 +6,9 @@ services:
     ports:
       - 27017:27017
     # environment:
-    #   MONGO_INITDB_ROOT_USERNAME: admin
-    #   MONGO_INITDB_ROOT_PASSWORD: password
+        # MONGO_INITDB_DATABASE: scouting-field
+        # MONGO_INITDB_ROOT_USERNAME: admin
+        # MONGO_INITDB_ROOT_PASSWORD: pass
     env_file:
       - .env
     volumes:
@@ -16,11 +17,13 @@ services:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
-      retries: 3
-      start_period: 5s
+      retries: 10
+      start_period: 40s
+    # networks:
+    #   - backend
 
   backend:
-    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+    # image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     build: ./backend
     restart: always
     ports:
@@ -31,3 +34,9 @@ services:
       db:
         condition: service_healthy
         restart: true
+  #   networks:
+  #     - backend
+
+# networks:
+#   backend:
+#     driver: bridge

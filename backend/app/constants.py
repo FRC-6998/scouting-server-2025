@@ -1,6 +1,8 @@
+from os import getenv
 # MongoDB connection setting
 
-MONGO_URL = "mongodb://localhost:27017"
+MONGO_HOST = getenv("MONGO_HOST", "localhost")
+MONGO_URL = "mongodb://db:27017"
 DATABASE_NAME = "scouting-field"
 
 # MongoDB Collections
