@@ -1,3 +1,7 @@
+"""
+FIXME: This script is not working as expected. It is not returning the expected results.
+"""
+
 from enum import Enum
 from operator import itemgetter
 from typing import Dict
@@ -22,7 +26,7 @@ def get_abs_team_stats(data: list):
     }
 
 
-async def get_rel_team_stats(team_number: int, key: str, period: str):
+async def get_rel_team_stats(team_number: str, key: str, period: str):
     # Query to find documents in result_collection
     unsorted_data = await result_collection.find(
         {},  # Query criteria
@@ -54,7 +58,7 @@ async def get_rel_team_stats(team_number: int, key: str, period: str):
 
 
 @numba.jit(cache=True)
-def calc_relative(team_number: int, data: list, key: str):
+def calc_relative(team_number: str, data: list, key: str):
     rank = 0
 
     for item in data:
@@ -84,7 +88,7 @@ class ReefSide(str, Enum):
     KL = "KL"
 
 
-async def count_preload(team_number: int):
+async def count_preload(team_number: str):
     raw_data = await raw_collection.find(
         {"team_number": team_number},
         {
@@ -98,7 +102,7 @@ async def count_preload(team_number: int):
     return {"none": none, "coral": coral, "algae": algae}
 
 
-async def count_start_pos(team_number: int):
+async def count_start_pos(team_number: str):
     raw_data = await raw_collection.find(
         {"team_number": team_number},
         {
@@ -112,7 +116,7 @@ async def count_start_pos(team_number: int):
     return {"left": left, "center": center, "right": right}
 
 
-async def calc_leave_success_rate(team_number: int, is_percentage: int = 0):
+async def calc_leave_success_rate(team_number: str, is_percentage: int = 0):
     raw_data = await raw_collection.find(
         {"team_number": team_number},
         {"_id": 0,
@@ -120,6 +124,10 @@ async def calc_leave_success_rate(team_number: int, is_percentage: int = 0):
     ).to_list(None)
     count_try = len(raw_data)
     count_success = raw_data.count({"leave": True})
+
+    if count_try == 0:
+        return 0
+
     match is_percentage:
         case 1:
             return count_success / count_try * 100
@@ -199,7 +207,7 @@ def convert_reef_level_side_to_pos(level: str, side: str):
                     return "l4ReefKL"
 
 
-async def get_path(team_number: int, period: str = "auto"):
+async def get_path(team_number: str, period: str = "auto"):
     data = await raw_collection.find(
         {"team_number": team_number},
         {
@@ -211,7 +219,7 @@ async def get_path(team_number: int, period: str = "auto"):
     return data
 
 
-async def calc_reef_level(team_number: int, level: ReefLevel, period: str = "auto"):
+async def calc_reef_level(team_number: str, level: ReefLevel, period: str = "auto"):
     converted_level = convert_reef_level_to_pos(level)
     paths = await get_path(team_number, period)
 
@@ -243,21 +251,46 @@ async def calc_reef_level(team_number: int, level: ReefLevel, period: str = "aut
     return merged_stats  # Use the merged dictionary
 
 
-async def calc_reef_score(team_number: int, period: str = "auto"):
+async def calc_reef_score(team_number: str, period: str = "auto"):
     all_reef_level = ["l1", "l2", "l3", "l4"]
     scores = []
 
+    # Get paths for the given team and period
     paths = await get_path(team_number, period)
+
+    # If paths are empty, log and return default values
+    if not paths:
+        print(f"Warning: No paths found for team {team_number} in period {period}.")
+        return {
+            "abs_stats": {},
+            "rel_stats": {},
+            "scores": scores  # Return empty scores for debugging purposes
+        }
 
     for data in paths:
         reef_score = 0
         for level in all_reef_level:
-            for pos in convert_reef_level_to_pos(level):
+            positions = convert_reef_level_to_pos(level)  # Ensure valid positions
+            if not positions:
+                print(f"Warning: No positions returned for reef level {level}. Skipping.")
+                continue
+
+            for pos in positions:
                 if isinstance(data, dict) and data.get("path.position") == pos:
                     reef_score += get_reef_level_score_weight(level, "auto")
 
                 scores.append(reef_score)
 
+    # If scores is still empty after processing, handle it gracefully
+    if not scores:
+        print(f"Warning: No scores computed for team {team_number} in period {period}.")
+        return {
+            "abs_stats": {},
+            "rel_stats": {},
+            "scores": scores  # Return empty scores for debugging purposes
+        }
+
+    # Calculate absolute and relative stats for the scores
     abs_team_stats = get_abs_team_stats(scores)
     rel_team_stats = await get_rel_team_stats(team_number, "reef_core", period)
 
@@ -307,25 +340,34 @@ def get_reef_level_score_weight(level: str, period: str):
                     return 5
 
 
-async def calc_reef_score_by_side(team_number: int, side: ReefSide, period: str = "auto"):
+async def calc_reef_score_by_side(team_number: str, side: ReefSide, period: str = "auto"):
     converted_side = convert_reef_side_to_pos(side)
-    paths = await get_path(team_number, period)
+    paths = await get_path(team_number, period)  # Fetch paths
 
-    side_matched = []
-    all_reef_level = ["l1", "l2", "l3", "l4"]
+    # Check if paths is empty
+    if not paths:
+        return 0  # Return default value when no paths are present
+
+    side_matched = []  # Initialize an empty list
+    all_reef_level = ["l1", "l2", "l3", "l4"]  # Possible reef levels
+
     for data in paths:
         score = 0
         for side in converted_side:
             for level in all_reef_level:
                 if data.get("path.position") == convert_reef_level_side_to_pos(level, side):
-                    score += get_reef_level_score_weight(level, "auto")
+                    score += get_reef_level_score_weight(level, "auto")  # Calculate score
 
         side_matched.append(score)
 
-    return get_abs_team_stats(side_matched)
+    # Handle the case where side_matched is empty
+    if not side_matched:
+        return 0  # Return a default value
+
+    return get_abs_team_stats(side_matched)  # Compute stats if side_matched has values
 
 
-async def calc_reef_success_rate_by_side(team_number: int, side: ReefSide, period: str = "auto"):
+async def calc_reef_success_rate_by_side(team_number: str, side: ReefSide, period: str = "auto"):
     converted_side = convert_reef_side_to_pos(side)
     paths = await get_path(team_number, period)
 
@@ -351,8 +393,16 @@ async def calc_reef_success_rate_by_side(team_number: int, side: ReefSide, perio
     return {side: rate}
 
 
-async def count_processor_score(team_number: int, period: str = "auto"):
+async def count_processor_score(team_number: str, period: str = "auto"):
     paths = await get_path(team_number, period)
+
+    # Safety check in case get_path returns None or invalid data
+    if not paths:
+        return {
+            "abs_team_stats": {},  # Default empty stats if no paths are found
+            "rel_team_stats": await get_rel_team_stats(team_number, "processor", period)
+        }
+
     processor_score = []
 
     for data in paths:
@@ -363,14 +413,34 @@ async def count_processor_score(team_number: int, period: str = "auto"):
                     score += 6
         processor_score.append(score)
 
+    # Ensure processor_score is not empty before calculating stats
+    if not processor_score:
+        return {
+            "abs_team_stats": {},  # Default empty stats if no scores are computed
+            "rel_team_stats": await get_rel_team_stats(team_number, "processor", period)
+        }
+
     abs_team_stats = get_abs_team_stats(processor_score)
     rel_team_stats = await get_rel_team_stats(team_number, "processor", period)
+
     # Use dictionary unpacking to merge them safely.
     return {**abs_team_stats, **rel_team_stats}
 
 
-async def count_net_score(team_number: int, period: str = "auto"):
+async def count_net_score(team_number: str, period: str = "auto"):
     paths = await get_path(team_number, period)
+
+    # Check if paths is empty or invalid:
+    if not paths:
+        # Return default stats if no paths are found
+        return {
+            "max": 0,
+            "min": 0,
+            "average": 0,
+            "count": 0,
+            # Add any other relevant default statistics here
+        }
+
     net_score = []
 
     for data in paths:
@@ -382,13 +452,23 @@ async def count_net_score(team_number: int, period: str = "auto"):
 
         net_score.append(score)
 
-    # Return computed stats
+    # Ensure net_score is not empty before proceeding:
+    if not net_score:
+        return {
+            "max": 0,
+            "min": 0,
+            "average": 0,
+            "count": 0,
+            # Add any other relevant default statistics here
+        }
+
+    # Compute stats if net_score has data
     abs_stats = get_abs_team_stats(net_score)
     rel_stats = await get_rel_team_stats(team_number, "net", period)
     return {**abs_stats, **rel_stats}
 
 
-async def pack_auto_data(team_number: int):
+async def pack_auto_data(team_number: str):
     data = {
         "preload_count": await count_preload(team_number),
         "start_position_count": await count_start_pos(team_number),
@@ -481,7 +561,7 @@ def search_cycle_time(data: list, cycle_type: str):
     return cycle_time
 
 
-async def calc_cycle_time(team_number: int, cycle_type: str):
+async def calc_cycle_time(team_number: str, cycle_type: str):
     data = await get_path(team_number, "teleop")
     cycle_times = search_cycle_time(data, cycle_type)
 
@@ -509,7 +589,7 @@ async def count_hang(team_number):
     return abs_stats | rel_stats
 
 
-async def pack_teleop_data(team_number: int):
+async def pack_teleop_data(team_number: str):
     data = {
         "reef": {
             "l1": await calc_reef_level(team_number, ReefLevel.L1, "teleop"),
@@ -530,7 +610,7 @@ async def pack_teleop_data(team_number: int):
     return data
 
 
-async def get_comments(team_number: int):
+async def get_comments(team_number: str):
     # Get all documents matching the query and project only the 'comments' field
     cursor = raw_collection.find(
         {"team_number": team_number},
@@ -544,7 +624,7 @@ async def get_comments(team_number: int):
 
     return comments  # Return the list of comments
 
-async def pack_obj_data(team_number: int):
+async def pack_obj_data(team_number: str):
     data = {
         "team_number": team_number,
         "auto": await pack_auto_data(team_number),
@@ -555,7 +635,7 @@ async def pack_obj_data(team_number: int):
     return data
 
 
-async def post_obj_results(team_number: int):
+async def post_obj_results(team_number: str):
     data = await pack_obj_data(team_number)
     filter_query = {"team_number": team_number}
     replacement = data
