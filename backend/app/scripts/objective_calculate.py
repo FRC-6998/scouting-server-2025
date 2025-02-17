@@ -303,7 +303,6 @@ def get_reef_level_score_weight(level: str, period: str):
                 case ReefLevel.L4.value:
                     return 5
 
-# FIXME: Fix the following functions to return the correct values
 async def calc_auto_reef_score_by_side(team_number: str, side: str, ):
     converted_side = convert_auto_reef_side_to_pos(side)
     print(converted_side)
@@ -327,11 +326,11 @@ async def calc_auto_reef_score_by_side(team_number: str, side: str, ):
         print(side_matched)
         filtered_matches.append(side_matched)
 
-    side_points = []
+    side_scores = []
 
     for match in filtered_matches:
         if not match:
-            side_points.append(0)
+            side_scores.append(0)
             continue
 
         for paths in match:
@@ -343,14 +342,9 @@ async def calc_auto_reef_score_by_side(team_number: str, side: str, ):
                         if single_path.get("point") == pos:
                             score += d_score
                             break
-            side_points.append(score)
+            side_scores.append(score)
 
-    print (side_points)
-
-
-    # print({"calc_reef_score_by_side": get_abs_team_stats(side_matched)})
-
-    # return get_abs_team_stats(side_matched)  # Compute stats if side_matched has values
+    return get_abs_team_stats(side_scores)  # Compute stats if side_matched has values
 
 # FIXME: Fix the following functions to return the correct values
 async def calc_reef_success_rate_by_side(team_number: str, side: ReefSide, period: str = "auto"):
@@ -359,10 +353,6 @@ async def calc_reef_success_rate_by_side(team_number: str, side: ReefSide, perio
 
     matched = 0
     count_succeeded = 0
-
-    if not isinstance(paths, list) or not all(isinstance(data, dict) for data in paths):
-        raise ValueError(
-            f"Expected 'paths' to be a list of dictionaries, got {type(paths)} with elements of type {type(paths[0]) if paths else 'unknown'}.")
 
     for path in paths:  # Iterate through each dictionary in 'paths'
         for pos in converted_side:
