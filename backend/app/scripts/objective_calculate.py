@@ -352,7 +352,7 @@ async def calc_auto_reef_score_by_side(team_number: str, side: str, ):
 
     # return get_abs_team_stats(side_matched)  # Compute stats if side_matched has values
 
-
+# FIXME: Fix the following functions to return the correct values
 async def calc_reef_success_rate_by_side(team_number: str, side: ReefSide, period: str = "auto"):
     converted_side = convert_auto_reef_side_to_pos(side)
     paths = await get_path(team_number, period)
