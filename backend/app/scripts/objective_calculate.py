@@ -407,11 +407,11 @@ async def count_processor_score(team_number: str, period: str):
     return {**abs_team_stats, **rel_team_stats}
 
 # FIXME: Fix the following functions to return the correct values
-async def count_net_score(team_number: str, period: str = "auto"):
-    paths = await get_path(team_number, period)
+async def count_net_score(team_number: str, period: str):
+    matches = await get_path(team_number, period)
 
     # Check if paths is empty or invalid:
-    if not paths:
+    if not matches:
         # Return default stats if no paths are found
         return {
             "max": 0,
@@ -423,13 +423,17 @@ async def count_net_score(team_number: str, period: str = "auto"):
 
     net_score = []
 
-    for data in paths:
+    for paths in matches:
         score = 0
-        for path in data:
+        for path in paths["path"]:
             # Default to False if no "success" key
-            if isinstance(path, dict) and path.get("success", False):
-                score += 4
-
+            match period:
+                case "auto":
+                    if path.get("point") == "net" and path.get("success"):
+                        score += 4
+                case "teleop":
+                    if path.get("point") == "net":
+                        score += 4
         net_score.append(score)
 
     # Ensure net_score is not empty before proceeding:
@@ -445,7 +449,7 @@ async def count_net_score(team_number: str, period: str = "auto"):
     # Compute stats if net_score has data
     abs_stats = get_abs_team_stats(net_score)
     rel_stats = await get_rel_team_stats(team_number, "net", period)
-    print({"count_net_score": {**abs_stats, **rel_stats}})
+    # print({"count_net_score": {**abs_stats, **rel_stats}})
     return {**abs_stats, **rel_stats}
 
 
@@ -477,7 +481,7 @@ async def pack_auto_data(team_number: str):
             "IJ": await calc_auto_reef_score_by_side(team_number, ReefSide.IJ),
             "KL": await calc_auto_reef_score_by_side(team_number, ReefSide.KL)
         },
-        "reef_score": await calc_auto_reef_score(team_number, "auto"),
+        "reef_score": await calc_auto_reef_score(team_number),
         "processor_score": await count_processor_score(team_number, "auto"),
         "net_score": await count_net_score(team_number, "auto")
     }
