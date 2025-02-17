@@ -4,6 +4,7 @@ from typing import Dict
 
 import numba
 import numpy as np
+from numba.cuda import match_all_sync
 
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION, ALL_REEF_LEVELS
 from ..model import TeleopPathPoint
@@ -346,7 +347,6 @@ async def calc_auto_reef_score_by_side(team_number: str, side: str, ):
 
     return get_abs_team_stats(side_scores)  # Compute stats if side_matched has values
 
-# FIXME: Fix the following functions to return the correct values
 async def calc_reef_success_rate_by_side(team_number: str, side: str, period: str = "auto"):
     converted_side = convert_auto_reef_side_to_pos(side)
     matches_paths = await get_path(team_number, period)
@@ -368,16 +368,13 @@ async def calc_reef_success_rate_by_side(team_number: str, side: str, period: st
 
     rate = count_succeeded / matched
 
-    print({"calc_reef_success_rate_by_side": {side: rate}})
-
     return {side: rate}
 
-
-async def count_processor_score(team_number: str, period: str = "auto"):
-    paths = await get_path(team_number, period)
+async def count_processor_score(team_number: str, period: str):
+    match_paths = await get_path(team_number, period)
 
     # Safety check in case get_path returns None or invalid data
-    if not paths:
+    if not match_paths:
         return {
             "abs_team_stats": {},  # Default empty stats if no paths are found
             "rel_team_stats": await get_rel_team_stats(team_number, "processor", period)
@@ -385,14 +382,16 @@ async def count_processor_score(team_number: str, period: str = "auto"):
 
     processor_score = []
 
-    for data in paths:
+    for paths in match_paths:
         score = 0
-        for path in data:
-            if isinstance(path, Dict) and "success" in path:
-                if path["success"]:
-                    score += 6
+        for single_path in paths["path"]:
+            if period == "auto" and single_path.get("point") == "processor" and single_path.get("success"):
+                score += 4
+            elif period == "teleop" and single_path.get("point") == "processor":
+                score += 4
         processor_score.append(score)
 
+    print (processor_score)
     # Ensure processor_score is not empty before calculating stats
     if not processor_score:
         return {
@@ -407,7 +406,7 @@ async def count_processor_score(team_number: str, period: str = "auto"):
     print({"count_processor_score": {**abs_team_stats, **rel_team_stats}})
     return {**abs_team_stats, **rel_team_stats}
 
-
+# FIXME: Fix the following functions to return the correct values
 async def count_net_score(team_number: str, period: str = "auto"):
     paths = await get_path(team_number, period)
 
@@ -471,12 +470,12 @@ async def pack_auto_data(team_number: str):
             "KL": await calc_reef_success_rate_by_side(team_number, ReefSide.KL, "auto")
         },
         "reef_score_by_side": {
-            "AB": await calc_auto_reef_score_by_side(team_number, ReefSide.AB, "auto"),
-            "CD": await calc_auto_reef_score_by_side(team_number, ReefSide.CD, "auto"),
-            "EF": await calc_auto_reef_score_by_side(team_number, ReefSide.EF, "auto"),
-            "GH": await calc_auto_reef_score_by_side(team_number, ReefSide.GH, "auto"),
-            "IJ": await calc_auto_reef_score_by_side(team_number, ReefSide.IJ, "auto"),
-            "KL": await calc_auto_reef_score_by_side(team_number, ReefSide.KL, "auto")
+            "AB": await calc_auto_reef_score_by_side(team_number, ReefSide.AB),
+            "CD": await calc_auto_reef_score_by_side(team_number, ReefSide.CD),
+            "EF": await calc_auto_reef_score_by_side(team_number, ReefSide.EF),
+            "GH": await calc_auto_reef_score_by_side(team_number, ReefSide.GH),
+            "IJ": await calc_auto_reef_score_by_side(team_number, ReefSide.IJ),
+            "KL": await calc_auto_reef_score_by_side(team_number, ReefSide.KL)
         },
         "reef_score": await calc_auto_reef_score(team_number, "auto"),
         "processor_score": await count_processor_score(team_number, "auto"),
