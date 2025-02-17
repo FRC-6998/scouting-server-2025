@@ -347,19 +347,21 @@ async def calc_auto_reef_score_by_side(team_number: str, side: str, ):
     return get_abs_team_stats(side_scores)  # Compute stats if side_matched has values
 
 # FIXME: Fix the following functions to return the correct values
-async def calc_reef_success_rate_by_side(team_number: str, side: ReefSide, period: str = "auto"):
+async def calc_reef_success_rate_by_side(team_number: str, side: str, period: str = "auto"):
     converted_side = convert_auto_reef_side_to_pos(side)
-    paths = await get_path(team_number, period)
+    matches_paths = await get_path(team_number, period)
 
     matched = 0
     count_succeeded = 0
 
-    for path in paths:  # Iterate through each dictionary in 'paths'
-        for pos in converted_side:
-            if path.get("position") == pos:  # Match the position
-                matched += 1
-                if path.get("success"):  # Success if key exists and is truthy
-                    count_succeeded += 1
+    for paths in matches_paths:
+        for single_path in paths["path"]:
+            for pos in converted_side:
+                if single_path.get("point") == pos:
+                    matched += 1
+                    if single_path.get("success"):
+                        count_succeeded += 1
+                    break
 
     if matched == 0:  # Avoid division by zero
         return {side: 0.0}
