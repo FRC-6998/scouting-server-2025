@@ -5,7 +5,7 @@ from typing import Dict
 import numba
 import numpy as np
 
-from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
+from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION, ALL_REEF_LEVELS
 from ..model import TeleopPathPoint
 from ..scripts.initdb import init_collection
 
@@ -243,60 +243,40 @@ async def calc_reef_level_objective(team_number: str, level: str, period: str = 
 async def calc_reef_level_subjective(team_number: str, level: str, period: str):
     return await get_rel_team_stats(team_number, level, period)
 
-async def calc_reef_score(team_number: str, period: str = "auto"):
-    all_reef_level = ["l1", "l2", "l3", "l4"]
+async def calc_auto_reef_score(team_number: str):
     scores = []
 
     # Get paths for the given team and period
-    matches = await get_path(team_number, period)
+    matches = await get_path(team_number, "auto")
 
     for paths in matches:
         score = 0
         for single_path in paths["path"]:
-            for level in all_reef_level:
-                d_score = 0
-                match level, period:
-                    case "l1", "auto":
-                        d_score = 3
-                    case "l2", "auto":
-                        d_score = 4
-                    case "l3", "auto":
-                        d_score = 6
-                    case "l4", "auto":
-                        d_score = 7
-                    case "l1", "teleop":
-                        d_score = 2
-                    case "l2", "teleop":
-                        d_score = 3
-                    case "l3", "teleop":
-                        d_score = 4
-                    case "l4", "teleop":
-                        d_score = 5
-
+            for level in ALL_REEF_LEVELS:
+                d_score = get_reef_level_score_weight(level, "auto")
                 for pos in convert_reef_level_to_pos(level):
                     if single_path.get("point") == pos:
                         score += d_score
                         break
-        print(score)
         scores.append(score)
 
     print (scores)
-    return get_abs_team_stats(scores)
+    return scores
 
 
-def convert_reef_side_to_pos(side: ReefSide):
+def convert_auto_reef_side_to_pos(side: str):
     match side:
-        case ReefSide.AB:
+        case ReefSide.AB.value:
             return ["l1ReefAB", "l2ReefAB", "l3ReefAB", "l4ReefAB"]
-        case ReefSide.CD:
+        case ReefSide.CD.value:
             return ["l1ReefCD", "l2ReefCD", "l3ReefCD", "l4ReefCD"]
-        case ReefSide.EF:
+        case ReefSide.EF.value:
             return ["l1ReefEF", "l2ReefEF", "l3ReefEF", "l4ReefEF"]
-        case ReefSide.GH:
+        case ReefSide.GH.value:
             return ["l1ReefGH", "l2ReefGH", "l3ReefGH", "l4ReefGH"]
-        case ReefSide.IJ:
+        case ReefSide.IJ.value:
             return ["l1ReefIJ", "l2ReefIJ", "l3ReefIJ", "l4ReefIJ"]
-        case ReefSide.KL:
+        case ReefSide.KL.value:
             return ["l1ReefKL", "l2ReefKL", "l3ReefKL", "l4ReefKL"]
 
 
@@ -304,57 +284,78 @@ def get_reef_level_score_weight(level: str, period: str):
     match period:
         case "auto":
             match level:
-                case ReefLevel.L1:
+                case ReefLevel.L1.value:
                     return 3
-                case ReefLevel.L2:
+                case ReefLevel.L2.value:
                     return 4
-                case ReefLevel.L3:
+                case ReefLevel.L3.value:
                     return 6
-                case ReefLevel.L4:
+                case ReefLevel.L4.value:
                     return 7
         case "teleop":
             match level:
-                case ReefLevel.L1:
+                case ReefLevel.L1.value:
                     return 2
-                case ReefLevel.L2:
+                case ReefLevel.L2.value:
                     return 3
-                case ReefLevel.L3:
+                case ReefLevel.L3.value:
                     return 4
-                case ReefLevel.L4:
+                case ReefLevel.L4.value:
                     return 5
 
 # FIXME: Fix the following functions to return the correct values
-async def calc_reef_score_by_side(team_number: str, side: ReefSide, period: str = "auto"):
-    converted_side = convert_reef_side_to_pos(side)
-    paths = await get_path(team_number, period)  # Fetch paths
+async def calc_auto_reef_score_by_side(team_number: str, side: str, ):
+    converted_side = convert_auto_reef_side_to_pos(side)
+    print(converted_side)
+    point_value = get_reef_level_score_weight(side, "auto")
+    print (point_value)
+    matches = await get_path(team_number, "auto")  # Fetch paths
 
     # Check if paths is empty
-    if not paths:
+    if not matches:
         return 0  # Return default value when no paths are present
 
-    side_matched = []  # Initialize an empty list
-    all_reef_level = ["l1", "l2", "l3", "l4"]  # Possible reef levels
+    filtered_matches = []
 
-    for data in paths:
-        score = 0
-        for side in converted_side:
-            for level in all_reef_level:
-                if data.get("path.position") == convert_reef_level_side_to_pos(level, side):
-                    score += get_reef_level_score_weight(level, "auto")  # Calculate score
+    for paths in matches:
+        point_got = 0
+        side_matched = []
+        for single_path in paths["path"]:
+            for pos in converted_side:
+                if single_path.get("point") == pos:
+                    side_matched.append(paths)
+                    break
+        print(side_matched)
+        filtered_matches.append(side_matched)
 
-        side_matched.append(score)
+    side_points = []
 
-    # Handle the case where side_matched is empty
-    if not side_matched:
-        return 0  # Return a default value
+    for match in filtered_matches:
+        if not match:
+            side_points.append(0)
+            continue
 
-    print({"calc_reef_score_by_side": get_abs_team_stats(side_matched)})
+        for paths in match:
+            score = 0
+            for single_path in paths["path"]:
+                for level in ALL_REEF_LEVELS:
+                    d_score = get_reef_level_score_weight(level, "auto")
+                    for pos in convert_reef_level_to_pos(level):
+                        if single_path.get("point") == pos:
+                            score += d_score
+                            break
+            side_points.append(score)
 
-    return get_abs_team_stats(side_matched)  # Compute stats if side_matched has values
+    print (side_points)
+
+
+    # print({"calc_reef_score_by_side": get_abs_team_stats(side_matched)})
+
+    # return get_abs_team_stats(side_matched)  # Compute stats if side_matched has values
 
 
 async def calc_reef_success_rate_by_side(team_number: str, side: ReefSide, period: str = "auto"):
-    converted_side = convert_reef_side_to_pos(side)
+    converted_side = convert_auto_reef_side_to_pos(side)
     paths = await get_path(team_number, period)
 
     matched = 0
@@ -479,14 +480,14 @@ async def pack_auto_data(team_number: str):
             "KL": await calc_reef_success_rate_by_side(team_number, ReefSide.KL, "auto")
         },
         "reef_score_by_side": {
-            "AB": await calc_reef_score_by_side(team_number, ReefSide.AB, "auto"),
-            "CD": await calc_reef_score_by_side(team_number, ReefSide.CD, "auto"),
-            "EF": await calc_reef_score_by_side(team_number, ReefSide.EF, "auto"),
-            "GH": await calc_reef_score_by_side(team_number, ReefSide.GH, "auto"),
-            "IJ": await calc_reef_score_by_side(team_number, ReefSide.IJ, "auto"),
-            "KL": await calc_reef_score_by_side(team_number, ReefSide.KL, "auto")
+            "AB": await calc_auto_reef_score_by_side(team_number, ReefSide.AB, "auto"),
+            "CD": await calc_auto_reef_score_by_side(team_number, ReefSide.CD, "auto"),
+            "EF": await calc_auto_reef_score_by_side(team_number, ReefSide.EF, "auto"),
+            "GH": await calc_auto_reef_score_by_side(team_number, ReefSide.GH, "auto"),
+            "IJ": await calc_auto_reef_score_by_side(team_number, ReefSide.IJ, "auto"),
+            "KL": await calc_auto_reef_score_by_side(team_number, ReefSide.KL, "auto")
         },
-        "reef_score": await calc_reef_score(team_number, "auto"),
+        "reef_score": await calc_auto_reef_score(team_number, "auto"),
         "processor_score": await count_processor_score(team_number, "auto"),
         "net_score": await count_net_score(team_number, "auto")
     }

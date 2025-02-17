@@ -12,3 +12,6 @@ SUBJECTIVE_RAW_COLLECTION = "subjective_raw"
 OBJECTIVE_RESULT_COLLECTION = "objective_result"
 SUBJECTIVE_RESULT_COLLECTION = "subjective_result"
 PIT_DATA_COLLECTION = "pit"
+
+# Utilities
+ALL_REEF_LEVELS = ["l1", "l2", "l3", "l4"]
