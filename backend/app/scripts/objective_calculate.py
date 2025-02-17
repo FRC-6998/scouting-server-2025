@@ -1,10 +1,8 @@
 from enum import Enum
 from operator import itemgetter
-from typing import Dict
 
 import numba
 import numpy as np
-from numba.cuda import match_all_sync
 
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION, ALL_REEF_LEVELS
 from ..model import TeleopPathPoint
@@ -406,7 +404,6 @@ async def count_processor_score(team_number: str, period: str):
     # print({"count_processor_score": {**abs_team_stats, **rel_team_stats}})
     return {**abs_team_stats, **rel_team_stats}
 
-# FIXME: Fix the following functions to return the correct values
 async def count_net_score(team_number: str, period: str):
     matches = await get_path(team_number, period)
 
@@ -501,53 +498,53 @@ B. ALGAE Cycle
 
 """
 
-def search_cycle_time(data: list, cycle_type: str):
+def search_cycle_time(data: list, cycle_type: str): # FIXME: Check if the logic is correct
     start_pos = []
     end_pos = []
 
-    start_point = []
-    end_point = []
-
     if cycle_type == "coral":
         start_pos.extend([
-            TeleopPathPoint.GROUND_CORAL,
-            TeleopPathPoint.CORAL_STATION
+            TeleopPathPoint.GROUND_CORAL.value,
+            TeleopPathPoint.CORAL_STATION.value
         ])
         end_pos.extend([
-            TeleopPathPoint.L1_REEF,
-            TeleopPathPoint.L2_REEF,
-            TeleopPathPoint.L3_REEF,
-            TeleopPathPoint.L4_REEF
+            TeleopPathPoint.L1_REEF.value,
+            TeleopPathPoint.L2_REEF.value,
+            TeleopPathPoint.L3_REEF.value,
+            TeleopPathPoint.L4_REEF.value
         ])
     elif cycle_type == "algae":
         start_pos.extend([
-            TeleopPathPoint.REEF_ALGAE,
-            TeleopPathPoint.GROUND_ALGAE
+            TeleopPathPoint.REEF_ALGAE.value,
+            TeleopPathPoint.GROUND_ALGAE.value
         ])
         end_pos.extend([
-            TeleopPathPoint.NET,
-            TeleopPathPoint.PROCESSOR
+            TeleopPathPoint.NET.value,
+            TeleopPathPoint.PROCESSOR.value
         ])
 
+    print (start_pos, end_pos)
     # Filter the data for start and end points
     start_points = []
     end_points = []
 
-    for path in data:
-        if path.get("position") in start_pos and path.get("success"):
-            start_points.append(path)
-        elif path.get("position") in end_pos:
-            end_points.append(path)
+    for match in data:
+        for point in match["path"]:
+            if point["point"] in start_pos:
+                start_points.append(point["timestamp"])
+            elif point["point"] in end_pos:
+                end_points.append(point["timestamp"])
 
     cycle_time = []
-    for start, end in zip(start_point, end_point):
-        cycle_time.append(end["time"] - start["time"])
-
+    for start, end in zip(start_points, end_points):
+        cycle_time.append(end["timestamp"] - start["timestamp"])
+    print (cycle_time)
     return cycle_time
 
 
 async def calc_cycle_time(team_number: str, cycle_type: str):
     data = await get_path(team_number, "teleop")
+    print (data)
     cycle_times = search_cycle_time(data, cycle_type)
 
     if not cycle_times:
@@ -555,10 +552,10 @@ async def calc_cycle_time(team_number: str, cycle_type: str):
         return {"abs_stats": {}, "rel_stats": {}}  # Replace with meaningful defaults if needed
 
 
-    return get_abs_team_stats(cycle_times) | await get_rel_team_stats(team_number, "cycle_time", "teleop")
+    return {**get_abs_team_stats(cycle_times), **await get_rel_team_stats(team_number, "cycle_time", "teleop")}
 
 
-async def count_hang(team_number):
+async def count_hang(team_number): # FIXME
     data = await get_path(team_number, "teleop")
     hang_time = [item.get("hangTime", 0) for item in data if "hangTime" in item]
     # Handle empty hang_time case
