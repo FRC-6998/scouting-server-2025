@@ -386,12 +386,12 @@ async def count_processor_score(team_number: str, period: str):
         score = 0
         for single_path in paths["path"]:
             if period == "auto" and single_path.get("point") == "processor" and single_path.get("success"):
-                score += 4
+                score += 6
             elif period == "teleop" and single_path.get("point") == "processor":
-                score += 4
+                score += 6
         processor_score.append(score)
 
-    print (processor_score)
+    # print (processor_score)
     # Ensure processor_score is not empty before calculating stats
     if not processor_score:
         return {
@@ -403,7 +403,7 @@ async def count_processor_score(team_number: str, period: str):
     rel_team_stats = await get_rel_team_stats(team_number, "processor", period)
 
     # Use dictionary unpacking to merge them safely.
-    print({"count_processor_score": {**abs_team_stats, **rel_team_stats}})
+    # print({"count_processor_score": {**abs_team_stats, **rel_team_stats}})
     return {**abs_team_stats, **rel_team_stats}
 
 # FIXME: Fix the following functions to return the correct values
