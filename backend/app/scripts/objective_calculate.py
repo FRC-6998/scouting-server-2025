@@ -42,10 +42,6 @@ async def get_rel_team_stats(team_number: str, key: str, period: str):
         entry for entry in unsorted_data
         if key + ".average" in entry  # Only include items containing the key
     ]
-
-    if not valid_data:  # Handle case where no documents include the desired key
-        return {"relative_rank": None, "relative_percentile": None}
-
     # Sort only the valid data by the key
     data = sorted(valid_data, key=itemgetter(key + ".average"), reverse=True)
 
@@ -497,7 +493,7 @@ B. ALGAE Cycle
     - GROUND -> PROCESSOR
 
 """
-def search_cycle_time(data: list, cycle_type: str): 
+def search_cycle_time(data: list, cycle_type: str):
     start_pos = []
     end_pos = []
 
@@ -564,8 +560,16 @@ async def calc_cycle_time(team_number: str, cycle_type: str):
 
 
 async def count_hang(team_number): # FIXME
-    data = await get_path(team_number, "teleop")
-    hang_time = [item.get("hangTime", 0) for item in data if "hangTime" in item]
+    data = await raw_collection.find(
+        {"team_number": team_number},
+        {
+            "_id": 0,
+            "hang_time": "$teleop.hang_time"
+        }
+    ).to_list(None)
+    print (data)
+    hang_time = [item.get("hang_time") for item in data]
+    print  (hang_time)
     # Handle empty hang_time case
     if not hang_time:  # If hang_time is an empty list
         # Substitute default values for absolute and relative stats
@@ -576,8 +580,8 @@ async def count_hang(team_number): # FIXME
         abs_stats = get_abs_team_stats(hang_time)
         rel_stats = await get_rel_team_stats(team_number, "hang_time", "teleop")
 
-    print({"calc_cycle_time": abs_stats | rel_stats})
-    return abs_stats | rel_stats
+    print({"calc_cycle_time": {**abs_stats, **rel_stats}})
+    return {**abs_stats, **rel_stats}
 
 
 async def pack_teleop_data_objective(team_number: str):
