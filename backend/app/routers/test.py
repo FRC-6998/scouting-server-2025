@@ -11,5 +11,5 @@ reef_levels = ["l1", "l2", "l3", "l4"]
 
 @router.get("/")
 async def test(team_number: str):
-    print (await count_hang(team_number))
-    return {"message": "Tested successfully"}
+    await post_obj_results(team_number)
+    return {"message": "Test successful"}
