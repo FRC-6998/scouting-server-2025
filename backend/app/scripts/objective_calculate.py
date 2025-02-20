@@ -545,18 +545,19 @@ def search_cycle_time(data: list, cycle_type: str):
 
     return cycle_time
 
-# TODO: Make absolute and relative stats functions separate
-async def calc_cycle_time(team_number: str, cycle_type: str):
+async def calc_cycle_time_abs(team_number: str, cycle_type: str):
     data = await get_path(team_number, "teleop")
     print (data)
     cycle_times = search_cycle_time(data, cycle_type)
 
     if not cycle_times:
         # Handle empty cycle_times by returning default values
-        return {"abs_stats": {}, "rel_stats": {}}  # Replace with meaningful defaults if needed
+        return {"average": 0, "stability": 0}
 
+    return get_abs_team_stats(cycle_times)
 
-    return {**get_abs_team_stats(cycle_times), **await get_rel_team_stats(team_number, "cycle_time", "teleop")}
+async def calc_cycle_time_rel(team_number: str, cycle_type: str):
+    return await get_rel_team_stats(team_number, "cycle_time." + cycle_type, "teleop")
 
 # TODO: Make absolute and relative stats functions separate
 async def count_hang(team_number):
@@ -596,8 +597,8 @@ async def pack_teleop_data_objective(team_number: str):
         "processor_score": await count_processor_score_abs(team_number, "teleop"),
         "net_score": await count_net_score_abs(team_number, "teleop"),
         "cycle_time": {
-            "coral": await calc_cycle_time(team_number, "coral"),
-            "algae": await calc_cycle_time(team_number, "algae")
+            "coral": await calc_cycle_time_abs(team_number, "coral"),
+            "algae": await calc_cycle_time_abs(team_number, "algae")
         },
         "hang": await count_hang(team_number)
     }
