@@ -606,7 +606,7 @@ async def count_hang_abs(team_number):
 async def calc_hang_rel(team_number: str):
     return await get_rel_team_stats(team_number, "hang", "teleop")
 
-async def pack_teleop_data_objective(team_number: str):
+async def pack_teleop_data_abs(team_number: str):
     data = {
         "reef": {
             "l1": await calc_reef_level_abs(team_number, ReefLevel.L1, "teleop"),
@@ -624,6 +624,25 @@ async def pack_teleop_data_objective(team_number: str):
         "hang": await count_hang_abs(team_number)
     }
     print({"pack_teleop_data": data})
+    return data
+
+async def pack_teleop_data_rel(team_number: str):
+    data = {
+        "reef": {
+            "l1": await calc_reef_level_rel(team_number, ReefLevel.L1, "teleop"),
+            "l2": await calc_reef_level_rel(team_number, ReefLevel.L2, "teleop"),
+            "l3": await calc_reef_level_rel(team_number, ReefLevel.L3, "teleop"),
+            "l4": await calc_reef_level_rel(team_number, ReefLevel.L4, "teleop")
+        },
+        "processor_score": await calc_processor_score_rel(team_number, "teleop"),
+        "net_score": await calc_net_score_rel(team_number, "teleop"),
+        "cycle_time": {
+            "coral": await calc_cycle_time_rel(team_number, "coral"),
+            "algae": await calc_cycle_time_rel(team_number, "algae")
+        },
+        "hang": await calc_hang_rel(team_number)
+    }
+    print ({"pack_teleop_data_rel": data})
     return data
 
 
@@ -644,8 +663,8 @@ async def get_comments(team_number: str):
 async def pack_obj_data(team_number: str):
     data = {
         "team_number": team_number,
-        "auto": await pack_auto_data(team_number),
-        "teleop": await pack_teleop_data_objective(team_number),
+        "auto": await pack_auto_data_abs(team_number),
+        "teleop": await pack_teleop_data_abs(team_number),
         "comments": await get_comments(team_number)
     }
     print({"pack_data": data})
