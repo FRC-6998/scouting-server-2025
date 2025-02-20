@@ -448,7 +448,6 @@ async def count_net_score_abs(team_number: str, period: str):
 async def calc_net_score_rel(team_number: str, period: str):
     return await get_rel_team_stats(team_number, "net_score", period)
 
-# TODO: Make absolute data post first, and then relative data calculated and posted
 async def pack_auto_data_abs(team_number: str):
     data = {
         "preload_count": await count_preload(team_number),
