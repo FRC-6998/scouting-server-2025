@@ -368,7 +368,7 @@ async def calc_reef_success_rate_by_side(team_number: str, side: str, period: st
     return {side: rate}
 
 # TODO: Make absolute and relative stats functions separate
-async def count_processor_score(team_number: str, period: str):
+async def count_processor_score_abs(team_number: str, period: str):
     match_paths = await get_path(team_number, period)
 
     # Safety check in case get_path returns None or invalid data
@@ -392,17 +392,14 @@ async def count_processor_score(team_number: str, period: str):
     # print (processor_score)
     # Ensure processor_score is not empty before calculating stats
     if not processor_score:
-        return {
-            "abs_team_stats": {},  # Default empty stats if no scores are computed
-            "rel_team_stats": await get_rel_team_stats(team_number, "processor", period)
-        }
+        return {"average": 0, "stability": 0}
 
-    abs_team_stats = get_abs_team_stats(processor_score)
-    rel_team_stats = await get_rel_team_stats(team_number, "processor", period)
-
-    # Use dictionary unpacking to merge them safely.
     # print({"count_processor_score": {**abs_team_stats, **rel_team_stats}})
-    return {**abs_team_stats, **rel_team_stats}
+
+    return get_abs_team_stats(processor_score)
+
+async def calc_processor_score_rel(team_number: str, period: str):
+    return await get_rel_team_stats(team_number, "processor_score", period)
 
 # TODO: Make absolute and relative stats functions separate
 async def count_net_score(team_number: str, period: str):
@@ -480,7 +477,7 @@ async def pack_auto_data(team_number: str):
             "KL": await calc_auto_reef_score_by_side_abs(team_number, ReefSide.KL)
         },
         "reef_score": await calc_auto_reef_score(team_number),
-        "processor_score": await count_processor_score(team_number, "auto"),
+        "processor_score": await count_processor_score_abs(team_number, "auto"),
         "net_score": await count_net_score(team_number, "auto")
     }
     print({"pack_auto_data": data})
@@ -598,7 +595,7 @@ async def pack_teleop_data_objective(team_number: str):
             "l4": await calc_reef_level_abs(team_number, ReefLevel.L4, "teleop"),
 
         },
-        "processor_score": await count_processor_score(team_number, "teleop"),
+        "processor_score": await count_processor_score_abs(team_number, "teleop"),
         "net_score": await count_net_score(team_number, "teleop"),
         "cycle_time": {
             "coral": await calc_cycle_time(team_number, "coral"),
