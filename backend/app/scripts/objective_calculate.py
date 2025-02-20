@@ -681,8 +681,10 @@ async def pack_obj_data_rel(team_number: str):
     return data
 
 async def post_obj_results(team_number: str):
-    data = await pack_obj_data(team_number)
-    print(data)
-    filter_query = {"team_number": team_number}
-    replacement = data
-    await result_collection.replace_one(filter_query, replacement, bypass_document_validation=False, session=None, upsert=True)
+    abs_data = await pack_obj_data_abs(team_number)
+    rel_data = await pack_obj_data_rel(team_number)
+
+    await result_collection.insert_one(abs_data)
+    await result_collection.update_one(rel_data)
+
+    return {"message": "Data posted successfully"}
