@@ -66,5 +66,8 @@ async def delete_obj_match_data(match_id: str):
     response_description="Got objective match results successfully",
     status_code=status.HTTP_200_OK,
 )
-async def get_obj_match_results():
-    return await pack_obj_data_abs("6998")
+async def get_obj_match_results(team_number: str):
+    await post_obj_results(team_number)
+    data = await objective_result.find_one({"team_number": team_number},{"_id": 0})
+    print (data)
+    return data

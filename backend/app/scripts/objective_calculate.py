@@ -232,10 +232,13 @@ def calc_relative(team_number: str, data: list, key: str):
     sorted_np = np.array([item.get(key) for item in data])
 
     if rank == 0:
-        return {"rank": rank, "z_score": None}
+        return {"rank": rank, "z_score": 0.0}
 
     # Calculate the z-score for the team's rank
     z_score = float((sorted_np[rank - 1] - np.average(sorted_np)) / np.std(sorted_np))
+
+    if np.isnan(z_score):
+        z_score = 0.0
 
     return {"rank": rank, "z_score": z_score}
 
