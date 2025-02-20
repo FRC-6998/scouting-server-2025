@@ -450,7 +450,7 @@ async def count_net_score(team_number: str, period: str):
     # print({"count_net_score": {**abs_stats, **rel_stats}})
     return {**abs_stats, **rel_stats}
 
-
+# TODO: Make absolute data post first, and then relative data calculated and posted
 async def pack_auto_data(team_number: str):
     data = {
         "preload_count": await count_preload(team_number),
