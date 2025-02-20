@@ -367,7 +367,6 @@ async def calc_reef_success_rate_by_side(team_number: str, side: str, period: st
 
     return {side: rate}
 
-# TODO: Make absolute and relative stats functions separate
 async def count_processor_score_abs(team_number: str, period: str):
     match_paths = await get_path(team_number, period)
 
