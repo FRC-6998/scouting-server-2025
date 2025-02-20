@@ -559,8 +559,7 @@ async def calc_cycle_time_abs(team_number: str, cycle_type: str):
 async def calc_cycle_time_rel(team_number: str, cycle_type: str):
     return await get_rel_team_stats(team_number, "cycle_time." + cycle_type, "teleop")
 
-# TODO: Make absolute and relative stats functions separate
-async def count_hang(team_number):
+async def count_hang_abs(team_number):
     data = await raw_collection.find(
         {"team_number": team_number},
         {
@@ -576,8 +575,10 @@ async def count_hang(team_number):
         return {"average": 0, "stability": 0}
 
     # print({"calc_cycle_time": {**abs_stats, **rel_stats}})
-    return {**abs_stats, **rel_stats}
+    return get_abs_team_stats(hang_time)
 
+async def calc_hang_rel(team_number: str):
+    return await get_rel_team_stats(team_number, "hang", "teleop")
 
 async def pack_teleop_data_objective(team_number: str):
     data = {
@@ -594,7 +595,7 @@ async def pack_teleop_data_objective(team_number: str):
             "coral": await calc_cycle_time_abs(team_number, "coral"),
             "algae": await calc_cycle_time_abs(team_number, "algae")
         },
-        "hang": await count_hang(team_number)
+        "hang": await count_hang_abs(team_number)
     }
     print({"pack_teleop_data": data})
     return data
