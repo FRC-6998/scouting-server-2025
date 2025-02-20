@@ -235,8 +235,38 @@ async def calc_reef_level_abs(team_number: str, level: str, period: str = "auto"
 
     return get_abs_team_stats(reef_matched)
 
+def calc_reef_relative(team_number: str, data: list, key: str):
+    rank = 0
+
+    # Extract the values from data for key into a list
+    for item in data:
+        if item.get("team_number") == team_number:
+            rank = data.index(item) + 1
+        # Rank matches the 1-based index in sorted order
+    # Convert the list of values into a NumPy array
+    sorted_np = np.array([item.get(key) for item in data])
+
+    # Calculate the z-score for the team's rank
+    z_score = (sorted_np[rank - 1] - np.average(sorted_np)) / np.std(sorted_np)
+
+    return {"rank": rank, "z_score": z_score}
+
+
 async def calc_reef_level_rel(team_number: str, level: str, period: str):
-    return await get_rel_team_stats(team_number, level, period)
+    unsorted_data = await result_collection.find(
+        {},  # Query criteria
+        {
+            "_id": 0,
+            "team_number": 1,
+            level: f"${period}.reef.{level}.average"
+        }
+    ).to_list(None)
+
+    data = sorted(unsorted_data, key=itemgetter(level), reverse=True)
+
+    print ({"calc_reef_level_rel": calc_reef_relative(team_number, data, level)})
+
+    return calc_reef_relative(team_number, data, level)
 
 async def calc_auto_reef_score_abs(team_number: str):
     scores = []
