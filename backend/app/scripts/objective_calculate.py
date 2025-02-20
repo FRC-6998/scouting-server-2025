@@ -491,7 +491,7 @@ async def pack_auto_data_rel(team_number: str):
             "l2": await calc_reef_level_rel(team_number, ReefLevel.L2, "auto"),
             "l3": await calc_reef_level_rel(team_number, ReefLevel.L3, "auto"),
             "l4": await calc_reef_level_rel(team_number, ReefLevel.L4, "auto")
-        }
+        },
         "reef_score_by_side": {
             "AB": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.AB),
             "CD": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.CD),
