@@ -1,4 +1,3 @@
-import asyncio
 from enum import Enum
 from operator import itemgetter
 
@@ -231,6 +230,9 @@ def calc_relative(team_number: str, data: list, key: str):
         # Rank matches the 1-based index in sorted order
     # Convert the list of values into a NumPy array
     sorted_np = np.array([item.get(key) for item in data])
+
+    if rank == 0:
+        return {"rank": rank, "z_score": None}
 
     # Calculate the z-score for the team's rank
     z_score = float((sorted_np[rank - 1] - np.average(sorted_np)) / np.std(sorted_np))
@@ -645,19 +647,19 @@ async def calc_hang_rel(team_number: str):
 async def pack_teleop_data_abs(team_number: str):
     data = {
         "reef": {
-            "l1": await calc_reef_level_abs(team_number, ReefLevel.L1.value, "teleop"),
-            "l2": await calc_reef_level_abs(team_number, ReefLevel.L2.value, "teleop"),
-            "l3": await calc_reef_level_abs(team_number, ReefLevel.L3.value, "teleop"),
-            "l4": await calc_reef_level_abs(team_number, ReefLevel.L4.value, "teleop"),
+            "l1": {**await calc_reef_level_abs(team_number, ReefLevel.L1.value, "teleop")},
+            "l2": {**await calc_reef_level_abs(team_number, ReefLevel.L2.value, "teleop")},
+            "l3": {**await calc_reef_level_abs(team_number, ReefLevel.L3.value, "teleop")},
+            "l4": {**await calc_reef_level_abs(team_number, ReefLevel.L4.value, "teleop")},
 
         },
-        "processor_score": await count_processor_score_abs(team_number, "teleop"),
-        "net_score": await count_net_score_abs(team_number, "teleop"),
+        "processor_score": {**await count_processor_score_abs(team_number, "teleop")},
+        "net_score": {**await count_net_score_abs(team_number, "teleop")},
         "cycle_time": {
-            "coral": await calc_cycle_time_abs(team_number, "coral"),
-            "algae": await calc_cycle_time_abs(team_number, "algae")
+            "coral": {**await calc_cycle_time_abs(team_number, "coral")},
+            "algae": {**await calc_cycle_time_abs(team_number, "algae")}
         },
-        "hang": await count_hang_abs(team_number)
+        "hang": {**await count_hang_abs(team_number)}
     }
     print({"pack_teleop_data": data})
     return data
@@ -665,18 +667,18 @@ async def pack_teleop_data_abs(team_number: str):
 async def pack_teleop_data_rel(team_number: str):
     data = {
         "reef": {
-            "l1": await calc_reef_level_rel(team_number, ReefLevel.L1.value, "teleop"),
-            "l2": await calc_reef_level_rel(team_number, ReefLevel.L2.value, "teleop"),
-            "l3": await calc_reef_level_rel(team_number, ReefLevel.L3.value, "teleop"),
-            "l4": await calc_reef_level_rel(team_number, ReefLevel.L4.value, "teleop")
+            "l1": {**await calc_reef_level_rel(team_number, ReefLevel.L1.value, "teleop")},
+            "l2": {**await calc_reef_level_rel(team_number, ReefLevel.L2.value, "teleop")},
+            "l3": {**await calc_reef_level_rel(team_number, ReefLevel.L3.value, "teleop")},
+            "l4": {**await calc_reef_level_rel(team_number, ReefLevel.L4.value, "teleop")}
         },
-        "processor_score": await calc_processor_score_rel(team_number, "teleop"),
-        "net_score": await calc_net_score_rel(team_number, "teleop"),
+        "processor_score": {**await calc_processor_score_rel(team_number, "teleop")},
+        "net_score": {**await calc_net_score_rel(team_number, "teleop")},
         "cycle_time": {
-            "coral": await calc_cycle_time_rel(team_number, "coral"),
-            "algae": await calc_cycle_time_rel(team_number, "algae")
+            "coral": {**await calc_cycle_time_rel(team_number, "coral")},
+            "algae": {**await calc_cycle_time_rel(team_number, "algae")}
         },
-        "hang": await calc_hang_rel(team_number)
+        "hang": {**await calc_hang_rel(team_number)}
     }
     print ({"pack_teleop_data_rel": data})
     return data
@@ -716,19 +718,30 @@ async def pack_obj_data_rel(team_number: str):
     print({"pack_data": data})
     return data
 
-async def post_obj_results_abs(team_number: str):
-    data = await pack_obj_data_abs(team_number)  # Await the coroutine directly
-    await result_collection.update_one({"team_number": team_number}, {"$set": data}, upsert=True)
-
-    return {"message": "Objective-absolute data posted successfully"}
-
-async def post_obj_results_rel(team_number: str):
-    data = await pack_obj_data_rel(team_number)
-    await result_collection.update_one({"team_number": team_number}, {"$set": data}, upsert=True)
-    return {"message": "Objective-relative data posted successfully"}
-
 async def post_obj_results(team_number: str):
-    await post_obj_results_abs(team_number)
-    await post_obj_results_rel(team_number)
+    obj = {**await pack_obj_data_abs(team_number)}
+    rel = {**await pack_obj_data_rel(team_number)}
+
+    post_data = merge_data(obj, rel)
+
+    await result_collection.update_one({"team_number": team_number}, {"$set": post_data}, upsert=True)
 
     return {"message": "Data posted successfully"}
+
+def merge_data(data1: dict, data2: dict):
+    """
+    合併兩個巢狀字典，對於相同的鍵，若值為字典則遞迴合併，否則使用 dict2 的值。
+    """
+    for key in data2:
+        if key in data1:
+            # 如果鍵存在且都是字典，則遞迴合併
+            if isinstance(data1[key], dict) and isinstance(data2[key], dict):
+                merge_data(data1[key], data2[key])
+            else:
+                # 否則使用 dict2 的值覆蓋 dict1 的值
+                data1[key] = data2[key]
+        else:
+            # 如果鍵不存在於 dict1，則直接添加
+            data1[key] = data2[key]
+
+    return data1
