@@ -564,7 +564,7 @@ async def calc_cycle_time(team_number: str, cycle_type: str):
     return {**get_abs_team_stats(cycle_times), **await get_rel_team_stats(team_number, "cycle_time", "teleop")}
 
 # TODO: Make absolute and relative stats functions separate
-async def count_hang(team_number): # FIXME
+async def count_hang(team_number):
     data = await raw_collection.find(
         {"team_number": team_number},
         {
