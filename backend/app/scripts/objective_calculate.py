@@ -364,6 +364,7 @@ async def calc_reef_success_rate_by_side(team_number: str, side: str, period: st
 
     return {side: rate}
 
+# TODO: Make absolute and relative stats functions separate
 async def count_processor_score(team_number: str, period: str):
     match_paths = await get_path(team_number, period)
 
@@ -400,6 +401,7 @@ async def count_processor_score(team_number: str, period: str):
     # print({"count_processor_score": {**abs_team_stats, **rel_team_stats}})
     return {**abs_team_stats, **rel_team_stats}
 
+# TODO: Make absolute and relative stats functions separate
 async def count_net_score(team_number: str, period: str):
     matches = await get_path(team_number, period)
 
@@ -545,7 +547,7 @@ def search_cycle_time(data: list, cycle_type: str):
 
     return cycle_time
 
-
+# TODO: Make absolute and relative stats functions separate
 async def calc_cycle_time(team_number: str, cycle_type: str):
     data = await get_path(team_number, "teleop")
     print (data)
@@ -558,7 +560,7 @@ async def calc_cycle_time(team_number: str, cycle_type: str):
 
     return {**get_abs_team_stats(cycle_times), **await get_rel_team_stats(team_number, "cycle_time", "teleop")}
 
-
+# TODO: Make absolute and relative stats functions separate
 async def count_hang(team_number): # FIXME
     data = await raw_collection.find(
         {"team_number": team_number},
