@@ -252,7 +252,7 @@ class ReefCountAbsoluteResultBySide(BaseModel):
     l3: GamePieceActionResult
     l4: GamePieceActionResult
 
-class ReefResultBySide(BaseModel):
+class ReefSuccessRateBySide(BaseModel):
     AB: float
     CD: float
     EF: float
@@ -260,13 +260,21 @@ class ReefResultBySide(BaseModel):
     IJ: float
     KL: float
 
+class ReefScoreBySide(BaseModel):
+    AB: GamePieceActionResult
+    CD: GamePieceActionResult
+    EF: GamePieceActionResult
+    GH: GamePieceActionResult
+    IJ: GamePieceActionResult
+    KL: GamePieceActionResult
+
 class AutoResult(BaseModel):
     preload_count: PreloadCount
     start_position_count: StartPositionCount
     leave_success_rate: float
     reef: ReefCountAbsoluteResultBySide
-    reef_success_rate_by_side: ReefResultBySide
-    reef_score_by_side: ReefResultBySide
+    reef_success_rate_by_side: ReefSuccessRateBySide
+    reef_score_by_side: ReefScoreBySide
     reef_score: GamePieceActionResult
     processor_score: GamePieceActionResult
     net_score: GamePieceActionResult
