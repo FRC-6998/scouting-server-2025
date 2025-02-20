@@ -573,15 +573,9 @@ async def count_hang(team_number):
     print  (hang_time)
     # Handle empty hang_time case
     if not hang_time:  # If hang_time is an empty list
-        # Substitute default values for absolute and relative stats
-        abs_stats = {"total_hang_time": 0}  # Define meaningful default stats
-        rel_stats = {"relative_hang_score": 0}  # Define meaningful placeholder for relative stats
-    else:
-        # Calculate absolute and relative stats using available hang_time
-        abs_stats = get_abs_team_stats(hang_time)
-        rel_stats = await get_rel_team_stats(team_number, "hang_time", "teleop")
+        return {"average": 0, "stability": 0}
 
-    print({"calc_cycle_time": {**abs_stats, **rel_stats}})
+    # print({"calc_cycle_time": {**abs_stats, **rel_stats}})
     return {**abs_stats, **rel_stats}
 
 
