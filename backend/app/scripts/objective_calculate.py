@@ -255,7 +255,7 @@ async def calc_auto_reef_score(team_number: str):
                         break
         scores.append(score)
 
-    print (scores)
+    # print (scores)
     return scores
 
 
