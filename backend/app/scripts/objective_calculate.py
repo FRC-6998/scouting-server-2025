@@ -238,7 +238,7 @@ async def calc_reef_level_abs(team_number: str, level: str, period: str = "auto"
 async def calc_reef_level_rel(team_number: str, level: str, period: str):
     return await get_rel_team_stats(team_number, level, period)
 
-async def calc_auto_reef_score(team_number: str):
+async def calc_auto_reef_score_abs(team_number: str):
     scores = []
 
     # Get paths for the given team and period
@@ -256,7 +256,10 @@ async def calc_auto_reef_score(team_number: str):
         scores.append(score)
 
     # print (scores)
-    return scores
+    return get_abs_team_stats(scores)
+
+async def calc_auto_reef_score_rel(team_number: str):
+    return await get_rel_team_stats(team_number, "reef_score", "auto")
 
 
 def convert_auto_reef_side_to_pos(side: str):
@@ -474,7 +477,7 @@ async def pack_auto_data(team_number: str):
             "IJ": await calc_auto_reef_score_by_side_abs(team_number, ReefSide.IJ),
             "KL": await calc_auto_reef_score_by_side_abs(team_number, ReefSide.KL)
         },
-        "reef_score": await calc_auto_reef_score(team_number),
+        "reef_score": await calc_auto_reef_score_abs(team_number),
         "processor_score": await count_processor_score_abs(team_number, "auto"),
         "net_score": await count_net_score_abs(team_number, "auto")
     }
