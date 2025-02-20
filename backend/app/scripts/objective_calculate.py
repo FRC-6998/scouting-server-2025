@@ -341,6 +341,9 @@ async def calc_auto_reef_score_by_side(team_number: str, side: str, ):
 
     return get_abs_team_stats(side_scores)  # Compute stats if side_matched has values
 
+async def calc_auto_reef_score_by_side_rel(team_number: str, side: str):
+    return await get_rel_team_stats(team_number, "reef_score_by_side." + side, "auto")
+
 async def calc_reef_success_rate_by_side(team_number: str, side: str, period: str = "auto"):
     converted_side = convert_auto_reef_side_to_pos(side)
     matches_paths = await get_path(team_number, period)
@@ -469,12 +472,12 @@ async def pack_auto_data(team_number: str):
             "KL": await calc_reef_success_rate_by_side(team_number, ReefSide.KL, "auto")
         },
         "reef_score_by_side": {
-            "AB": await calc_auto_reef_score_by_side(team_number, ReefSide.AB),
-            "CD": await calc_auto_reef_score_by_side(team_number, ReefSide.CD),
-            "EF": await calc_auto_reef_score_by_side(team_number, ReefSide.EF),
-            "GH": await calc_auto_reef_score_by_side(team_number, ReefSide.GH),
-            "IJ": await calc_auto_reef_score_by_side(team_number, ReefSide.IJ),
-            "KL": await calc_auto_reef_score_by_side(team_number, ReefSide.KL)
+            "AB": await calc_auto_reef_score_by_side_abs(team_number, ReefSide.AB),
+            "CD": await calc_auto_reef_score_by_side_abs(team_number, ReefSide.CD),
+            "EF": await calc_auto_reef_score_by_side_abs(team_number, ReefSide.EF),
+            "GH": await calc_auto_reef_score_by_side_abs(team_number, ReefSide.GH),
+            "IJ": await calc_auto_reef_score_by_side_abs(team_number, ReefSide.IJ),
+            "KL": await calc_auto_reef_score_by_side_abs(team_number, ReefSide.KL)
         },
         "reef_score": await calc_auto_reef_score(team_number),
         "processor_score": await count_processor_score(team_number, "auto"),
