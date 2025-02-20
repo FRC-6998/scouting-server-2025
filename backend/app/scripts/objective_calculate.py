@@ -298,7 +298,7 @@ def get_reef_level_score_weight(level: str, period: str):
                 case ReefLevel.L4.value:
                     return 5
 
-async def calc_auto_reef_score_by_side(team_number: str, side: str, ):
+async def calc_auto_reef_score_by_side_abs(team_number: str, side: str, ):
     converted_side = convert_auto_reef_side_to_pos(side)
     print(converted_side)
     point_value = get_reef_level_score_weight(side, "auto")
