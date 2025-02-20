@@ -660,7 +660,7 @@ async def get_comments(team_number: str):
 
     return comments  # Return the list of comments
 
-async def pack_obj_data(team_number: str):
+async def pack_obj_data_abs(team_number: str):
     data = {
         "team_number": team_number,
         "auto": await pack_auto_data_abs(team_number),
@@ -670,6 +670,15 @@ async def pack_obj_data(team_number: str):
     print({"pack_data": data})
     return data
 
+async def pack_obj_data_rel(team_number: str):
+    data = {
+        "team_number": team_number,
+        "auto": await pack_auto_data_rel(team_number),
+        "teleop": await pack_teleop_data_rel(team_number),
+        "comments": await get_comments(team_number)
+    }
+    print({"pack_data": data})
+    return data
 
 async def post_obj_results(team_number: str):
     data = await pack_obj_data(team_number)
