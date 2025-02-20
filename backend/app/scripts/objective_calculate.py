@@ -400,8 +400,7 @@ async def count_processor_score_abs(team_number: str, period: str):
 async def calc_processor_score_rel(team_number: str, period: str):
     return await get_rel_team_stats(team_number, "processor_score", period)
 
-# TODO: Make absolute and relative stats functions separate
-async def count_net_score(team_number: str, period: str):
+async def count_net_score_abs(team_number: str, period: str):
     matches = await get_path(team_number, period)
 
     # Check if paths is empty or invalid:
@@ -441,10 +440,10 @@ async def count_net_score(team_number: str, period: str):
         }
 
     # Compute stats if net_score has data
-    abs_stats = get_abs_team_stats(net_score)
-    rel_stats = await get_rel_team_stats(team_number, "net", period)
-    # print({"count_net_score": {**abs_stats, **rel_stats}})
-    return {**abs_stats, **rel_stats}
+    return get_abs_team_stats(net_score)
+
+async def calc_net_score_rel(team_number: str, period: str):
+    return await get_rel_team_stats(team_number, "net_score", period)
 
 # TODO: Make absolute data post first, and then relative data calculated and posted
 async def pack_auto_data(team_number: str):
@@ -477,7 +476,7 @@ async def pack_auto_data(team_number: str):
         },
         "reef_score": await calc_auto_reef_score(team_number),
         "processor_score": await count_processor_score_abs(team_number, "auto"),
-        "net_score": await count_net_score(team_number, "auto")
+        "net_score": await count_net_score_abs(team_number, "auto")
     }
     print({"pack_auto_data": data})
     return data
@@ -595,7 +594,7 @@ async def pack_teleop_data_objective(team_number: str):
 
         },
         "processor_score": await count_processor_score_abs(team_number, "teleop"),
-        "net_score": await count_net_score(team_number, "teleop"),
+        "net_score": await count_net_score_abs(team_number, "teleop"),
         "cycle_time": {
             "coral": await calc_cycle_time(team_number, "coral"),
             "algae": await calc_cycle_time(team_number, "algae")
