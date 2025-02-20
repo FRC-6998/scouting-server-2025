@@ -1,3 +1,4 @@
+import asyncio
 from enum import Enum
 from operator import itemgetter
 
@@ -24,44 +25,29 @@ def get_abs_team_stats(data: list):
 
 async def get_rel_team_stats(team_number: str, key: str, period: str):
     # Query to find documents in result_collection
+    print (f"${period}.{key}.average")
     unsorted_data = await result_collection.find(
         {},  # Query criteria
         {
             "_id": 0,
             "team_number": 1,
-            key + ".average": "$" + period + "." + key + ".average"
+            key: f"${period}.{key}.average"
         }
     ).to_list(None)
+    print ({"unsorted_data": unsorted_data})
 
     if not unsorted_data:  # Handle case where no data is returned by the query
         # Default relative statistics when no data is found
         return {"rank": None, "z_score": None}
 
-    # Remove entries where the key ".average" does not exist in the result
-    valid_data = [
-        entry for entry in unsorted_data
-        if key + ".average" in entry  # Only include items containing the key
-    ]
+
     # Sort only the valid data by the key
-    data = sorted(valid_data, key=itemgetter(key + ".average"), reverse=True)
+    data = sorted(unsorted_data, key=itemgetter(key), reverse=True)
+
+    print (data)
 
     # Calculate the relative stats for the current team
     return calc_relative(team_number, data, key)
-
-
-@numba.jit(cache=True)
-def calc_relative(team_number: str, data: list, key: str):
-    rank = 0
-
-    for item in data:
-        data.append(item[key+".average"])
-        if item["team_number"] == team_number:
-            rank = data.index(item) + 1
-
-    sorted_np = np.array(d[key] for d in data)
-    z_score = (sorted_np[rank - 1] - np.average(sorted_np)) / np.std(sorted_np)
-
-    return {"rank": rank, "z_score": z_score}
 
 
 class ReefLevel(str, Enum):
@@ -235,7 +221,7 @@ async def calc_reef_level_abs(team_number: str, level: str, period: str = "auto"
 
     return get_abs_team_stats(reef_matched)
 
-def calc_reef_side_relative(team_number: str, data: list, key: str):
+def calc_relative(team_number: str, data: list, key: str):
     rank = 0
 
     # Extract the values from data for key into a list
@@ -266,7 +252,7 @@ async def calc_reef_level_rel(team_number: str, level: str, period: str):
 
     # print ({"calc_reef_level_rel": calc_reef_side_relative(team_number, data, level)})
 
-    return calc_reef_side_relative(team_number, data, level)
+    return calc_relative(team_number, data, level)
 
 async def calc_auto_reef_score_abs(team_number: str):
     scores = []
@@ -375,7 +361,18 @@ async def calc_auto_reef_score_by_side_abs(team_number: str, side: str, ):
     return get_abs_team_stats(side_scores)  # Compute stats if side_matched has values
 
 async def calc_auto_reef_score_by_side_rel(team_number: str, side: str):
-    return await get_rel_team_stats(team_number, "reef_score_by_side." + side, "auto")
+    unsorted_data = await result_collection.find(
+        {},  # Query criteria
+        {
+            "_id": 0,
+            "team_number": 1,
+            side: f"$auto.reef_score_by_side.{side}.average"
+        }
+    ).to_list(None)
+
+    data = sorted(unsorted_data, key=itemgetter(side), reverse=True)
+
+    return calc_relative(team_number, data, side)
 
 async def calc_reef_success_rate_by_side(team_number: str, side: str, period: str = "auto"):
     converted_side = convert_auto_reef_side_to_pos(side)
@@ -491,20 +488,20 @@ async def pack_auto_data_abs(team_number: str):
 
         },
         "reef_success_rate_by_side": {
-            "AB": await calc_reef_success_rate_by_side(team_number, ReefSide.AB, "auto"),
-            "CD": await calc_reef_success_rate_by_side(team_number, ReefSide.CD, "auto"),
-            "EF": await calc_reef_success_rate_by_side(team_number, ReefSide.EF, "auto"),
-            "GH": await calc_reef_success_rate_by_side(team_number, ReefSide.GH, "auto"),
-            "IJ": await calc_reef_success_rate_by_side(team_number, ReefSide.IJ, "auto"),
-            "KL": await calc_reef_success_rate_by_side(team_number, ReefSide.KL, "auto")
+            "AB": await calc_reef_success_rate_by_side(team_number, ReefSide.AB.value, "auto"),
+            "CD": await calc_reef_success_rate_by_side(team_number, ReefSide.CD.value, "auto"),
+            "EF": await calc_reef_success_rate_by_side(team_number, ReefSide.EF.value, "auto"),
+            "GH": await calc_reef_success_rate_by_side(team_number, ReefSide.GH.value, "auto"),
+            "IJ": await calc_reef_success_rate_by_side(team_number, ReefSide.IJ.value, "auto"),
+            "KL": await calc_reef_success_rate_by_side(team_number, ReefSide.KL.value, "auto")
         },
         "reef_score_by_side": {
-            "AB": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.AB)},
-            "CD": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.CD)},
-            "EF": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.EF)},
-            "GH": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.GH)},
-            "IJ": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.IJ)},
-            "KL": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.KL)}
+            "AB": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.AB.value)},
+            "CD": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.CD.value)},
+            "EF": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.EF.value)},
+            "GH": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.GH.value)},
+            "IJ": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.IJ.value)},
+            "KL": {**await calc_auto_reef_score_by_side_abs(team_number, ReefSide.KL.value)}
         },
         "reef_score": {**await calc_auto_reef_score_abs(team_number)},
         "processor_score": {**await count_processor_score_abs(team_number, "auto")},
@@ -516,18 +513,18 @@ async def pack_auto_data_abs(team_number: str):
 async def pack_auto_data_rel(team_number: str):
     data = {
         "reef": {
-            "l1": await calc_reef_level_rel(team_number, ReefLevel.L1, "auto"),
-            "l2": await calc_reef_level_rel(team_number, ReefLevel.L2, "auto"),
-            "l3": await calc_reef_level_rel(team_number, ReefLevel.L3, "auto"),
-            "l4": await calc_reef_level_rel(team_number, ReefLevel.L4, "auto")
+            "l1": await calc_reef_level_rel(team_number, ReefLevel.L1.value, "auto"),
+            "l2": await calc_reef_level_rel(team_number, ReefLevel.L2.value, "auto"),
+            "l3": await calc_reef_level_rel(team_number, ReefLevel.L3.value, "auto"),
+            "l4": await calc_reef_level_rel(team_number, ReefLevel.L4.value, "auto")
         },
         "reef_score_by_side": {
-            "AB": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.AB),
-            "CD": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.CD),
-            "EF": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.EF),
-            "GH": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.GH),
-            "IJ": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.IJ),
-            "KL": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.KL)
+            "AB": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.AB.value),
+            "CD": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.CD.value),
+            "EF": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.EF.value),
+            "GH": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.GH.value),
+            "IJ": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.IJ.value),
+            "KL": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.KL.value)
         },
         "reef_score": await calc_auto_reef_score_rel(team_number),
         "processor_score": await calc_processor_score_rel(team_number, "auto"),
@@ -648,10 +645,10 @@ async def calc_hang_rel(team_number: str):
 async def pack_teleop_data_abs(team_number: str):
     data = {
         "reef": {
-            "l1": await calc_reef_level_abs(team_number, ReefLevel.L1, "teleop"),
-            "l2": await calc_reef_level_abs(team_number, ReefLevel.L2, "teleop"),
-            "l3": await calc_reef_level_abs(team_number, ReefLevel.L3, "teleop"),
-            "l4": await calc_reef_level_abs(team_number, ReefLevel.L4, "teleop"),
+            "l1": await calc_reef_level_abs(team_number, ReefLevel.L1.value, "teleop"),
+            "l2": await calc_reef_level_abs(team_number, ReefLevel.L2.value, "teleop"),
+            "l3": await calc_reef_level_abs(team_number, ReefLevel.L3.value, "teleop"),
+            "l4": await calc_reef_level_abs(team_number, ReefLevel.L4.value, "teleop"),
 
         },
         "processor_score": await count_processor_score_abs(team_number, "teleop"),
@@ -668,10 +665,10 @@ async def pack_teleop_data_abs(team_number: str):
 async def pack_teleop_data_rel(team_number: str):
     data = {
         "reef": {
-            "l1": await calc_reef_level_rel(team_number, ReefLevel.L1, "teleop"),
-            "l2": await calc_reef_level_rel(team_number, ReefLevel.L2, "teleop"),
-            "l3": await calc_reef_level_rel(team_number, ReefLevel.L3, "teleop"),
-            "l4": await calc_reef_level_rel(team_number, ReefLevel.L4, "teleop")
+            "l1": await calc_reef_level_rel(team_number, ReefLevel.L1.value, "teleop"),
+            "l2": await calc_reef_level_rel(team_number, ReefLevel.L2.value, "teleop"),
+            "l3": await calc_reef_level_rel(team_number, ReefLevel.L3.value, "teleop"),
+            "l4": await calc_reef_level_rel(team_number, ReefLevel.L4.value, "teleop")
         },
         "processor_score": await calc_processor_score_rel(team_number, "teleop"),
         "net_score": await calc_net_score_rel(team_number, "teleop"),
@@ -719,11 +716,19 @@ async def pack_obj_data_rel(team_number: str):
     print({"pack_data": data})
     return data
 
-async def post_obj_results(team_number: str):
-    abs_data = await pack_obj_data_abs(team_number)
-    rel_data = await pack_obj_data_rel(team_number)
+async def post_obj_results_abs(team_number: str):
+    data = await pack_obj_data_abs(team_number)  # Await the coroutine directly
+    await result_collection.update_one({"team_number": team_number}, {"$set": data}, upsert=True)
 
-    await result_collection.insert_one(abs_data)
-    await result_collection.update_one(rel_data)
+    return {"message": "Objective-absolute data posted successfully"}
+
+async def post_obj_results_rel(team_number: str):
+    data = await pack_obj_data_rel(team_number)
+    await result_collection.update_one({"team_number": team_number}, {"$set": data}, upsert=True)
+    return {"message": "Objective-relative data posted successfully"}
+
+async def post_obj_results(team_number: str):
+    await post_obj_results_abs(team_number)
+    await post_obj_results_rel(team_number)
 
     return {"message": "Data posted successfully"}
