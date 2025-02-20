@@ -449,7 +449,7 @@ async def calc_net_score_rel(team_number: str, period: str):
     return await get_rel_team_stats(team_number, "net_score", period)
 
 # TODO: Make absolute data post first, and then relative data calculated and posted
-async def pack_auto_data(team_number: str):
+async def pack_auto_data_abs(team_number: str):
     data = {
         "preload_count": await count_preload(team_number),
         "start_position_count": await count_start_pos(team_number),
@@ -481,7 +481,30 @@ async def pack_auto_data(team_number: str):
         "processor_score": await count_processor_score_abs(team_number, "auto"),
         "net_score": await count_net_score_abs(team_number, "auto")
     }
-    print({"pack_auto_data": data})
+    print({"pack_auto_data_abs": data})
+    return data
+
+async def pack_auto_data_rel(team_number: str):
+    data = {
+        "reef": {
+            "l1": await calc_reef_level_rel(team_number, ReefLevel.L1, "auto"),
+            "l2": await calc_reef_level_rel(team_number, ReefLevel.L2, "auto"),
+            "l3": await calc_reef_level_rel(team_number, ReefLevel.L3, "auto"),
+            "l4": await calc_reef_level_rel(team_number, ReefLevel.L4, "auto")
+        }
+        "reef_score_by_side": {
+            "AB": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.AB),
+            "CD": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.CD),
+            "EF": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.EF),
+            "GH": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.GH),
+            "IJ": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.IJ),
+            "KL": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.KL)
+        },
+        "reef_score": await calc_auto_reef_score_rel(team_number),
+        "processor_score": await calc_processor_score_rel(team_number, "auto"),
+        "net_score": await calc_net_score_rel(team_number, "auto")
+    }
+    print ({"pack_auto_data_rel": data})
     return data
 
 """
