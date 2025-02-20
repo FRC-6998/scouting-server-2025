@@ -612,7 +612,17 @@ async def calc_cycle_time_abs(team_number: str, cycle_type: str):
     return get_abs_team_stats(cycle_times)
 
 async def calc_cycle_time_rel(team_number: str, cycle_type: str):
-    return await get_rel_team_stats(team_number, "cycle_time." + cycle_type, "teleop")
+    unsorted_data = await result_collection.find(
+        {},  # Query criteria
+        {
+            "_id": 0,
+            "team_number": 1,
+            cycle_type: f"$teleop.cycle_time.{cycle_type}.average"
+        }
+    ).to_list(None)
+
+    data = sorted(unsorted_data, key=itemgetter(cycle_type), reverse=True)
+    return calc_relative(team_number, data, cycle_type)
 
 async def count_hang_abs(team_number):
     data = await raw_collection.find(
