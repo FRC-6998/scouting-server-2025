@@ -701,12 +701,38 @@ async def get_comments(team_number: str):
 
     return comments  # Return the list of comments
 
+async def count_bypassed(team_number: str):
+    raw_data = await raw_collection.find(
+        {"team_number": team_number},
+        {
+            "_id": 0,
+            "bypassed": 1
+        }
+    ).to_list(None)
+    count = raw_data.count({"bypassed": True})
+    print({"count_bypassed": count})
+    return count
+
+async def count_disabled(team_number: str):
+    raw_data = await raw_collection.find(
+        {"team_number": team_number},
+        {
+            "_id": 0,
+            "disabled": 1
+        }
+    ).to_list(None)
+    count = raw_data.count({"disabled": True})
+    print({"count_disabled": count})
+    return count
+
 async def pack_obj_data_abs(team_number: str):
     data = {
         "team_number": team_number,
         "auto": await pack_auto_data_abs(team_number),
         "teleop": await pack_teleop_data_abs(team_number),
-        "comments": await get_comments(team_number)
+        "comments": await get_comments(team_number),
+        "bypassed_count": await count_bypassed(team_number),
+        "disabled_count": await count_disabled(team_number)
     }
     print({"pack_data": data})
     return data
