@@ -118,73 +118,73 @@ async def calc_leave_success_rate(team_number: str, is_percentage: int = 0):
 
 def convert_reef_level_to_pos(level: str):
     match level:
-        case ReefLevel.L1:
+        case ReefLevel.L1.value:
             return ["l1ReefAB", "l1ReefCD", "l1ReefEF", "l1ReefGH", "l1ReefIJ"]
-        case ReefLevel.L2:
+        case ReefLevel.L2.value:
             return ["l2ReefAB", "l2ReefCD", "l2ReefEF", "l2ReefGH", "l2ReefIJ"]
-        case ReefLevel.L3:
+        case ReefLevel.L3.value:
             return ["l3ReefAB", "l3ReefCD", "l3ReefEF", "l3ReefGH", "l3ReefIJ"]
-        case ReefLevel.L4:
+        case ReefLevel.L4.value:
             return ["l4ReefAB", "l4ReefCD", "l4ReefEF", "l4ReefGH", "l4ReefIJ"]
 
 
 def convert_reef_level_side_to_pos(level: str, side: str):
     match level:
-        case ReefLevel.L1:
+        case ReefLevel.L1.value:
             match side:
-                case ReefSide.AB:
+                case ReefSide.AB.value:
                     return "l1ReefAB"
-                case ReefSide.CD:
+                case ReefSide.CD.value:
                     return "l1ReefCD"
-                case ReefSide.EF:
+                case ReefSide.EF.value:
                     return "l1ReefEF"
-                case ReefSide.GH:
+                case ReefSide.GH.value:
                     return "l1ReefGH"
-                case ReefSide.IJ:
+                case ReefSide.IJ.value:
                     return "l1ReefIJ"
-                case ReefSide.KL:
+                case ReefSide.KL.value:
                     return "l1ReefKL"
-        case ReefLevel.L2:
+        case ReefLevel.L2.value:
             match side:
-                case ReefSide.AB:
+                case ReefSide.AB.value:
                     return "l2ReefAB"
-                case ReefSide.CD:
+                case ReefSide.CD.value:
                     return "l2ReefCD"
-                case ReefSide.EF:
+                case ReefSide.EF.value:
                     return "l2ReefEF"
-                case ReefSide.GH:
+                case ReefSide.GH.value:
                     return "l2ReefGH"
-                case ReefSide.IJ:
+                case ReefSide.IJ.value:
                     return "l2ReefIJ"
-                case ReefSide.KL:
+                case ReefSide.KL.value:
                     return "l2ReefKL"
-        case ReefLevel.L3:
+        case ReefLevel.L3.value:
             match side:
-                case ReefSide.AB:
+                case ReefSide.AB.value:
                     return "l3ReefAB"
-                case ReefSide.CD:
+                case ReefSide.CD.value:
                     return "l3ReefCD"
-                case ReefSide.EF:
+                case ReefSide.EF.value:
                     return "l3ReefEF"
-                case ReefSide.GH:
+                case ReefSide.GH.value:
                     return "l3ReefGH"
-                case ReefSide.IJ:
+                case ReefSide.IJ.value:
                     return "l3ReefIJ"
-                case ReefSide.KL:
+                case ReefSide.KL.value:
                     return "l3ReefKL"
-        case ReefLevel.L4:
+        case ReefLevel.L4.value:
             match side:
-                case ReefSide.AB:
+                case ReefSide.AB.value:
                     return "l4ReefAB"
-                case ReefSide.CD:
+                case ReefSide.CD.value:
                     return "l4ReefCD"
-                case ReefSide.EF:
+                case ReefSide.EF.value:
                     return "l4ReefEF"
-                case ReefSide.GH:
+                case ReefSide.GH.value:
                     return "l4ReefGH"
-                case ReefSide.IJ:
+                case ReefSide.IJ.value:
                     return "l4ReefIJ"
-                case ReefSide.KL:
+                case ReefSide.KL.value:
                     return "l4ReefKL"
 
 
@@ -200,10 +200,10 @@ async def get_path(team_number: str, period: str = "auto"):
     print({"get_path": data})
     return data
 
-async def calc_reef_level_abs(team_number: str, level: str, period: str = "auto"):
+async def calc_auto_reef_level_abs(team_number: str, level: str):
     converted_level = convert_reef_level_to_pos(level)
     # print (converted_level)
-    matches = await get_path(team_number, period)
+    matches = await get_path(team_number, "auto")
 
     reef_matched = 0
     for paths in matches:
@@ -219,6 +219,37 @@ async def calc_reef_level_abs(team_number: str, level: str, period: str = "auto"
         reef_matched = [0]  # Assign a default value (e.g., no matches)
 
     return get_abs_team_stats(reef_matched)
+
+def convert_teleop_reef_level_to_pos(level: str):
+
+    match level:
+        case ReefLevel.L1.value:
+            return "l1Reef"
+        case ReefLevel.L2.value:
+            return "l2Reef"
+        case ReefLevel.L3.value:
+            return "l3Reef"
+        case ReefLevel.L4.value:
+            return "l4Reef"
+
+
+async def calc_teleop_reef_level_abs(team_number: str, level: str):
+    converted_level = convert_teleop_reef_level_to_pos(level)
+    # print (converted_level)
+    matches = await get_path(team_number, "teleop")
+
+    print({"teleop_test": converted_level})
+
+    reef_matched = 0
+    for paths in matches:
+        for single_path in paths["path"]:
+            if single_path.get("point") == converted_level:
+                reef_matched += 1
+                # print ("got it")
+
+    return get_abs_team_stats(reef_matched)
+
+
 
 def calc_relative(team_number: str, data: list, key: str):
     rank = 0
@@ -486,10 +517,10 @@ async def pack_auto_data_abs(team_number: str):
         "start_position_count": await count_start_pos(team_number),
         "leave_success_rate": await calc_leave_success_rate(team_number),
         "reef": {
-            "l1": {** await calc_reef_level_abs(team_number, ReefLevel.L1, "auto")},
-            "l2": {** await calc_reef_level_abs(team_number, ReefLevel.L2, "auto")},
-            "l3": {** await calc_reef_level_abs(team_number, ReefLevel.L3, "auto")},
-            "l4": {** await calc_reef_level_abs(team_number, ReefLevel.L4, "auto")},
+            "l1": {** await calc_auto_reef_level_abs(team_number, ReefLevel.L1.value)},
+            "l2": {** await calc_auto_reef_level_abs(team_number, ReefLevel.L2.value)},
+            "l3": {** await calc_auto_reef_level_abs(team_number, ReefLevel.L3.value)},
+            "l4": {** await calc_auto_reef_level_abs(team_number, ReefLevel.L4.value)},
 
         },
         "reef_success_rate_by_side": {
@@ -650,10 +681,10 @@ async def calc_hang_rel(team_number: str):
 async def pack_teleop_data_abs(team_number: str):
     data = {
         "reef": {
-            "l1": {**await calc_reef_level_abs(team_number, ReefLevel.L1.value, "teleop")},
-            "l2": {**await calc_reef_level_abs(team_number, ReefLevel.L2.value, "teleop")},
-            "l3": {**await calc_reef_level_abs(team_number, ReefLevel.L3.value, "teleop")},
-            "l4": {**await calc_reef_level_abs(team_number, ReefLevel.L4.value, "teleop")},
+            "l1": {**await calc_teleop_reef_level_abs(team_number, ReefLevel.L1.value)},
+            "l2": {**await calc_teleop_reef_level_abs(team_number, ReefLevel.L2.value)},
+            "l3": {**await calc_teleop_reef_level_abs(team_number, ReefLevel.L3.value)},
+            "l4": {**await calc_teleop_reef_level_abs(team_number, ReefLevel.L4.value)},
 
         },
         "processor_score": {**await count_processor_score_abs(team_number, "teleop")},
