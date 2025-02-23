@@ -146,8 +146,8 @@ class ObjectiveMatchRawData (BaseModel):
     auto : AutoRaw
     teleop: TeleopRaw
     comment: str
-    bypassed: bool = False
-    disabled: bool = False
+    # bypassed: bool = False
+    # disabled: bool = False
 
 # Subjective Match Data (formerly known as Super Scout Data)
 
