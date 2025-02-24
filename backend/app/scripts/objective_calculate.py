@@ -256,6 +256,8 @@ async def calc_teleop_reef_level_abs(team_number: str, level: str):
 
 
 def calc_relative(team_number: str, data: list, key: str):
+    print ({"initialize_relative": data})
+
     rank = 0
 
     # Extract the values from data for key into a list
@@ -266,7 +268,7 @@ def calc_relative(team_number: str, data: list, key: str):
     # Convert the list of values into a NumPy array
     sorted_np = np.array([item.get(key) for item in data])
 
-    if rank == 0:
+    if rank == 0 or np.std(sorted_np) == 0:
         return {"rank": rank, "z_score": 0.0}
 
     # Calculate the z-score for the team's rank
@@ -287,6 +289,8 @@ async def calc_reef_level_rel(team_number: str, level: str, period: str):
             level: f"${period}.reef.{level}.average"
         }
     ).to_list(None)
+
+    print ({"test_reef_level_rel":unsorted_data})
 
     data = sorted(unsorted_data, key=itemgetter(level), reverse=True)
 
@@ -357,7 +361,7 @@ def get_reef_level_score_weight(level: str, period: str):
                 case ReefLevel.L4.value:
                     return 5
 
-async def calc_auto_reef_score_by_side_abs(team_number: str, side: str, ):
+async def calc_auto_reef_score_by_side_abs(team_number: str, side: str):
     converted_side = convert_auto_reef_side_to_pos(side)
     print(converted_side)
     point_value = get_reef_level_score_weight(side, "auto")
@@ -515,6 +519,48 @@ async def count_net_score_abs(team_number: str, period: str):
 async def calc_net_score_rel(team_number: str, period: str):
     return await get_rel_team_stats(team_number, "net_score", period)
 
+async def calc_auto_reef_point_count_abs(team_number: str, pos: str):
+    matches = await get_path(team_number, "auto")
+
+    matched_per_match = []
+
+    for paths in matches:
+        count = 0
+        for single_path in paths["path"]:
+            if single_path.get("point") == pos and single_path.get("success"):
+                count += 1
+
+        matched_per_match.append(count)
+
+    print({f"calc_auto_reef_point_count_abs-{pos}": matched_per_match})
+
+    if not matched_per_match:
+        return {"average": 0.0, "stability": 0.0}
+
+
+    return get_abs_team_stats(matched_per_match)
+
+async def calc_auto_reef_point_count_rel (team_number: str, pos: str):
+    unsorted_data = await result_collection.find(
+        {},  # Query criteria
+        {
+            "_id": 0,
+            "team_number": 1,
+            pos: f"$auto.reef_count_per_point.{pos}.average"
+        }
+    ).to_list(None)
+
+    for item in unsorted_data:
+        if pos not in item:
+            team_number_temp = item.get("team_number")
+            unsorted_data.remove(item)
+            unsorted_data.append({"team_number": team_number_temp, pos: 0.0})
+
+    print ({"calc_auto_reef_point_count_rel": unsorted_data})
+    data = sorted(unsorted_data, key=itemgetter(pos), reverse=True)
+
+    return calc_relative(team_number, data, pos)
+
 async def pack_auto_data_abs(team_number: str):
     data = {
         "preload_count": await count_preload(team_number),
@@ -526,6 +572,32 @@ async def pack_auto_data_abs(team_number: str):
             "l3": {** await calc_auto_reef_level_abs(team_number, ReefLevel.L3.value)},
             "l4": {** await calc_auto_reef_level_abs(team_number, ReefLevel.L4.value)},
 
+        },
+        "reef_count_per_point":{
+            "l1ReefAB": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefAB")},
+            "l1ReefCD": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefCD")},
+            "l1ReefEF": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefEF")},
+            "l1ReefGH": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefGH")},
+            "l1ReefIJ": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefIJ")},
+            "l1ReefKL": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefKL")},
+            "l2ReefAB": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefAB")},
+            "l2ReefCD": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefCD")},
+            "l2ReefEF": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefEF")},
+            "l2ReefGH": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefGH")},
+            "l2ReefIJ": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefIJ")},
+            "l2ReefKL": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefKL")},
+            "l3ReefAB": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefAB")},
+            "l3ReefCD": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefCD")},
+            "l3ReefEF": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefEF")},
+            "l3ReefGH": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefGH")},
+            "l3ReefIJ": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefIJ")},
+            "l3ReefKL": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefKL")},
+            "l4ReefAB": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefAB")},
+            "l4ReefCD": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefCD")},
+            "l4ReefEF": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefEF")},
+            "l4ReefGH": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefGH")},
+            "l4ReefIJ": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefIJ")},
+            "l4ReefKL": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefKL")}
         },
         "reef_success_rate_by_side": {
             "AB": await calc_reef_success_rate_by_side(team_number, ReefSide.AB.value, "auto"),
@@ -557,6 +629,32 @@ async def pack_auto_data_rel(team_number: str):
             "l2": await calc_reef_level_rel(team_number, ReefLevel.L2.value, "auto"),
             "l3": await calc_reef_level_rel(team_number, ReefLevel.L3.value, "auto"),
             "l4": await calc_reef_level_rel(team_number, ReefLevel.L4.value, "auto")
+        },
+        "reef_count_per_point": {
+            "l1ReefAB": await calc_auto_reef_point_count_rel(team_number, "l1ReefAB"),
+            "l1ReefCD": await calc_auto_reef_point_count_rel(team_number, "l1ReefCD"),
+            "l1ReefEF": await calc_auto_reef_point_count_rel(team_number, "l1ReefEF"),
+            "l1ReefGH": await calc_auto_reef_point_count_rel(team_number, "l1ReefGH"),
+            "l1ReefIJ": await calc_auto_reef_point_count_rel(team_number, "l1ReefIJ"),
+            "l1ReefKL": await calc_auto_reef_point_count_rel(team_number, "l1ReefKL"),
+            "l2ReefAB": await calc_auto_reef_point_count_rel(team_number, "l2ReefAB"),
+            "l2ReefCD": await calc_auto_reef_point_count_rel(team_number, "l2ReefCD"),
+            "l2ReefEF": await calc_auto_reef_point_count_rel(team_number, "l2ReefEF"),
+            "l2ReefGH": await calc_auto_reef_point_count_rel(team_number, "l2ReefGH"),
+            "l2ReefIJ": await calc_auto_reef_point_count_rel(team_number, "l2ReefIJ"),
+            "l2ReefKL": await calc_auto_reef_point_count_rel(team_number, "l2ReefKL"),
+            "l3ReefAB": await calc_auto_reef_point_count_rel(team_number, "l3ReefAB"),
+            "l3ReefCD": await calc_auto_reef_point_count_rel(team_number, "l3ReefCD"),
+            "l3ReefEF": await calc_auto_reef_point_count_rel(team_number, "l3ReefEF"),
+            "l3ReefGH": await calc_auto_reef_point_count_rel(team_number, "l3ReefGH"),
+            "l3ReefIJ": await calc_auto_reef_point_count_rel(team_number, "l3ReefIJ"),
+            "l3ReefKL": await calc_auto_reef_point_count_rel(team_number, "l3ReefKL"),
+            "l4ReefAB": await calc_auto_reef_point_count_rel(team_number, "l4ReefAB"),
+            "l4ReefCD": await calc_auto_reef_point_count_rel(team_number, "l4ReefCD"),
+            "l4ReefEF": await calc_auto_reef_point_count_rel(team_number, "l4ReefEF"),
+            "l4ReefGH": await calc_auto_reef_point_count_rel(team_number, "l4ReefGH"),
+            "l4ReefIJ": await calc_auto_reef_point_count_rel(team_number, "l4ReefIJ"),
+            "l4ReefKL": await calc_auto_reef_point_count_rel(team_number, "l4ReefKL")
         },
         "reef_score_by_side": {
             "AB": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.AB.value),
