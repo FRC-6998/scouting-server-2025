@@ -885,6 +885,21 @@ async def post_obj_results(team_number: str):
 
     return {"message": "Data posted successfully"}
 
+async def refresh_all_obj_results():
+    team_list_raw = await raw_collection.find({},{"_id": 0, "team_number": 1}).to_list(None)
+    print (team_list_raw)
+    team_list = [item ["team_number"] for item in team_list_raw]
+    team_set = set(team_list)
+    print (team_set)
+    team_set.remove('')
+
+
+    for team in team_set:
+        await post_obj_results(team)
+
+    return {"message": "Data refreshed successfully"}
+
+
 def merge_data(data1: dict, data2: dict):
     """
     合併兩個巢狀字典，對於相同的鍵，若值為字典則遞迴合併，否則使用 dict2 的值。

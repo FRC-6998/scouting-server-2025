@@ -7,7 +7,7 @@ from typing_extensions import Annotated
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
 from ..model import ObjectiveMatchRawData, ObjectiveResult  # , MatchRawDataFilterParams
 from ..scripts.initdb import init_collection
-from ..scripts.objective_calculate import post_obj_results, pack_obj_data_abs
+from ..scripts.objective_calculate import post_obj_results, pack_obj_data_abs, refresh_all_obj_results
 from ..scripts.subjective_calculate import pack_result
 
 # db[OBJECTIVE_DATA_COLLECTION]
@@ -30,7 +30,7 @@ router = APIRouter(
 )
 async def add_obj_match_data(data: ObjectiveMatchRawData, background_tasks: BackgroundTasks):
     await objective_raw.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
-    background_tasks.add_task(post_obj_results,data.team_number)
+    background_tasks.add_task(refresh_all_obj_results)
     return {"message": "Data added successfully"}
 
 
@@ -67,7 +67,6 @@ async def delete_obj_match_data(match_id: str):
     status_code=status.HTTP_200_OK,
 )
 async def get_obj_match_results(team_number: str):
-    await post_obj_results(team_number)
     data = await objective_result.find_one({"team_number": team_number},{"_id": 0})
     print (data)
     return data
