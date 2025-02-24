@@ -205,12 +205,14 @@ async def calc_auto_reef_level_abs(team_number: str, level: str):
     # print (converted_level)
     matches = await get_path(team_number, "auto")
 
-    reef_matched = 0
+    reef_matched = []
     for paths in matches:
+        matched = 0
         for single_path in paths["path"]:
             if single_path.get("point") in converted_level:
-                reef_matched += 1
+                matched += 1
                 # print ("got it")
+        reef_matched.append(matched)
 
     # print (reef_matched)
 
@@ -240,12 +242,14 @@ async def calc_teleop_reef_level_abs(team_number: str, level: str):
 
     print({"teleop_test": converted_level})
 
-    reef_matched = 0
+    reef_matched = []
     for paths in matches:
+        matched = 0
         for single_path in paths["path"]:
             if single_path.get("point") == converted_level:
-                reef_matched += 1
+                matched += 1
                 # print ("got it")
+        reef_matched.append(matched)
 
     return get_abs_team_stats(reef_matched)
 
@@ -720,15 +724,10 @@ async def pack_teleop_data_rel(team_number: str):
 
 async def get_comments(team_number: str):
     # Get all documents matching the query and project only the 'comments' field
-    cursor = raw_collection.find(
+    comments = await raw_collection.find(
         {"team_number": team_number},
-        {"_id": 0, "comments": 1}  # Fixed projection syntax
-    )
-    # Convert the cursor to a list of documents
-    documents = await cursor.to_list(length=None)
-
-    # Extract the comments from each document, if they exist
-    comments = [doc.get("comments") for doc in documents if "comments" in doc]
+        {"_id": 0, "comment": 1}  # Fixed projection syntax
+    ).to_list(None)  # Convert the cursor to a list
 
     return comments  # Return the list of comments
 
