@@ -519,7 +519,7 @@ async def count_net_score_abs(team_number: str, period: str):
 async def calc_net_score_rel(team_number: str, period: str):
     return await get_rel_team_stats(team_number, "net_score", period)
 
-async def calc_auto_reef_point_count_abs(team_number: str, pos: str):
+async def calc_auto_reef_point_count(team_number: str, pos: str):
     matches = await get_path(team_number, "auto")
 
     matched_per_match = []
@@ -535,10 +535,11 @@ async def calc_auto_reef_point_count_abs(team_number: str, pos: str):
     print({f"calc_auto_reef_point_count_abs-{pos}": matched_per_match})
 
     if not matched_per_match:
-        return {"average": 0.0, "stability": 0.0}
+        return 0.0
 
+    matched_per_match_np = np.array(matched_per_match)
 
-    return get_abs_team_stats(matched_per_match)
+    return float(np.average(matched_per_match_np))
 
 async def calc_auto_reef_point_count_rel (team_number: str, pos: str):
     unsorted_data = await result_collection.find(
@@ -574,30 +575,75 @@ async def pack_auto_data_abs(team_number: str):
 
         },
         "reef_count_per_point":{
-            "l1ReefAB": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefAB")},
-            "l1ReefCD": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefCD")},
-            "l1ReefEF": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefEF")},
-            "l1ReefGH": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefGH")},
-            "l1ReefIJ": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefIJ")},
-            "l1ReefKL": {** await calc_auto_reef_point_count_abs(team_number, "l1ReefKL")},
-            "l2ReefAB": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefAB")},
-            "l2ReefCD": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefCD")},
-            "l2ReefEF": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefEF")},
-            "l2ReefGH": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefGH")},
-            "l2ReefIJ": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefIJ")},
-            "l2ReefKL": {** await calc_auto_reef_point_count_abs(team_number, "l2ReefKL")},
-            "l3ReefAB": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefAB")},
-            "l3ReefCD": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefCD")},
-            "l3ReefEF": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefEF")},
-            "l3ReefGH": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefGH")},
-            "l3ReefIJ": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefIJ")},
-            "l3ReefKL": {** await calc_auto_reef_point_count_abs(team_number, "l3ReefKL")},
-            "l4ReefAB": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefAB")},
-            "l4ReefCD": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefCD")},
-            "l4ReefEF": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefEF")},
-            "l4ReefGH": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefGH")},
-            "l4ReefIJ": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefIJ")},
-            "l4ReefKL": {** await calc_auto_reef_point_count_abs(team_number, "l4ReefKL")}
+            "type": "average",
+            "l1": {
+                "AB": await calc_auto_reef_point_count(team_number, "l1ReefAB"),
+                "CD": await calc_auto_reef_point_count(team_number, "l1ReefCD"),
+                "EF": await calc_auto_reef_point_count(team_number, "l1ReefEF"),
+                "GH": await calc_auto_reef_point_count(team_number, "l1ReefGH"),
+                "IJ": await calc_auto_reef_point_count(team_number, "l1ReefIJ"),
+                "KL": await calc_auto_reef_point_count(team_number, "l1ReefKL"),
+                "average":
+                    (
+                            await calc_auto_reef_point_count(team_number, "l1ReefAB")
+                            + await calc_auto_reef_point_count(team_number, "l1ReefCD")
+                            + await calc_auto_reef_point_count(team_number, "l1ReefEF")
+                            + await calc_auto_reef_point_count(team_number, "l1ReefGH")
+                            + await calc_auto_reef_point_count(team_number, "l1ReefIJ")
+                            + await calc_auto_reef_point_count(team_number, "l1ReefKL")
+                    ) / 6
+            },
+            "l2": {
+                "AB": await calc_auto_reef_point_count(team_number, "l2ReefAB"),
+                "CD": await calc_auto_reef_point_count(team_number, "l2ReefCD"),
+                "EF": await calc_auto_reef_point_count(team_number, "l2ReefEF"),
+                "GH": await calc_auto_reef_point_count(team_number, "l2ReefGH"),
+                "IJ": await calc_auto_reef_point_count(team_number, "l2ReefIJ"),
+                "KL": await calc_auto_reef_point_count(team_number, "l2ReefKL"),
+                "average":
+                    (
+                            await calc_auto_reef_point_count(team_number, "l2ReefAB")
+                            + await calc_auto_reef_point_count(team_number, "l2ReefCD")
+                            + await calc_auto_reef_point_count(team_number, "l2ReefEF")
+                            + await calc_auto_reef_point_count(team_number, "l2ReefGH")
+                            + await calc_auto_reef_point_count(team_number, "l2ReefIJ")
+                            + await calc_auto_reef_point_count(team_number, "l2ReefKL")
+                    ) / 6
+            },
+            "l3": {
+                "AB": await calc_auto_reef_point_count(team_number, "l3ReefAB"),
+                "CD": await calc_auto_reef_point_count(team_number, "l3ReefCD"),
+                "EF": await calc_auto_reef_point_count(team_number, "l3ReefEF"),
+                "GH": await calc_auto_reef_point_count(team_number, "l3ReefGH"),
+                "IJ": await calc_auto_reef_point_count(team_number, "l3ReefIJ"),
+                "KL": await calc_auto_reef_point_count(team_number, "l3ReefKL"),
+                "average":
+                    (
+                            await calc_auto_reef_point_count(team_number, "l3ReefAB")
+                            + await calc_auto_reef_point_count(team_number, "l3ReefCD")
+                            + await calc_auto_reef_point_count(team_number, "l3ReefEF")
+                            + await calc_auto_reef_point_count(team_number, "l3ReefGH")
+                            + await calc_auto_reef_point_count(team_number, "l3ReefIJ")
+                            + await calc_auto_reef_point_count(team_number, "l3ReefKL")
+                    ) / 6
+            },
+            "l4": {
+                "AB": await calc_auto_reef_point_count(team_number, "l4ReefAB"),
+                "CD": await calc_auto_reef_point_count(team_number, "l4ReefCD"),
+                "EF": await calc_auto_reef_point_count(team_number, "l4ReefEF"),
+                "GH": await calc_auto_reef_point_count(team_number, "l4ReefGH"),
+                "IJ": await calc_auto_reef_point_count(team_number, "l4ReefIJ"),
+                "KL": await calc_auto_reef_point_count(team_number, "l4ReefKL"),
+                "average":
+                    (
+                            await calc_auto_reef_point_count(team_number, "l4ReefAB")
+                            + await calc_auto_reef_point_count(team_number, "l4ReefCD")
+                            + await calc_auto_reef_point_count(team_number, "l4ReefEF")
+                            + await calc_auto_reef_point_count(team_number, "l4ReefGH")
+                            + await calc_auto_reef_point_count(team_number, "l4ReefIJ")
+                            + await calc_auto_reef_point_count(team_number, "l4ReefKL")
+                    ) / 6
+            }
         },
         "reef_success_rate_by_side": {
             "AB": await calc_reef_success_rate_by_side(team_number, ReefSide.AB.value, "auto"),
@@ -629,32 +675,6 @@ async def pack_auto_data_rel(team_number: str):
             "l2": await calc_reef_level_rel(team_number, ReefLevel.L2.value, "auto"),
             "l3": await calc_reef_level_rel(team_number, ReefLevel.L3.value, "auto"),
             "l4": await calc_reef_level_rel(team_number, ReefLevel.L4.value, "auto")
-        },
-        "reef_count_per_point": {
-            "l1ReefAB": await calc_auto_reef_point_count_rel(team_number, "l1ReefAB"),
-            "l1ReefCD": await calc_auto_reef_point_count_rel(team_number, "l1ReefCD"),
-            "l1ReefEF": await calc_auto_reef_point_count_rel(team_number, "l1ReefEF"),
-            "l1ReefGH": await calc_auto_reef_point_count_rel(team_number, "l1ReefGH"),
-            "l1ReefIJ": await calc_auto_reef_point_count_rel(team_number, "l1ReefIJ"),
-            "l1ReefKL": await calc_auto_reef_point_count_rel(team_number, "l1ReefKL"),
-            "l2ReefAB": await calc_auto_reef_point_count_rel(team_number, "l2ReefAB"),
-            "l2ReefCD": await calc_auto_reef_point_count_rel(team_number, "l2ReefCD"),
-            "l2ReefEF": await calc_auto_reef_point_count_rel(team_number, "l2ReefEF"),
-            "l2ReefGH": await calc_auto_reef_point_count_rel(team_number, "l2ReefGH"),
-            "l2ReefIJ": await calc_auto_reef_point_count_rel(team_number, "l2ReefIJ"),
-            "l2ReefKL": await calc_auto_reef_point_count_rel(team_number, "l2ReefKL"),
-            "l3ReefAB": await calc_auto_reef_point_count_rel(team_number, "l3ReefAB"),
-            "l3ReefCD": await calc_auto_reef_point_count_rel(team_number, "l3ReefCD"),
-            "l3ReefEF": await calc_auto_reef_point_count_rel(team_number, "l3ReefEF"),
-            "l3ReefGH": await calc_auto_reef_point_count_rel(team_number, "l3ReefGH"),
-            "l3ReefIJ": await calc_auto_reef_point_count_rel(team_number, "l3ReefIJ"),
-            "l3ReefKL": await calc_auto_reef_point_count_rel(team_number, "l3ReefKL"),
-            "l4ReefAB": await calc_auto_reef_point_count_rel(team_number, "l4ReefAB"),
-            "l4ReefCD": await calc_auto_reef_point_count_rel(team_number, "l4ReefCD"),
-            "l4ReefEF": await calc_auto_reef_point_count_rel(team_number, "l4ReefEF"),
-            "l4ReefGH": await calc_auto_reef_point_count_rel(team_number, "l4ReefGH"),
-            "l4ReefIJ": await calc_auto_reef_point_count_rel(team_number, "l4ReefIJ"),
-            "l4ReefKL": await calc_auto_reef_point_count_rel(team_number, "l4ReefKL")
         },
         "reef_score_by_side": {
             "AB": await calc_auto_reef_score_by_side_rel(team_number, ReefSide.AB.value),
