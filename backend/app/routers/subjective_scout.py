@@ -7,6 +7,7 @@ from ..constants import SUBJECTIVE_RAW_COLLECTION
 from ..model import SubjectiveMatchRawData  # , MatchRawDataFilterParams
 from ..scripts.objective_calculate import post_obj_results
 from ..scripts.subjective_calculate import post_sbj_results
+from ..scripts.util import init_collection
 
 subjective_collection = init_collection(SUBJECTIVE_RAW_COLLECTION)
 

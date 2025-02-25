@@ -5,7 +5,7 @@ from typing_extensions import Annotated
 
 from ..constants import PIT_DATA_COLLECTION
 from ..model import PitScoutData
-from ..scripts.initdb import init_collection
+from ..scripts.util import init_collection
 
 router = APIRouter(
     prefix="/pit_scout",

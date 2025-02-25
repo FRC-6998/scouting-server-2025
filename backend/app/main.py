@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import FastAPI
 
 from .routers import objective_scout, subjective_scout, pit_scout, test
