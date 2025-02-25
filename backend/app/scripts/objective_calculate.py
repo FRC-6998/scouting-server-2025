@@ -435,11 +435,11 @@ async def calc_reef_success_rate_by_side(team_number: str, side: str, period: st
                     break
 
     if matched == 0:  # Avoid division by zero
-        return {side: 0.0}
+        return 0.0
 
     rate = count_succeeded / matched
 
-    return {side: rate}
+    return rate
 
 async def count_processor_score_abs(team_number: str, period: str):
     match_paths = await get_path(team_number, period)

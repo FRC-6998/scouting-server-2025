@@ -5,7 +5,6 @@ from typing_extensions import Annotated
 
 from ..constants import SUBJECTIVE_RAW_COLLECTION
 from ..model import SubjectiveMatchRawData  # , MatchRawDataFilterParams
-from ..scripts.initdb import init_collection
 from ..scripts.objective_calculate import post_obj_results
 from ..scripts.subjective_calculate import post_sbj_results
 
