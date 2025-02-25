@@ -3,8 +3,8 @@ from operator import itemgetter
 import numba
 import numpy as np
 
+from .util import init_collection
 from ..constants import SUBJECTIVE_RAW_COLLECTION, SUBJECTIVE_RESULT_COLLECTION
-from ..scripts.initdb import init_collection
 
 subjective_raw = init_collection(SUBJECTIVE_RAW_COLLECTION)
 subjective_result = init_collection(SUBJECTIVE_RESULT_COLLECTION)

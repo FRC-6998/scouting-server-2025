@@ -4,9 +4,9 @@ from operator import itemgetter
 import numba
 import numpy as np
 
+from .util import init_collection, get_all_teams
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION, ALL_REEF_LEVELS
 from ..model import TeleopPathPoint
-from ..scripts.initdb import init_collection
 
 raw_collection = init_collection(OBJECTIVE_RAW_COLLECTION)
 result_collection = init_collection(OBJECTIVE_RESULT_COLLECTION)
@@ -886,10 +886,7 @@ async def post_obj_results(team_number: str):
     return {"message": "Data posted successfully"}
 
 async def refresh_all_obj_results():
-    team_list_raw = await raw_collection.find({},{"_id": 0, "team_number": 1}).to_list(None)
-    print (team_list_raw)
-    team_list = [item ["team_number"] for item in team_list_raw]
-    team_set = set(team_list)
+    team_set = await get_all_teams()
     print (team_set)
     if '' in team_set:
         team_set.remove('')
