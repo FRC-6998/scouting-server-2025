@@ -6,7 +6,7 @@ from .scripts.objective_calculate import raw_collection
 scouting_app = FastAPI(
     title="Scouting Field Server API",
     description="API for Scouting Field Server made by Team Unipards 6998",
-    version="0.1.0",
+    version="0.2.0-alpha",
 )
 
 scouting_app.include_router(objective_scout.router)
