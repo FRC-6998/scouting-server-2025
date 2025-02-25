@@ -20,11 +20,21 @@ scouting_app.include_router(test.router)
     description="Getting team list from the database.",
     response_description="Got team list successfully",
 )
-async def get_team_list(match_level: str, match_number: str):
-    dict_data = await raw_collection.find(
-        {"match_level": match_level, "match_number": match_number},
-        {"_id":0, "team_number":1}
-    ).to_list(None)
-    list_data = list(d["team_number"] for d in dict_data)
-    print (list_data)
-    return {"teams": list_data}
+async def get_team_list(event_key: str = None):
+    if event_key is None:
+        team_list_raw = await raw_collection.find({}, {"_id": 0, "team_number": 1}).to_list(None)
+    else:
+        team_list_raw = await raw_collection.find({"event_key": event_key}, {"_id": 0, "team_number": 1}).to_list(None)
+    #print(team_list_raw)
+    team_list = [item["team_number"] for item in team_list_raw]
+    team_set = set(team_list)
+    #print(team_set)
+    if '' in team_set:
+        team_set.remove('')
+
+    return team_set
+
+@scouting_app.get("/refresh_result")
+async def refresh_result():
+    await test.refresh_all_obj_results()
+    return {"message": "Result refreshed successfully"}
