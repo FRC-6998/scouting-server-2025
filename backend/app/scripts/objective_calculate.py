@@ -541,26 +541,6 @@ async def calc_auto_reef_point_count(team_number: str, pos: str):
 
     return float(np.average(matched_per_match_np))
 
-async def calc_auto_reef_point_count_rel (team_number: str, pos: str):
-    unsorted_data = await result_collection.find(
-        {},  # Query criteria
-        {
-            "_id": 0,
-            "team_number": 1,
-            pos: f"$auto.reef_count_per_point.{pos}.average"
-        }
-    ).to_list(None)
-
-    for item in unsorted_data:
-        if pos not in item:
-            team_number_temp = item.get("team_number")
-            unsorted_data.remove(item)
-            unsorted_data.append({"team_number": team_number_temp, pos: 0.0})
-
-    print ({"calc_auto_reef_point_count_rel": unsorted_data})
-    data = sorted(unsorted_data, key=itemgetter(pos), reverse=True)
-
-    return calc_relative(team_number, data, pos)
 
 async def pack_auto_data_abs(team_number: str):
     data = {
