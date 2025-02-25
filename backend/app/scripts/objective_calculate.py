@@ -825,9 +825,11 @@ async def get_comments(team_number: str):
     comments = await raw_collection.find(
         {"team_number": team_number},
         {"_id": 0, "comment": 1}  # Fixed projection syntax
-    ).to_list(None)  # Convert the cursor to a list
+    ).to_list(None) # Convert the cursor to a list
 
-    return comments  # Return the list of comments
+    comments_raw = [item.get("comment") for item in comments]
+
+    return comments_raw  # Return the list of comments
 
 async def count_bypassed(team_number: str):
     raw_data = await raw_collection.find(
@@ -858,9 +860,9 @@ async def pack_obj_data_abs(team_number: str):
         "team_number": team_number,
         "auto": await pack_auto_data_abs(team_number),
         "teleop": await pack_teleop_data_abs(team_number),
-        "comments": await get_comments(team_number),
         "bypassed_count": await count_bypassed(team_number),
-        "disabled_count": await count_disabled(team_number)
+        "disabled_count": await count_disabled(team_number),
+        "comment": await get_comments(team_number)
     }
     print({"pack_data": data})
     return data
@@ -870,7 +872,6 @@ async def pack_obj_data_rel(team_number: str):
         "team_number": team_number,
         "auto": await pack_auto_data_rel(team_number),
         "teleop": await pack_teleop_data_rel(team_number),
-        "comments": await get_comments(team_number)
     }
     print({"pack_data": data})
     return data
