@@ -891,8 +891,8 @@ async def refresh_all_obj_results():
     team_list = [item ["team_number"] for item in team_list_raw]
     team_set = set(team_list)
     print (team_set)
-    team_set.remove('')
-
+    if '' in team_set:
+        team_set.remove('')
 
     for team in team_set:
         await post_obj_results(team)
