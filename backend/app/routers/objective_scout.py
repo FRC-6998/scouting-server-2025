@@ -63,6 +63,7 @@ async def delete_obj_match_data(match_id: str):
     name="Getting objective match results",
     description="Getting objective match results from the database.",
     response_description="Got objective match results successfully",
+    response_model=ObjectiveResult,
     status_code=status.HTTP_200_OK,
 )
 async def get_obj_match_results(team_number: str):
