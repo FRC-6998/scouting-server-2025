@@ -298,4 +298,4 @@ class ObjectiveResult (BaseModel):
     teleop: TeleopResult
     bypassed_count: int
     disabled_count: int
-    comment: str
+    comment: List[str]
