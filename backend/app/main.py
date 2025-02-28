@@ -14,7 +14,7 @@ scouting_app = FastAPI(
 
 
 origins = [
-    "http://localhost:52695",
+    "http://localhost:8080",
 ]
 
 scouting_app.add_middleware(
