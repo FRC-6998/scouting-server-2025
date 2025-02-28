@@ -1,11 +1,12 @@
 import asyncio
 
-from fastapi import APIRouter, Query, BackgroundTasks
+from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
 from starlette import status
 from typing_extensions import Annotated
 
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
-from ..model import ObjectiveMatchRawData, ObjectiveResult  # , MatchRawDataFilterParams
+# , MatchRawDataFilterParams
+from ..model import ObjectiveMatchRawData, ObjectiveResult
 from ..scripts.objective_calculate import post_obj_results, pack_obj_data_abs, refresh_all_obj_results
 from ..scripts.subjective_calculate import pack_result
 from ..scripts.util import init_collection
@@ -58,6 +59,7 @@ async def delete_obj_match_data(match_id: str):
     await objective_raw.delete_one({"match_id": match_id})
     return {"message": "Data with id [" + match_id + "] deleted successfully"}
 
+
 @router.get(
     "/result",
     name="Getting objective match results",
@@ -67,6 +69,8 @@ async def delete_obj_match_data(match_id: str):
     status_code=status.HTTP_200_OK,
 )
 async def get_obj_match_results(team_number: str):
-    data = await objective_result.find_one({"team_number": team_number},{"_id": 0})
-    print (data)
+    data = await objective_result.find_one({"team_number": team_number}, {"_id": 0})
+    print(data)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Team not found")
     return data
