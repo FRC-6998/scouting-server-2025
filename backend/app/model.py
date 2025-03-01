@@ -270,11 +270,27 @@ class ReefScoreBySide(BaseModel):
     IJ: GamePieceActionResult
     KL: GamePieceActionResult
 
+class ReefCountPerPointByLevel(BaseModel):
+    AB: float
+    CD: float
+    EF: float
+    GH: float
+    IJ: float
+    KL: float
+
+class ReefCountPerPoint(BaseModel):
+    type: str
+    l1: ReefCountPerPointByLevel
+    l2: ReefCountPerPointByLevel
+    l3: ReefCountPerPointByLevel
+    l4: ReefCountPerPointByLevel
+
 class AutoResult(BaseModel):
     preload_count: PreloadCount
     start_position_count: StartPositionCount
     leave_success_rate: float
     reef: ReefCountAbsoluteResultBySide
+    reef_count_per_point: ReefCountPerPoint
     reef_success_rate_by_side: ReefSuccessRateBySide
     reef_score_by_side: ReefScoreBySide
     reef_score: GamePieceActionResult
