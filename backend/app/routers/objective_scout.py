@@ -1,5 +1,3 @@
-import asyncio
-
 from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
 from starlette import status
 from typing_extensions import Annotated
@@ -7,8 +5,7 @@ from typing_extensions import Annotated
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
 # , MatchRawDataFilterParams
 from ..model import ObjectiveMatchRawData, ObjectiveResult
-from ..scripts.objective_calculate import post_obj_results, pack_obj_data_abs, refresh_all_obj_results
-from ..scripts.subjective_calculate import pack_result
+from ..scripts.objective_calculate import refresh_all_obj_results
 from ..scripts.util import init_collection
 
 # db[OBJECTIVE_DATA_COLLECTION]
