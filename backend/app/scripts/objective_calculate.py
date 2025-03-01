@@ -624,31 +624,43 @@ async def pack_auto_data_abs(team_number: str):
                             + await calc_auto_reef_point_count(team_number, "l4ReefKL")
                     ) / 6
             },
-            "all_level": {
-                "AB": await calc_auto_reef_point_count(team_number, "l1ReefAB")
-                      + await calc_auto_reef_point_count(team_number, "l2ReefAB")
-                      + await calc_auto_reef_point_count(team_number, "l3ReefAB")
-                      + await calc_auto_reef_point_count(team_number, "l4ReefAB"),
-                "CD": await calc_auto_reef_point_count(team_number, "l1ReefCD")
-                      + await calc_auto_reef_point_count(team_number, "l2ReefCD")
-                      + await calc_auto_reef_point_count(team_number, "l3ReefCD")
-                      + await calc_auto_reef_point_count(team_number, "l4ReefCD"),
-                "EF": await calc_auto_reef_point_count(team_number, "l1ReefEF")
-                      + await calc_auto_reef_point_count(team_number, "l2ReefEF")
-                      + await calc_auto_reef_point_count(team_number, "l3ReefEF")
-                      + await calc_auto_reef_point_count(team_number, "l4ReefEF"),
-                "GH": await calc_auto_reef_point_count(team_number, "l1ReefGH")
-                      + await calc_auto_reef_point_count(team_number, "l2ReefGH")
-                      + await calc_auto_reef_point_count(team_number, "l3ReefGH")
-                      + await calc_auto_reef_point_count(team_number, "l4ReefGH"),
-                "IJ": await calc_auto_reef_point_count(team_number, "l1ReefIJ")
-                      + await calc_auto_reef_point_count(team_number, "l2ReefIJ")
-                      + await calc_auto_reef_point_count(team_number, "l3ReefIJ")
-                      + await calc_auto_reef_point_count(team_number, "l4ReefIJ"),
-                "KL": await calc_auto_reef_point_count(team_number, "l1ReefKL")
-                      + await calc_auto_reef_point_count(team_number, "l2ReefKL")
-                      + await calc_auto_reef_point_count(team_number, "l3ReefKL")
-                      + await calc_auto_reef_point_count(team_number, "l4ReefKL"),
+            "average": {
+                "AB": (
+                          await calc_auto_reef_point_count(team_number, "l1ReefAB")
+                        + await calc_auto_reef_point_count(team_number, "l2ReefAB")
+                        + await calc_auto_reef_point_count(team_number, "l3ReefAB")
+                        + await calc_auto_reef_point_count(team_number, "l4ReefAB")
+                ) / 4,
+                "CD": (
+                          await calc_auto_reef_point_count(team_number, "l1ReefCD")
+                        + await calc_auto_reef_point_count(team_number, "l2ReefCD")
+                        + await calc_auto_reef_point_count(team_number, "l3ReefCD")
+                        + await calc_auto_reef_point_count(team_number, "l4ReefCD")
+                ) / 4,
+                "EF": (
+                          await calc_auto_reef_point_count(team_number, "l1ReefEF")
+                        + await calc_auto_reef_point_count(team_number, "l2ReefEF")
+                        + await calc_auto_reef_point_count(team_number, "l3ReefEF")
+                        + await calc_auto_reef_point_count(team_number, "l4ReefEF")
+                ) / 4,
+                "GH": (
+                          await calc_auto_reef_point_count(team_number, "l1ReefGH")
+                        + await calc_auto_reef_point_count(team_number, "l2ReefGH")
+                        + await calc_auto_reef_point_count(team_number, "l3ReefGH")
+                        + await calc_auto_reef_point_count(team_number, "l4ReefGH")
+                ) / 4,
+                "IJ": (
+                          await calc_auto_reef_point_count(team_number, "l1ReefIJ")
+                        + await calc_auto_reef_point_count(team_number, "l2ReefIJ")
+                        + await calc_auto_reef_point_count(team_number, "l3ReefIJ")
+                        + await calc_auto_reef_point_count(team_number, "l4ReefIJ")
+                ) / 4,
+                "KL": (
+                          await calc_auto_reef_point_count(team_number, "l1ReefKL")
+                        + await calc_auto_reef_point_count(team_number, "l2ReefKL")
+                        + await calc_auto_reef_point_count(team_number, "l3ReefKL")
+                        + await calc_auto_reef_point_count(team_number, "l4ReefKL")
+                ) / 4,
                 "average": (
                     await calc_auto_reef_point_count(team_number, "l1ReefAB")
                     + await calc_auto_reef_point_count(team_number, "l2ReefAB")

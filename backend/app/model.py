@@ -285,7 +285,7 @@ class ReefCountPerPoint(BaseModel):
     l2: ReefCountPerPointByLevel
     l3: ReefCountPerPointByLevel
     l4: ReefCountPerPointByLevel
-    all_level: ReefCountPerPointByLevel
+    average: ReefCountPerPointByLevel
 
 class AutoResult(BaseModel):
     preload_count: PreloadCount
