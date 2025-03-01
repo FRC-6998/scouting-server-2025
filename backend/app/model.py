@@ -277,6 +277,7 @@ class ReefCountPerPointByLevel(BaseModel):
     GH: float
     IJ: float
     KL: float
+    average: float
 
 class ReefCountPerPoint(BaseModel):
     type: str
@@ -284,6 +285,7 @@ class ReefCountPerPoint(BaseModel):
     l2: ReefCountPerPointByLevel
     l3: ReefCountPerPointByLevel
     l4: ReefCountPerPointByLevel
+    all_level: ReefCountPerPointByLevel
 
 class AutoResult(BaseModel):
     preload_count: PreloadCount
