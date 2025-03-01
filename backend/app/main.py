@@ -2,6 +2,7 @@ from typing import Optional
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from .routers import objective_scout, subjective_scout, pit_scout, test
 from .scripts.objective_calculate import raw_collection
@@ -24,6 +25,21 @@ scouting_app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@scouting_app.exception_handler(Exception)
+async def exception_handler(request, exc):
+    headers = {
+        'Access-Control-Allow-Origin': ', '.join(origins),
+        'Access-Control-Allow-Credentials': 'true',
+        'Access-Control-Allow-Methods': '*',
+        'Access-Control-Allow-Headers': '*',
+    }
+    return JSONResponse(
+        status_code=500,
+        content={"message": "Internal Server Error"},
+        headers=headers
+    )
 
 scouting_app.include_router(objective_scout.router)
 scouting_app.include_router(subjective_scout.router)
