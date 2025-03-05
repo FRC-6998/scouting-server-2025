@@ -24,7 +24,7 @@ def get_abs_team_stats(data: list):
 
 async def get_rel_team_stats(team_number: str, key: str, period: str):
     # Query to find documents in result_collection
-    print (f"${period}.{key}.average")
+    # print (f"${period}.{key}.average")
     unsorted_data = await result_collection.find(
         {},  # Query criteria
         {
@@ -33,7 +33,7 @@ async def get_rel_team_stats(team_number: str, key: str, period: str):
             key: f"${period}.{key}.average"
         }
     ).to_list(None)
-    print ({"unsorted_data": unsorted_data})
+    # print ({"unsorted_data": unsorted_data})
 
     if not unsorted_data:  # Handle case where no data is returned by the query
         # Default relative statistics when no data is found
@@ -43,7 +43,7 @@ async def get_rel_team_stats(team_number: str, key: str, period: str):
     # Sort only the valid data by the key
     data = sorted(unsorted_data, key=itemgetter(key), reverse=True)
 
-    print (data)
+    # print (data)
 
     # Calculate the relative stats for the current team
     return calc_relative(team_number, data, key)
@@ -76,7 +76,7 @@ async def count_preload(team_number: str):
     none = raw_data.count({"preload": "none"})
     coral = raw_data.count({"preload": "coral"})
     algae = raw_data.count({"preload": "algae"})
-    print({"count_preload":{"none": none, "coral": coral, "algae": algae}})
+    # print({"count_preload":{"none": none, "coral": coral, "algae": algae}})
     return {"none": none, "coral": coral, "algae": algae}
 
 
@@ -91,7 +91,7 @@ async def count_start_pos(team_number: str):
     left = raw_data.count({"start_position": "left"})
     center = raw_data.count({"start_position": "center"})
     right = raw_data.count({"start_position": "right"})
-    print({"count_start_pos": {"left": left, "center": center, "right": right}})
+    # print({"count_start_pos": {"left": left, "center": center, "right": right}})
     return {"left": left, "center": center, "right": right}
 
 
@@ -107,7 +107,7 @@ async def calc_leave_success_rate(team_number: str, is_percentage: int = 0):
     if count_try == 0:
         return 0
 
-    print({"calc_leave_success_rate": count_success / count_try})
+    # print({"calc_leave_success_rate": count_success / count_try})
 
     match is_percentage:
         case 1:
@@ -197,7 +197,7 @@ async def get_path(team_number: str, period: str = "auto"):
         }
     ).to_list(None)
 
-    print({"get_path": data})
+    # print({"get_path": data})
     return data
 
 async def calc_auto_reef_level_abs(team_number: str, level: str):
@@ -240,7 +240,7 @@ async def calc_teleop_reef_level_abs(team_number: str, level: str):
     # print (converted_level)
     matches = await get_path(team_number, "teleop")
 
-    print({"teleop_test": converted_level})
+    # print({"teleop_test": converted_level})
 
     reef_matched = []
     for paths in matches:
@@ -256,7 +256,7 @@ async def calc_teleop_reef_level_abs(team_number: str, level: str):
 
 
 def calc_relative(team_number: str, data: list, key: str):
-    print ({"initialize_relative": data})
+    # print ({"initialize_relative": data})
 
     rank = 0
 
@@ -290,7 +290,7 @@ async def calc_reef_level_rel(team_number: str, level: str, period: str):
         }
     ).to_list(None)
 
-    print ({"test_reef_level_rel":unsorted_data})
+    # print ({"test_reef_level_rel":unsorted_data})
 
     data = sorted(unsorted_data, key=itemgetter(level), reverse=True)
 
@@ -363,9 +363,9 @@ def get_reef_level_score_weight(level: str, period: str):
 
 async def calc_auto_reef_score_by_side_abs(team_number: str, side: str):
     converted_side = convert_auto_reef_side_to_pos(side)
-    print(converted_side)
+    # print(converted_side)
     point_value = get_reef_level_score_weight(side, "auto")
-    print (point_value)
+    # print (point_value)
     matches = await get_path(team_number, "auto")  # Fetch paths
 
     # Check if paths is empty
@@ -381,7 +381,7 @@ async def calc_auto_reef_score_by_side_abs(team_number: str, side: str):
                 if single_path.get("point") == pos:
                     side_matched.append(paths)
                     break
-        print(side_matched)
+        # print(side_matched)
         filtered_matches.append(side_matched)
 
     side_scores = []
@@ -532,7 +532,7 @@ async def calc_auto_reef_point_count(team_number: str, pos: str):
 
         matched_per_match.append(count)
 
-    print({f"calc_auto_reef_point_count_abs-{pos}": matched_per_match})
+    # print({f"calc_auto_reef_point_count_abs-{pos}": matched_per_match})
 
     if not matched_per_match:
         return 0.0
@@ -709,7 +709,7 @@ async def pack_auto_data_abs(team_number: str):
         "processor_score": {**await count_processor_score_abs(team_number, "auto")},
         "net_score": {**await count_net_score_abs(team_number, "auto")}
     }
-    print({"pack_auto_data_abs": data})
+    # print({"pack_auto_data_abs": data})
     return data
 
 async def pack_auto_data_rel(team_number: str):
@@ -732,7 +732,7 @@ async def pack_auto_data_rel(team_number: str):
         "processor_score": await calc_processor_score_rel(team_number, "auto"),
         "net_score": await calc_net_score_rel(team_number, "auto")
     }
-    print ({"pack_auto_data_rel": data})
+    # print ({"pack_auto_data_rel": data})
     return data
 
 """
@@ -772,7 +772,7 @@ def search_cycle_time(data: list, cycle_type: str):
             TeleopPathPoint.PROCESSOR.value
         ])
 
-    print (start_pos, end_pos)
+    # print (start_pos, end_pos)
     # Filter the data for start and end points
     start_points = []
     end_points = []
@@ -801,7 +801,7 @@ def search_cycle_time(data: list, cycle_type: str):
 
 async def calc_cycle_time_abs(team_number: str, cycle_type: str):
     data = await get_path(team_number, "teleop")
-    print (data)
+    # print (data)
     cycle_times = search_cycle_time(data, cycle_type)
 
     if not cycle_times:
@@ -831,9 +831,9 @@ async def count_hang_abs(team_number):
             "hang_time": "$teleop.hang_time"
         }
     ).to_list(None)
-    print (data)
+    # print (data)
     hang_time = [item.get("hang_time") for item in data]
-    print  (hang_time)
+    # print  (hang_time)
     # Handle empty hang_time case
     if not hang_time:  # If hang_time is an empty list
         return {"average": 0, "stability": 0}
@@ -861,7 +861,7 @@ async def pack_teleop_data_abs(team_number: str):
         },
         "hang": {**await count_hang_abs(team_number)}
     }
-    print({"pack_teleop_data": data})
+    # print({"pack_teleop_data": data})
     return data
 
 async def pack_teleop_data_rel(team_number: str):
@@ -880,7 +880,7 @@ async def pack_teleop_data_rel(team_number: str):
         },
         "hang": {**await calc_hang_rel(team_number)}
     }
-    print ({"pack_teleop_data_rel": data})
+    # print ({"pack_teleop_data_rel": data})
     return data
 
 
@@ -904,7 +904,7 @@ async def count_bypassed(team_number: str):
         }
     ).to_list(None)
     count = raw_data.count({"bypassed": True})
-    print({"count_bypassed": count})
+    # print({"count_bypassed": count})
     return count
 
 async def count_disabled(team_number: str):
@@ -916,7 +916,7 @@ async def count_disabled(team_number: str):
         }
     ).to_list(None)
     count = raw_data.count({"disabled": True})
-    print({"count_disabled": count})
+    # print({"count_disabled": count})
     return count
 
 async def pack_obj_data_abs(team_number: str):
@@ -928,7 +928,7 @@ async def pack_obj_data_abs(team_number: str):
         "disabled_count": await count_disabled(team_number),
         "comment": await get_comments(team_number)
     }
-    print({"pack_data": data})
+    # print({"pack_data": data})
     return data
 
 async def pack_obj_data_rel(team_number: str):
@@ -937,7 +937,7 @@ async def pack_obj_data_rel(team_number: str):
         "auto": await pack_auto_data_rel(team_number),
         "teleop": await pack_teleop_data_rel(team_number),
     }
-    print({"pack_data": data})
+    # print({"pack_data": data})
     return data
 
 async def post_obj_results(team_number: str):
@@ -952,7 +952,7 @@ async def post_obj_results(team_number: str):
 
 async def refresh_all_obj_results():
     team_set = await get_all_teams()
-    print (team_set)
+    # print (team_set)
     if '' in team_set:
         team_set.remove('')
 
