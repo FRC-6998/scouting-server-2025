@@ -4,8 +4,9 @@ from typing_extensions import Annotated
 from pymongo.errors import DuplicateKeyError
 
 from backend.app.scripts.db import get_collection
+from backend.app.scripts.util import post_to_remote_server
 
-from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
+from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION, REMOTE_SERVERS
 # , MatchRawDataFilterParams
 from ..model import ObjectiveMatchRawData, ObjectiveResult
 from ..scripts.objective_calculate import refresh_all_obj_results
@@ -32,6 +33,9 @@ async def add_obj_match_data(data: ObjectiveMatchRawData, background_tasks: Back
     except DuplicateKeyError:
         raise HTTPException(
             status_code=409, detail="Data with the same ulid already exists")
+    for remote_server in REMOTE_SERVERS:
+        background_tasks.add_task(post_to_remote_server, data.model_dump(
+        ), data.ulid, remote_server, "/objective/raw", OBJECTIVE_RAW_COLLECTION)
     background_tasks.add_task(refresh_all_obj_results)
     return {"message": "Data added successfully"}
 

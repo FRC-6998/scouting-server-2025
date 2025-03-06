@@ -1,4 +1,5 @@
 from pymongo import AsyncMongoClient
+import aiohttp
 
 from backend.app.constants import MONGO_URL, DATABASE_NAME, OBJECTIVE_RAW_COLLECTION
 from backend.app.scripts.db import get_collection
@@ -17,3 +18,19 @@ async def get_all_teams(event_key: str = None):
         team_set.remove('')
 
     return team_set
+
+
+async def post_to_remote_server(data: dict, ulid: str, remote_server: str, remote_path: str, collection_name: str):
+    remote_url = f"{remote_server}{remote_path}"
+    async with aiohttp.ClientSession() as session:
+        async with session.post(remote_url, json=data) as response:
+            if response.status >= 200 and response.status < 300:
+                print(f"Data sent to {remote_url} successfully")
+                await get_collection(collection_name).update_one(
+                    {"ulid": ulid}, {"$push": {"uploaded_remote": remote_server}})
+            elif response.status == 409:
+                print(f"Data already exists in {remote_url}")
+                await get_collection(collection_name).update_one(
+                    {"ulid": ulid}, {"$push": {"uploaded_remote": remote_server}})
+            else:
+                print(f"Failed to send data to {remote_url} with status code {response.status} and response text: {await response.text()}")
