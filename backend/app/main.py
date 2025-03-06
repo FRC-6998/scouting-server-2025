@@ -5,8 +5,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from backend.app.scripts.db import get_collection, init_db, disconnect_from_mongo
-from backend.app.constants import OBJECTIVE_RAW_COLLECTION
+from .scripts.db import get_collection, init_db, disconnect_from_mongo
+from .constants import OBJECTIVE_RAW_COLLECTION
 
 from .routers import objective_scout, subjective_scout, pit_scout, test
 

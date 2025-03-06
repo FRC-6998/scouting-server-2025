@@ -3,8 +3,8 @@ from starlette import status
 from typing_extensions import Annotated
 from pymongo.errors import DuplicateKeyError
 
-from backend.app.scripts.db import get_collection
-from backend.app.scripts.util import post_to_remote_server
+from ..scripts.db import get_collection
+from ..scripts.util import post_to_remote_server
 
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION, REMOTE_SERVERS
 # , MatchRawDataFilterParams

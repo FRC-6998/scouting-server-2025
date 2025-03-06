@@ -2,15 +2,13 @@ services:
 
   db:
     image: mongo:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - 27017:27017
     # environment:
         # MONGO_INITDB_DATABASE: scouting-field
         # MONGO_INITDB_ROOT_USERNAME: admin
         # MONGO_INITDB_ROOT_PASSWORD: pass
-    env_file:
-      - .env
     volumes:
       - .data/mongo:/data/db
     healthcheck:
@@ -25,11 +23,13 @@ services:
   backend:
     # image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     build: ./backend
-    restart: always
+    restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
       MONGO_HOST: db
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy

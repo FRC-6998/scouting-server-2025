@@ -17,5 +17,4 @@ PIT_DATA_COLLECTION = "pit"
 # Utilities
 ALL_REEF_LEVELS = ["l1", "l2", "l3", "l4"]
 
-REMOTE_SERVERS = json.loads(
-    getenv("REMOTE_SERVERS", '["http://localhost:8000"]'))
+REMOTE_SERVERS = getenv("REMOTE_SERVERS", "http://localhost:8000").split(",")

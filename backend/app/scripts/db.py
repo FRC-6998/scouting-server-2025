@@ -1,12 +1,12 @@
 from pymongo import AsyncMongoClient
-from backend.app.constants import (MONGO_URL,
-                                   DATABASE_NAME,
-                                   OBJECTIVE_RAW_COLLECTION,
-                                   OBJECTIVE_RESULT_COLLECTION,
-                                   SUBJECTIVE_RAW_COLLECTION,
-                                   SUBJECTIVE_RESULT_COLLECTION,
-                                   PIT_DATA_COLLECTION
-                                   )
+from ..constants import (MONGO_URL,
+                         DATABASE_NAME,
+                         OBJECTIVE_RAW_COLLECTION,
+                         OBJECTIVE_RESULT_COLLECTION,
+                         SUBJECTIVE_RAW_COLLECTION,
+                         SUBJECTIVE_RESULT_COLLECTION,
+                         PIT_DATA_COLLECTION
+                         )
 
 client: AsyncMongoClient = None
 db = None

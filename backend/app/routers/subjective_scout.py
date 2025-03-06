@@ -3,7 +3,7 @@ from fastapi.params import Query
 from starlette import status
 from typing_extensions import Annotated
 
-from backend.app.scripts.db import get_collection
+from ..scripts.db import get_collection
 
 from ..constants import SUBJECTIVE_RAW_COLLECTION
 from ..model import SubjectiveMatchRawData  # , MatchRawDataFilterParams

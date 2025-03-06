@@ -3,7 +3,7 @@ from operator import itemgetter
 import numba
 import numpy as np
 
-from backend.app.scripts.db import get_collection
+from ..scripts.db import get_collection
 
 from ..constants import SUBJECTIVE_RAW_COLLECTION, SUBJECTIVE_RESULT_COLLECTION
 
