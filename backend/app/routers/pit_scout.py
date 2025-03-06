@@ -3,16 +3,15 @@ from fastapi.params import Query
 from starlette import status
 from typing_extensions import Annotated
 
+from backend.app.scripts.db import get_collection
+
 from ..constants import PIT_DATA_COLLECTION
 from ..model import PitScoutData
-from ..scripts.util import init_collection
 
 router = APIRouter(
     prefix="/pit_scout",
     tags=["Pit Scout Data"]
 )
-
-pit_collection = init_collection(PIT_DATA_COLLECTION)
 
 
 @router.post(
@@ -24,7 +23,7 @@ pit_collection = init_collection(PIT_DATA_COLLECTION)
     status_code=status.HTTP_201_CREATED,
 )
 async def add_pit_scout_data(data: PitScoutData = Body(...)):
-    await pit_collection.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
+    await get_collection(PIT_DATA_COLLECTION).insert_one(data.model_dump(), bypass_document_validation=False, session=None)
     return data
 
 

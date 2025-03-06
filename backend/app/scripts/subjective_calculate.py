@@ -3,30 +3,28 @@ from operator import itemgetter
 import numba
 import numpy as np
 
-from .util import init_collection
-from ..constants import SUBJECTIVE_RAW_COLLECTION, SUBJECTIVE_RESULT_COLLECTION
+from backend.app.scripts.db import get_collection
 
-subjective_raw = init_collection(SUBJECTIVE_RAW_COLLECTION)
-subjective_result = init_collection(SUBJECTIVE_RESULT_COLLECTION)
+from ..constants import SUBJECTIVE_RAW_COLLECTION, SUBJECTIVE_RESULT_COLLECTION
 
 
 async def get_team_datas(team_number: int, key: str):
     data = [
-        await subjective_raw.find(
+        await get_collection(SUBJECTIVE_RAW_COLLECTION).find(
             {"team1.team_number": team_number},
             {
                 "_id": 0,
                 key: "$team1." + key
             },
         ),
-        await subjective_raw.find(
+        await get_collection(SUBJECTIVE_RAW_COLLECTION).find(
             {"team2.team_number": team_number},
             {
                 "_id": 0,
                 key: "$team2." + key
             },
         ),
-        await subjective_raw.find(
+        await get_collection(SUBJECTIVE_RAW_COLLECTION).find(
             {"team3.team_number": team_number},
             {
                 "_id": 0,
@@ -50,7 +48,7 @@ def analysis_absolute(data: list[dict], key: str):
 
 async def analysis_relative(team_number: int, key: str, is_descending: bool = False):
     unsorted_data = [
-        await subjective_result.find(
+        await get_collection(SUBJECTIVE_RESULT_COLLECTION).find(
             {},
             {
                 "_id": 0,
@@ -116,4 +114,4 @@ async def pack_result(team_number: int):
 
 async def post_sbj_results(team_number: int):
     data = await pack_result(team_number)
-    await subjective_result.insert_one(data, bypass_document_validation=False, session=None)
+    await get_collection(SUBJECTIVE_RESULT_COLLECTION).insert_one(data, bypass_document_validation=False, session=None)

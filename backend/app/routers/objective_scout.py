@@ -1,17 +1,17 @@
 from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
 from starlette import status
 from typing_extensions import Annotated
+from pymongo.errors import DuplicateKeyError
+
+from backend.app.scripts.db import get_collection
 
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION
 # , MatchRawDataFilterParams
 from ..model import ObjectiveMatchRawData, ObjectiveResult
 from ..scripts.objective_calculate import refresh_all_obj_results
-from ..scripts.util import init_collection
 
 # db[OBJECTIVE_DATA_COLLECTION]
-objective_raw = init_collection(OBJECTIVE_RAW_COLLECTION)
 # db[OBJECTIVE_RESULT_COLLECTION]
-objective_result = init_collection(OBJECTIVE_RESULT_COLLECTION)
 
 router = APIRouter(
     prefix="/objective",
@@ -27,7 +27,11 @@ router = APIRouter(
     status_code=status.HTTP_201_CREATED,
 )
 async def add_obj_match_data(data: ObjectiveMatchRawData, background_tasks: BackgroundTasks):
-    await objective_raw.insert_one(data.model_dump(), bypass_document_validation=False, session=None)
+    try:
+        await get_collection(OBJECTIVE_RAW_COLLECTION).insert_one(data.model_dump(), bypass_document_validation=False, session=None)
+    except DuplicateKeyError:
+        raise HTTPException(
+            status_code=409, detail="Data with the same ulid already exists")
     background_tasks.add_task(refresh_all_obj_results)
     return {"message": "Data added successfully"}
 
@@ -53,7 +57,7 @@ async def get_obj_match_data(data_query: Annotated[ObjectiveMatchRawData, Query(
     status_code=status.HTTP_200_OK,
 )
 async def delete_obj_match_data(match_id: str):
-    await objective_raw.delete_one({"match_id": match_id})
+    await get_collection(OBJECTIVE_RAW_COLLECTION).delete_one({"match_id": match_id})
     return {"message": "Data with id [" + match_id + "] deleted successfully"}
 
 
@@ -66,8 +70,7 @@ async def delete_obj_match_data(match_id: str):
     status_code=status.HTTP_200_OK,
 )
 async def get_obj_match_results(team_number: str):
-    data = await objective_result.find_one({"team_number": team_number}, {"_id": 0})
-    print(data)
+    data = await get_collection(OBJECTIVE_RESULT_COLLECTION).find_one({"team_number": team_number}, {"_id": 0})
     if data is None:
         raise HTTPException(status_code=404, detail="Team not found")
     return data

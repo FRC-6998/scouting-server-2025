@@ -4,12 +4,10 @@ from operator import itemgetter
 import numba
 import numpy as np
 
-from .util import init_collection, get_all_teams
+from .util import get_all_teams
 from ..constants import OBJECTIVE_RAW_COLLECTION, OBJECTIVE_RESULT_COLLECTION, ALL_REEF_LEVELS
 from ..model import TeleopPathPoint
-
-raw_collection = init_collection(OBJECTIVE_RAW_COLLECTION)
-result_collection = init_collection(OBJECTIVE_RESULT_COLLECTION)
+from ..scripts.db import get_collection
 
 
 @numba.jit(cache=True)
@@ -23,9 +21,9 @@ def get_abs_team_stats(data: list):
 
 
 async def get_rel_team_stats(team_number: str, key: str, period: str):
-    # Query to find documents in result_collection
+    # Query to find documents in get_collection(OBJECTIVE_RESULT_COLLECTION)
     # print (f"${period}.{key}.average")
-    unsorted_data = await result_collection.find(
+    unsorted_data = await get_collection(OBJECTIVE_RESULT_COLLECTION).find(
         {},  # Query criteria
         {
             "_id": 0,
@@ -38,7 +36,6 @@ async def get_rel_team_stats(team_number: str, key: str, period: str):
     if not unsorted_data:  # Handle case where no data is returned by the query
         # Default relative statistics when no data is found
         return {"rank": None, "z_score": None}
-
 
     # Sort only the valid data by the key
     data = sorted(unsorted_data, key=itemgetter(key), reverse=True)
@@ -66,7 +63,7 @@ class ReefSide(str, Enum):
 
 
 async def count_preload(team_number: str):
-    raw_data = await raw_collection.find(
+    raw_data = await get_collection(OBJECTIVE_RAW_COLLECTION).find(
         {"team_number": team_number},
         {
             "_id": 0,
@@ -81,7 +78,7 @@ async def count_preload(team_number: str):
 
 
 async def count_start_pos(team_number: str):
-    raw_data = await raw_collection.find(
+    raw_data = await get_collection(OBJECTIVE_RAW_COLLECTION).find(
         {"team_number": team_number},
         {
             "_id": 0,
@@ -96,7 +93,7 @@ async def count_start_pos(team_number: str):
 
 
 async def calc_leave_success_rate(team_number: str, is_percentage: int = 0):
-    raw_data = await raw_collection.find(
+    raw_data = await get_collection(OBJECTIVE_RAW_COLLECTION).find(
         {"team_number": team_number},
         {"_id": 0,
          "leave": "$auto.leave"}
@@ -189,7 +186,7 @@ def convert_reef_level_side_to_pos(level: str, side: str):
 
 
 async def get_path(team_number: str, period: str = "auto"):
-    data = await raw_collection.find(
+    data = await get_collection(OBJECTIVE_RAW_COLLECTION).find(
         {"team_number": team_number},
         {
             "_id": 0,
@@ -199,6 +196,7 @@ async def get_path(team_number: str, period: str = "auto"):
 
     # print({"get_path": data})
     return data
+
 
 async def calc_auto_reef_level_abs(team_number: str, level: str):
     converted_level = convert_reef_level_to_pos(level)
@@ -221,6 +219,7 @@ async def calc_auto_reef_level_abs(team_number: str, level: str):
         reef_matched = [0]  # Assign a default value (e.g., no matches)
 
     return get_abs_team_stats(reef_matched)
+
 
 def convert_teleop_reef_level_to_pos(level: str):
 
@@ -254,7 +253,6 @@ async def calc_teleop_reef_level_abs(team_number: str, level: str):
     return get_abs_team_stats(reef_matched)
 
 
-
 def calc_relative(team_number: str, data: list, key: str):
     # print ({"initialize_relative": data})
 
@@ -272,7 +270,8 @@ def calc_relative(team_number: str, data: list, key: str):
         return {"rank": rank, "z_score": 0.0}
 
     # Calculate the z-score for the team's rank
-    z_score = float((sorted_np[rank - 1] - np.average(sorted_np)) / np.std(sorted_np))
+    z_score = float(
+        (sorted_np[rank - 1] - np.average(sorted_np)) / np.std(sorted_np))
 
     if np.isnan(z_score):
         z_score = 0.0
@@ -281,7 +280,7 @@ def calc_relative(team_number: str, data: list, key: str):
 
 
 async def calc_reef_level_rel(team_number: str, level: str, period: str):
-    unsorted_data = await result_collection.find(
+    unsorted_data = await get_collection(OBJECTIVE_RESULT_COLLECTION).find(
         {},  # Query criteria
         {
             "_id": 0,
@@ -297,6 +296,7 @@ async def calc_reef_level_rel(team_number: str, level: str, period: str):
     # print ({"calc_reef_level_rel": calc_reef_side_relative(team_number, data, level)})
 
     return calc_relative(team_number, data, level)
+
 
 async def calc_auto_reef_score_abs(team_number: str):
     scores = []
@@ -317,6 +317,7 @@ async def calc_auto_reef_score_abs(team_number: str):
 
     # print (scores)
     return get_abs_team_stats(scores)
+
 
 async def calc_auto_reef_score_rel(team_number: str):
     return await get_rel_team_stats(team_number, "reef_score", "auto")
@@ -361,6 +362,7 @@ def get_reef_level_score_weight(level: str, period: str):
                 case ReefLevel.L4.value:
                     return 5
 
+
 async def calc_auto_reef_score_by_side_abs(team_number: str, side: str):
     converted_side = convert_auto_reef_side_to_pos(side)
     # print(converted_side)
@@ -402,10 +404,12 @@ async def calc_auto_reef_score_by_side_abs(team_number: str, side: str):
                             break
             side_scores.append(score)
 
-    return get_abs_team_stats(side_scores)  # Compute stats if side_matched has values
+    # Compute stats if side_matched has values
+    return get_abs_team_stats(side_scores)
+
 
 async def calc_auto_reef_score_by_side_rel(team_number: str, side: str):
-    unsorted_data = await result_collection.find(
+    unsorted_data = await get_collection(OBJECTIVE_RESULT_COLLECTION).find(
         {},  # Query criteria
         {
             "_id": 0,
@@ -417,6 +421,7 @@ async def calc_auto_reef_score_by_side_rel(team_number: str, side: str):
     data = sorted(unsorted_data, key=itemgetter(side), reverse=True)
 
     return calc_relative(team_number, data, side)
+
 
 async def calc_reef_success_rate_by_side(team_number: str, side: str, period: str = "auto"):
     converted_side = convert_auto_reef_side_to_pos(side)
@@ -440,6 +445,7 @@ async def calc_reef_success_rate_by_side(team_number: str, side: str, period: st
     rate = count_succeeded / matched
 
     return rate
+
 
 async def count_processor_score_abs(team_number: str, period: str):
     match_paths = await get_path(team_number, period)
@@ -471,8 +477,10 @@ async def count_processor_score_abs(team_number: str, period: str):
 
     return get_abs_team_stats(processor_score)
 
+
 async def calc_processor_score_rel(team_number: str, period: str):
     return await get_rel_team_stats(team_number, "processor_score", period)
+
 
 async def count_net_score_abs(team_number: str, period: str):
     matches = await get_path(team_number, period)
@@ -516,8 +524,10 @@ async def count_net_score_abs(team_number: str, period: str):
     # Compute stats if net_score has data
     return get_abs_team_stats(net_score)
 
+
 async def calc_net_score_rel(team_number: str, period: str):
     return await get_rel_team_stats(team_number, "net_score", period)
+
 
 async def calc_auto_reef_point_count(team_number: str, pos: str):
     matches = await get_path(team_number, "auto")
@@ -554,7 +564,7 @@ async def pack_auto_data_abs(team_number: str):
             "l4": {** await calc_auto_reef_level_abs(team_number, ReefLevel.L4.value)},
 
         },
-        "reef_count_per_point":{
+        "reef_count_per_point": {
             "type": "average",
             "l1": {
                 "AB": await calc_auto_reef_point_count(team_number, "l1ReefAB"),
@@ -565,13 +575,13 @@ async def pack_auto_data_abs(team_number: str):
                 "KL": await calc_auto_reef_point_count(team_number, "l1ReefKL"),
                 "average":
                     (
-                            await calc_auto_reef_point_count(team_number, "l1ReefAB")
-                            + await calc_auto_reef_point_count(team_number, "l1ReefCD")
-                            + await calc_auto_reef_point_count(team_number, "l1ReefEF")
-                            + await calc_auto_reef_point_count(team_number, "l1ReefGH")
-                            + await calc_auto_reef_point_count(team_number, "l1ReefIJ")
-                            + await calc_auto_reef_point_count(team_number, "l1ReefKL")
-                    ) / 6
+                    await calc_auto_reef_point_count(team_number, "l1ReefAB")
+                    + await calc_auto_reef_point_count(team_number, "l1ReefCD")
+                    + await calc_auto_reef_point_count(team_number, "l1ReefEF")
+                    + await calc_auto_reef_point_count(team_number, "l1ReefGH")
+                    + await calc_auto_reef_point_count(team_number, "l1ReefIJ")
+                    + await calc_auto_reef_point_count(team_number, "l1ReefKL")
+                ) / 6
             },
             "l2": {
                 "AB": await calc_auto_reef_point_count(team_number, "l2ReefAB"),
@@ -582,13 +592,13 @@ async def pack_auto_data_abs(team_number: str):
                 "KL": await calc_auto_reef_point_count(team_number, "l2ReefKL"),
                 "average":
                     (
-                            await calc_auto_reef_point_count(team_number, "l2ReefAB")
-                            + await calc_auto_reef_point_count(team_number, "l2ReefCD")
-                            + await calc_auto_reef_point_count(team_number, "l2ReefEF")
-                            + await calc_auto_reef_point_count(team_number, "l2ReefGH")
-                            + await calc_auto_reef_point_count(team_number, "l2ReefIJ")
-                            + await calc_auto_reef_point_count(team_number, "l2ReefKL")
-                    ) / 6
+                    await calc_auto_reef_point_count(team_number, "l2ReefAB")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefCD")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefEF")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefGH")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefIJ")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefKL")
+                ) / 6
             },
             "l3": {
                 "AB": await calc_auto_reef_point_count(team_number, "l3ReefAB"),
@@ -599,13 +609,13 @@ async def pack_auto_data_abs(team_number: str):
                 "KL": await calc_auto_reef_point_count(team_number, "l3ReefKL"),
                 "average":
                     (
-                            await calc_auto_reef_point_count(team_number, "l3ReefAB")
-                            + await calc_auto_reef_point_count(team_number, "l3ReefCD")
-                            + await calc_auto_reef_point_count(team_number, "l3ReefEF")
-                            + await calc_auto_reef_point_count(team_number, "l3ReefGH")
-                            + await calc_auto_reef_point_count(team_number, "l3ReefIJ")
-                            + await calc_auto_reef_point_count(team_number, "l3ReefKL")
-                    ) / 6
+                    await calc_auto_reef_point_count(team_number, "l3ReefAB")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefCD")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefEF")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefGH")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefIJ")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefKL")
+                ) / 6
             },
             "l4": {
                 "AB": await calc_auto_reef_point_count(team_number, "l4ReefAB"),
@@ -616,50 +626,50 @@ async def pack_auto_data_abs(team_number: str):
                 "KL": await calc_auto_reef_point_count(team_number, "l4ReefKL"),
                 "average":
                     (
-                            await calc_auto_reef_point_count(team_number, "l4ReefAB")
-                            + await calc_auto_reef_point_count(team_number, "l4ReefCD")
-                            + await calc_auto_reef_point_count(team_number, "l4ReefEF")
-                            + await calc_auto_reef_point_count(team_number, "l4ReefGH")
-                            + await calc_auto_reef_point_count(team_number, "l4ReefIJ")
-                            + await calc_auto_reef_point_count(team_number, "l4ReefKL")
-                    ) / 6
+                    await calc_auto_reef_point_count(team_number, "l4ReefAB")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefCD")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefEF")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefGH")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefIJ")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefKL")
+                ) / 6
             },
             "average": {
                 "AB": (
-                          await calc_auto_reef_point_count(team_number, "l1ReefAB")
-                        + await calc_auto_reef_point_count(team_number, "l2ReefAB")
-                        + await calc_auto_reef_point_count(team_number, "l3ReefAB")
-                        + await calc_auto_reef_point_count(team_number, "l4ReefAB")
+                    await calc_auto_reef_point_count(team_number, "l1ReefAB")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefAB")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefAB")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefAB")
                 ) / 4,
                 "CD": (
-                          await calc_auto_reef_point_count(team_number, "l1ReefCD")
-                        + await calc_auto_reef_point_count(team_number, "l2ReefCD")
-                        + await calc_auto_reef_point_count(team_number, "l3ReefCD")
-                        + await calc_auto_reef_point_count(team_number, "l4ReefCD")
+                    await calc_auto_reef_point_count(team_number, "l1ReefCD")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefCD")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefCD")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefCD")
                 ) / 4,
                 "EF": (
-                          await calc_auto_reef_point_count(team_number, "l1ReefEF")
-                        + await calc_auto_reef_point_count(team_number, "l2ReefEF")
-                        + await calc_auto_reef_point_count(team_number, "l3ReefEF")
-                        + await calc_auto_reef_point_count(team_number, "l4ReefEF")
+                    await calc_auto_reef_point_count(team_number, "l1ReefEF")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefEF")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefEF")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefEF")
                 ) / 4,
                 "GH": (
-                          await calc_auto_reef_point_count(team_number, "l1ReefGH")
-                        + await calc_auto_reef_point_count(team_number, "l2ReefGH")
-                        + await calc_auto_reef_point_count(team_number, "l3ReefGH")
-                        + await calc_auto_reef_point_count(team_number, "l4ReefGH")
+                    await calc_auto_reef_point_count(team_number, "l1ReefGH")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefGH")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefGH")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefGH")
                 ) / 4,
                 "IJ": (
-                          await calc_auto_reef_point_count(team_number, "l1ReefIJ")
-                        + await calc_auto_reef_point_count(team_number, "l2ReefIJ")
-                        + await calc_auto_reef_point_count(team_number, "l3ReefIJ")
-                        + await calc_auto_reef_point_count(team_number, "l4ReefIJ")
+                    await calc_auto_reef_point_count(team_number, "l1ReefIJ")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefIJ")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefIJ")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefIJ")
                 ) / 4,
                 "KL": (
-                          await calc_auto_reef_point_count(team_number, "l1ReefKL")
-                        + await calc_auto_reef_point_count(team_number, "l2ReefKL")
-                        + await calc_auto_reef_point_count(team_number, "l3ReefKL")
-                        + await calc_auto_reef_point_count(team_number, "l4ReefKL")
+                    await calc_auto_reef_point_count(team_number, "l1ReefKL")
+                    + await calc_auto_reef_point_count(team_number, "l2ReefKL")
+                    + await calc_auto_reef_point_count(team_number, "l3ReefKL")
+                    + await calc_auto_reef_point_count(team_number, "l4ReefKL")
                 ) / 4,
                 "average": (
                     await calc_auto_reef_point_count(team_number, "l1ReefAB")
@@ -712,6 +722,7 @@ async def pack_auto_data_abs(team_number: str):
     # print({"pack_auto_data_abs": data})
     return data
 
+
 async def pack_auto_data_rel(team_number: str):
     data = {
         "reef": {
@@ -747,6 +758,8 @@ B. ALGAE Cycle
     - GROUND -> PROCESSOR
 
 """
+
+
 def search_cycle_time(data: list, cycle_type: str):
     start_pos = []
     end_pos = []
@@ -787,7 +800,7 @@ def search_cycle_time(data: list, cycle_type: str):
     cycle_time = []
 
     i, j = 0, 0
-    n, m = len (start_points), len (end_points)
+    n, m = len(start_points), len(end_points)
 
     while i < n and j < m:
         if start_points[i] < end_points[j]:
@@ -798,6 +811,7 @@ def search_cycle_time(data: list, cycle_type: str):
             j += 1
 
     return cycle_time
+
 
 async def calc_cycle_time_abs(team_number: str, cycle_type: str):
     data = await get_path(team_number, "teleop")
@@ -810,8 +824,9 @@ async def calc_cycle_time_abs(team_number: str, cycle_type: str):
 
     return get_abs_team_stats(cycle_times)
 
+
 async def calc_cycle_time_rel(team_number: str, cycle_type: str):
-    unsorted_data = await result_collection.find(
+    unsorted_data = await get_collection(OBJECTIVE_RESULT_COLLECTION).find(
         {},  # Query criteria
         {
             "_id": 0,
@@ -823,8 +838,9 @@ async def calc_cycle_time_rel(team_number: str, cycle_type: str):
     data = sorted(unsorted_data, key=itemgetter(cycle_type), reverse=True)
     return calc_relative(team_number, data, cycle_type)
 
+
 async def count_hang_abs(team_number):
-    data = await raw_collection.find(
+    data = await get_collection(OBJECTIVE_RAW_COLLECTION).find(
         {"team_number": team_number},
         {
             "_id": 0,
@@ -841,8 +857,10 @@ async def count_hang_abs(team_number):
     # print({"calc_cycle_time": {**abs_stats, **rel_stats}})
     return get_abs_team_stats(hang_time)
 
+
 async def calc_hang_rel(team_number: str):
     return await get_rel_team_stats(team_number, "hang", "teleop")
+
 
 async def pack_teleop_data_abs(team_number: str):
     data = {
@@ -863,6 +881,7 @@ async def pack_teleop_data_abs(team_number: str):
     }
     # print({"pack_teleop_data": data})
     return data
+
 
 async def pack_teleop_data_rel(team_number: str):
     data = {
@@ -886,17 +905,18 @@ async def pack_teleop_data_rel(team_number: str):
 
 async def get_comments(team_number: str):
     # Get all documents matching the query and project only the 'comments' field
-    comments = await raw_collection.find(
+    comments = await get_collection(OBJECTIVE_RAW_COLLECTION).find(
         {"team_number": team_number},
         {"_id": 0, "comment": 1}  # Fixed projection syntax
-    ).to_list(None) # Convert the cursor to a list
+    ).to_list(None)  # Convert the cursor to a list
 
     comments_raw = [item.get("comment") for item in comments]
 
     return comments_raw  # Return the list of comments
 
+
 async def count_bypassed(team_number: str):
-    raw_data = await raw_collection.find(
+    raw_data = await get_collection(OBJECTIVE_RAW_COLLECTION).find(
         {"team_number": team_number},
         {
             "_id": 0,
@@ -907,8 +927,9 @@ async def count_bypassed(team_number: str):
     # print({"count_bypassed": count})
     return count
 
+
 async def count_disabled(team_number: str):
-    raw_data = await raw_collection.find(
+    raw_data = await get_collection(OBJECTIVE_RAW_COLLECTION).find(
         {"team_number": team_number},
         {
             "_id": 0,
@@ -918,6 +939,7 @@ async def count_disabled(team_number: str):
     count = raw_data.count({"disabled": True})
     # print({"count_disabled": count})
     return count
+
 
 async def pack_obj_data_abs(team_number: str):
     data = {
@@ -931,6 +953,7 @@ async def pack_obj_data_abs(team_number: str):
     # print({"pack_data": data})
     return data
 
+
 async def pack_obj_data_rel(team_number: str):
     data = {
         "team_number": team_number,
@@ -940,15 +963,17 @@ async def pack_obj_data_rel(team_number: str):
     # print({"pack_data": data})
     return data
 
+
 async def post_obj_results(team_number: str):
     obj = {**await pack_obj_data_abs(team_number)}
     rel = {**await pack_obj_data_rel(team_number)}
 
     post_data = merge_data(obj, rel)
 
-    await result_collection.update_one({"team_number": team_number}, {"$set": post_data}, upsert=True)
+    await get_collection(OBJECTIVE_RESULT_COLLECTION).update_one({"team_number": team_number}, {"$set": post_data}, upsert=True)
 
     return {"message": "Data posted successfully"}
+
 
 async def refresh_all_obj_results():
     team_set = await get_all_teams()

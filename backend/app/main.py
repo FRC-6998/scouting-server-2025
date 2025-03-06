@@ -4,8 +4,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from backend.app.scripts.db import get_collection, init_db, disconnect_from_mongo
+from backend.app.constants import OBJECTIVE_RAW_COLLECTION
+
 from .routers import objective_scout, subjective_scout, pit_scout, test
-from .scripts.objective_calculate import raw_collection
 
 scouting_app = FastAPI(
     title="Scouting Field Server API",
@@ -26,6 +28,16 @@ scouting_app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@scouting_app.on_event("startup")
+async def startup():
+    await init_db()
+
+
+@scouting_app.on_event("shutdown")
+async def shutdown():
+    await disconnect_from_mongo()
 
 
 @scouting_app.exception_handler(Exception)
@@ -56,9 +68,9 @@ scouting_app.include_router(test.router)
 )
 async def get_team_list(event_key: str = None):
     if event_key is None:
-        team_list_raw = await raw_collection.find({}, {"_id": 0, "team_number": 1}).to_list(None)
+        team_list_raw = await get_collection(OBJECTIVE_RAW_COLLECTION).find({}, {"_id": 0, "team_number": 1}).to_list(None)
     else:
-        team_list_raw = await raw_collection.find({"event_key": event_key}, {"_id": 0, "team_number": 1}).to_list(None)
+        team_list_raw = await get_collection(OBJECTIVE_RAW_COLLECTION).find({"event_key": event_key}, {"_id": 0, "team_number": 1}).to_list(None)
     # print(team_list_raw)
     team_list = [item["team_number"] for item in team_list_raw]
     team_set = set(team_list)
