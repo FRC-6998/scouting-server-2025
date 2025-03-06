@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
 from starlette import status
 from typing_extensions import Annotated
 from pymongo.errors import DuplicateKeyError
+from bson import ObjectId
+from datetime import datetime
 
 from ..scripts.db import get_collection
 from ..scripts.util import post_to_remote_server
@@ -50,6 +52,22 @@ async def add_obj_match_data(data: ObjectiveMatchRawData, background_tasks: Back
 )
 async def get_obj_match_data(data_query: Annotated[ObjectiveMatchRawData, Query()]):
     return data_query
+
+
+@router.get(
+    "/fetch",
+    name="Fetching objective match data",
+    description="Fetching objective match data from the database.",
+    response_description="Fetched objective match data successfully",
+    response_model=list[ObjectiveMatchRawData],
+    status_code=status.HTTP_200_OK,
+)
+async def fetch_obj_match_data(last_updated_timestamp: float = None):
+    if last_updated_timestamp is None:
+        data = await get_collection(OBJECTIVE_RAW_COLLECTION).find({}, {"_id": 0}).to_list(None)
+    else:
+        data = await get_collection(OBJECTIVE_RAW_COLLECTION).find({"_id": {"$gt": ObjectId.from_datetime(datetime.fromtimestamp(last_updated_timestamp))}}, {"_id": 0}).to_list(None)
+    return data
 
 
 @router.delete(
