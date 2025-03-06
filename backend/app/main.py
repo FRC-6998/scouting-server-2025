@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from typing import Optional
 
 from fastapi import FastAPI
@@ -9,10 +10,18 @@ from backend.app.constants import OBJECTIVE_RAW_COLLECTION
 
 from .routers import objective_scout, subjective_scout, pit_scout, test
 
+
+@asynccontextmanager
+async def lifespwn(app: FastAPI):
+    await init_db()
+    yield
+    await disconnect_from_mongo()
+
 scouting_app = FastAPI(
     title="Scouting Field Server API",
     description="API for Scouting Field Server made by Team Unipards 6998",
     version="0.2.0-alpha",
+    lifespan=lifespwn
 )
 
 
@@ -28,16 +37,6 @@ scouting_app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@scouting_app.on_event("startup")
-async def startup():
-    await init_db()
-
-
-@scouting_app.on_event("shutdown")
-async def shutdown():
-    await disconnect_from_mongo()
 
 
 @scouting_app.exception_handler(Exception)
